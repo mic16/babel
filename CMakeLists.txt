@@ -11,7 +11,7 @@ set (CMAKE_BUILD_TYPE RELEASE)
 
 # Crée des variables avec les fichiers à compiler
 set(SRCS
-    src/main.cpp
+    src/client/main.cpp
     )
 
 
@@ -33,6 +33,7 @@ find_package(Threads REQUIRED)
 link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
 set(HEADERS
+    src/client/LineWidget.hpp
     )
 
 # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
