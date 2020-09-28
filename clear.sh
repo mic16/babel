@@ -8,6 +8,7 @@ rm -rf Makefile
 rm -rf CMakeCache.txt
 rm -rf cmake_install.cmake
 rm -rf Babel
+rm -rf BabelServer
 rm -rf build
 
 echo "            Script is \e[32mFINISHED\e[39m !!!"

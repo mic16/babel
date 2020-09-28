@@ -10,8 +10,12 @@ set (CMAKE_BUILD_TYPE RELEASE)
 # set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3")
 
 # Crée des variables avec les fichiers à compiler
-set(SRCS
+set(SRCSCLIENT
     src/client/main.cpp
+    )
+
+set(SRCSSERVER
+    src/server/main.cpp
     )
 
 
@@ -32,11 +36,17 @@ find_package(Threads REQUIRED)
 
 link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
-set(HEADERS
+
+set(HEADERSCLIENT
     src/client/LineWidget.hpp
     )
 
+set(HEADERSSERVER
+    src/server/main.hpp
+    )
+
 # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
-add_executable(Babel ${SRCS} ${HEADERS})
+add_executable(BabelServer ${SRCSSERVER} ${HEADERSSERVER})
+add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
 
 target_link_libraries(Babel ${CONAN_LIBS} Qt5::Widgets)
