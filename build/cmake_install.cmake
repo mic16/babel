@@ -1,4 +1,4 @@
-# Install script for directory: /home/cyril/epitech/Ans3/B-CPP-500-MPL-5-1-babel-yoan.vessiere
+# Install script for directory: /home/michael/B-CPP-500-MPL-5-1-babel-yoan.vessiere
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/cyril/epitech/Ans3/B-CPP-500-MPL-5-1-babel-yoan.vessiere/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/michael/B-CPP-500-MPL-5-1-babel-yoan.vessiere/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

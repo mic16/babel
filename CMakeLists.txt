@@ -18,7 +18,7 @@ set(SRCSSERVER
     src/server/main.cpp
     )
 
-
+add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 add_definitions(-DDEBUG_PROFILE=0)
 add_definitions(-Wno-pointer-arith)
 add_definitions("-fPIC")
