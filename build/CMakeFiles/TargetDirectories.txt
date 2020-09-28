@@ -1,0 +1,4 @@
+/home/cyril/epitech/Ans3/B-CPP-500-MPL-5-1-babel-yoan.vessiere/build/CMakeFiles/rebuild_cache.dir
+/home/cyril/epitech/Ans3/B-CPP-500-MPL-5-1-babel-yoan.vessiere/build/CMakeFiles/edit_cache.dir
+/home/cyril/epitech/Ans3/B-CPP-500-MPL-5-1-babel-yoan.vessiere/build/CMakeFiles/Babel.dir
+/home/cyril/epitech/Ans3/B-CPP-500-MPL-5-1-babel-yoan.vessiere/build/CMakeFiles/BabelServer.dir
