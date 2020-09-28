@@ -17,14 +17,14 @@
 #include <QLine>
 #include "LineWidget.hpp"
 
-void create_menu(QMainWindow *mainWindow)
-{
-	QMenuBar menu = mainWindow->menuBar();
-	QMenu actionFile = menu->addMenu(tr("&File"));
-	actionFile->addAction("newAct");
+// void create_menu(QMainWindow *mainWindow)
+// {
+// 	QMenuBar menu = mainWindow->menuBar();
+// 	QMenu actionFile = menu->addMenu(tr("&File"));
+// 	actionFile->addAction("newAct");
 
 
-}
+// }
 
 int main(int argc, char **argv)
 {
