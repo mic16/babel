@@ -19,14 +19,14 @@ std::string read_(boost::asio::ip::tcp::socket & socket) {
 
 void send_(boost::asio::ip::tcp::socket & socket, const std::string& message) {
     const std::string msg = message + "\n";
-    boost::asio::write( socket, boost::asio::buffer(message) );
+    boost::asio::write( socket, boost::asio::buffer(message));
 }
 
 int main() {
 
     boost::asio::io_service io_service;
-    boost::asio::ip::tcp::acceptor acceptor_(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 1234 ));
-    
+    boost::asio::ip::tcp::acceptor acceptor_(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 1234));
+
     while (true) 
     {
         boost::asio::ip::tcp::socket socket_(io_service);
