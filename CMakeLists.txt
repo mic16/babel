@@ -16,6 +16,8 @@ set(SRCSCLIENT
 
 set(SRCSSERVER
     src/server/main.cpp
+    src/server/TcpConnection.cpp
+    src/server/TcpServer.cpp
     )
 
 add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
@@ -43,6 +45,8 @@ set(HEADERSCLIENT
 
 set(HEADERSSERVER
     src/server/main.hpp
+    src/server/TcpConnection.hpp
+    src/server/TcpServer.hpp
     )
 
 # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
