@@ -15,16 +15,7 @@
 #include <QFrame>
 #include <QFont>
 #include <QLine>
-#include "LineWidget.hpp"
-
-// void create_menu(QMainWindow *mainWindow)
-// {
-// 	QMenuBar menu = mainWindow->menuBar();
-// 	QMenu actionFile = menu->addMenu(tr("&File"));
-// 	actionFile->addAction("newAct");
-
-
-// }
+#include <portaudio.h>
 
 int main(int argc, char **argv)
 {
@@ -37,7 +28,6 @@ int main(int argc, char **argv)
 	LineWidget myWidget2(QLine(100, 0, 100, 1400), &mainWindow);
 
 	mainWindow.setCentralWidget(&myWidget);
-	// mainWindow.setCentralWidget(&myWidget2);
 
 	if (app.setStyle("windows") == nullptr)
 		std::cout << "Style error" << std::endl;
@@ -53,5 +43,9 @@ int main(int argc, char **argv)
 	label.setFont(font);
 	label.show();
 
+	// Pa_Initialize();
+    // Pa_Terminate();
+	// std::cout << "YOO les boys" << std::endl;
+    // return 0;
 	return app.exec();
 }
