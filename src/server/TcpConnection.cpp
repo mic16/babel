@@ -14,28 +14,51 @@ TcpConnection::pointer TcpConnection::create(boost::asio::io_service& ios)
 
 boost::asio::ip::tcp::socket& TcpConnection::socket()
 {
-    return m_socket;
+    return mSocket;
 }
 
 void TcpConnection::start()
 {
-    m_message = "Bienvenue sur le serveur!";
 
-    boost::asio::async_write(m_socket, boost::asio::buffer(m_message),
-        boost::bind(&TcpConnection::handle_write, shared_from_this(),
-        boost::asio::placeholders::error)
-        );
+    // boost::array<char, 128> buf;
+    // boost::system::error_code error;
+    // int len = mSocket.read_some(boost::asio::buffer(buf), error);
+    
+    mSocket.async_read_some(boost::asio::buffer(buf), boost::bind(&TcpConnection::handleRead, shared_from_this(),
+        boost::asio::placeholders::error));
+
+    // mMessage = "Bienvenue sur le serveur!";
+
+    // boost::asio::async_write(mSocket, boost::asio::buffer(mMessage),
+    //     boost::bind(&TcpConnection::handleWrite, shared_from_this(),
+    //     boost::asio::placeholders::error)
+    //     );
 }
 
-TcpConnection::TcpConnection(boost::asio::io_service& io_service)
-    : m_socket(io_service)
+TcpConnection::TcpConnection(boost::asio::io_service& ioService)
+    : mSocket(ioService)
 {
 }
 
-void TcpConnection::handle_write(const boost::system::error_code& error)
+void TcpConnection::handleWrite(const boost::system::error_code& error)
 {
     if (!error)
     {
 
+    }
+}
+
+void TcpConnection::handleRead(const boost::system::error_code& error)
+{
+    if (!error)
+    {
+        std::cout << buf.data() << std::endl;
+
+        mMessage = "Bien Recu !";
+
+        boost::asio::async_write(mSocket, boost::asio::buffer(mMessage),
+            boost::bind(&TcpConnection::handleWrite, shared_from_this(),
+            boost::asio::placeholders::error)
+            );
     }
 }

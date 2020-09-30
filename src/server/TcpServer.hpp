@@ -22,10 +22,10 @@ class TcpServer
 		TcpServer(boost::asio::io_service& io_service, int port);
 					
 	private:
-		void start_accept();
-		void handle_accept(TcpConnection::pointer new_connection, const boost::system::error_code& error);
+		void startAccept();
+		void handleAccept(TcpConnection::pointer new_connection, const boost::system::error_code& error);
 						
-		boost::asio::ip::tcp::acceptor m_acceptor;
+		boost::asio::ip::tcp::acceptor mAcceptor;
 };
 
 #endif /* !TCPSERVER_HPP_ */

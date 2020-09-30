@@ -29,11 +29,18 @@ int main()
 		
 	// Création du buffer de réception // (3)
 	boost::array<char, 128> buf;
+	std::string message = "cannard #coincoin fils de pute";
 	while (1)
 	{
+		int len;
 		boost::system::error_code error;
 		// Réception des données, len = nombre d'octets reçus // (4)
-		int len = socket.read_some(boost::asio::buffer(buf), error);
+
+        std::copy(message.begin(),message.end(),buf.begin());
+		len = socket.write_some(boost::asio::buffer(buf, message.size()), error);
+
+		buf.empty();
+		len = socket.read_some(boost::asio::buffer(buf), error);
 				
 		if (error == boost::asio::error::eof) // (5)
 		{
