@@ -12,12 +12,15 @@ set (CMAKE_BUILD_TYPE RELEASE)
 # Crée des variables avec les fichiers à compiler
 set(SRCSCLIENT
     src/client/main.cpp
+    src/utils/Utils.cpp
     )
 
 set(SRCSSERVER
     src/server/main.cpp
     src/server/TcpConnection.cpp
     src/server/TcpServer.cpp
+    src/server/ServerLogic.cpp
+    src/utils/Utils.cpp
     )
 
 add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
@@ -41,12 +44,15 @@ link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
 set(HEADERSCLIENT
     src/client/LineWidget.hpp
+    src/utils/Utils.hpp
     )
 
 set(HEADERSSERVER
     src/server/main.hpp
     src/server/TcpConnection.hpp
     src/server/TcpServer.hpp
+    src/server/ServerLogic.hpp
+    src/utils/Utils.hpp
     )
 
 # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
@@ -54,3 +60,4 @@ add_executable(BabelServer ${SRCSSERVER} ${HEADERSSERVER})
 add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
 
 target_link_libraries(Babel ${CONAN_LIBS} Qt5::Widgets)
+target_link_libraries(BabelServer ${CONAN_LIBS} sqlite3)

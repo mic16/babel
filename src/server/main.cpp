@@ -5,13 +5,7 @@
 ** main
 */
 
-#include <iostream>
-#include <boost/asio.hpp>
-#include <boost/bind.hpp>
-#include <boost/array.hpp>
-#include <boost/enable_shared_from_this.hpp>
-
-#include "TcpServer.hpp"
+#include "main.hpp"
 
 int main()
 {

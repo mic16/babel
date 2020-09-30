@@ -13,6 +13,8 @@
 #include <boost/bind.hpp>
 #include <boost/array.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include "ServerLogic.hpp"
+#include "../utils/Utils.hpp"
 
 
 class TcpConnection : public boost::enable_shared_from_this<TcpConnection>
@@ -25,11 +27,14 @@ class TcpConnection : public boost::enable_shared_from_this<TcpConnection>
         void start();
 
     private:	
-        TcpConnection(boost::asio::io_service& ioService);
+        TcpConnection(boost::asio::io_service& ioService, ServerLogic *logic);
         void handleWrite(const boost::system::error_code& error);
         void handleRead(const boost::system::error_code& error);
+        void handleReadHeader(const boost::system::error_code& error);
         boost::asio::ip::tcp::socket mSocket;
         std::string mMessage;
-        boost::array<char, 128> buf;
+        boost::array<unsigned char, 4> bufForSize;
+        char *buf;
+        ServerLogic *logic;
 };
 #endif /* !TCPCONNECTION_HPP_ */
