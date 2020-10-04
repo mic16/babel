@@ -10,17 +10,20 @@
 
 #include <iostream>
 #include <sqlite3.h> 
+#include "../utils/Request.hpp"
 
 class ServerLogic {
 
     static ServerLogic *singleton;
 
     public:
-
         static ServerLogic *get();
+        Request executeLogic(Request request);
 
     private:
         sqlite3* dataBase;
+        Request connect(Request request);
+        Request createUser(Request request);
         ServerLogic();
         ~ServerLogic();
 

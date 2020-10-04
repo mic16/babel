@@ -13,6 +13,7 @@
 #include <boost/array.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include "../utils/Utils.hpp"
+#include "../utils/Request.hpp"
 
 int main()
 {
@@ -32,7 +33,7 @@ int main()
 	boost::array<char, 128> buf;
 
 
-	std::string content = Utils::generateSocketMessage("yolo le petit rigolo");
+	std::string content = Request(Request::CONNECT, "cyril").getRequestToSend();
 
 	while (1)
 	{	
@@ -51,7 +52,8 @@ int main()
 			std::cout << "\nTerminé !" << std::endl;
 			break;
 		}
-				
+		Request rep = Request(buf.data());
+		std::cout << "lol : " << rep.getRequestType() << std::endl; 
 		// On affiche (6)
 		std::cout.write(buf.data(), len); 
 	}

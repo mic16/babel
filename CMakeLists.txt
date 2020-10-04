@@ -13,6 +13,7 @@ set (CMAKE_BUILD_TYPE RELEASE)
 set(SRCSCLIENT
     src/client/main.cpp
     src/utils/Utils.cpp
+    src/utils/Request.cpp
     )
 
 set(SRCSSERVER
@@ -21,6 +22,7 @@ set(SRCSSERVER
     src/server/TcpServer.cpp
     src/server/ServerLogic.cpp
     src/utils/Utils.cpp
+    src/utils/Request.cpp
     )
 
 add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
@@ -45,6 +47,7 @@ link_libraries(${CMAKE_THREAD_LIBS_INIT})
 set(HEADERSCLIENT
     src/client/LineWidget.hpp
     src/utils/Utils.hpp
+    src/utils/Request.hpp
     )
 
 set(HEADERSSERVER
@@ -53,6 +56,7 @@ set(HEADERSSERVER
     src/server/TcpServer.hpp
     src/server/ServerLogic.hpp
     src/utils/Utils.hpp
+    src/utils/Request.hpp
     )
 
 # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS

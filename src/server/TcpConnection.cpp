@@ -62,9 +62,8 @@ void TcpConnection::handleRead(const boost::system::error_code& error)
 {
     if (!error)
     {
-        std::cout << buf << std::endl;
-        // TODO : connecter la logique
-        mMessage = "Bien Recu !";
+        Request request = this->logic->executeLogic(Request(buf));
+        mMessage = "jew" + request.getRequestToSend();
         boost::asio::async_write(mSocket, boost::asio::buffer(mMessage),
             boost::bind(&TcpConnection::handleWrite, shared_from_this(),
             boost::asio::placeholders::error)

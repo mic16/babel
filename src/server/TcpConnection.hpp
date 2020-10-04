@@ -14,6 +14,7 @@
 #include <boost/array.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include "ServerLogic.hpp"
+#include "../utils/Request.hpp"
 #include "../utils/Utils.hpp"
 
 
