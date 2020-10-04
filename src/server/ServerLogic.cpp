@@ -35,11 +35,13 @@ ServerLogic::~ServerLogic()
 
 Request ServerLogic::connect(Request request)
 {
+    // TODO code ici (le return c'est le cas en cas d'echec)
     return Request(Request::REFUSECONNECT);
 }
 
 Request ServerLogic::createUser(Request request)
 {
+    // TODO code ici (le return c'est le cas en cas d'echec)
     return Request(Request::REFUSECREATE);
 }
 
