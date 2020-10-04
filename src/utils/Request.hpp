@@ -14,8 +14,8 @@
 class Request {
     public:
         enum RequestType {
-            CONNECT,            // connect l'user passé en content de la request
             CREATEUSER,         // creé l'user passé en content de la request
+            CONNECT,            // connect l'user passé en content de la request
             BADREQUEST,         // request non valid
             REFUSECREATE,       // refus de creer l'user
             REFUSECONNECT,      // refus de connecter l'user

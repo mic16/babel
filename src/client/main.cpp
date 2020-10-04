@@ -52,8 +52,7 @@ int main()
 			std::cout << "\nTerminé !" << std::endl;
 			break;
 		}
-		Request rep = Request(buf.data());
-		std::cout << "lol : " << rep.getRequestType() << std::endl; 
+		Request rep = Request(buf.data() + 4);
 		// On affiche (6)
 		std::cout.write(buf.data(), len); 
 	}

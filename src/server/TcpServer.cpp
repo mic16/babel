@@ -26,7 +26,6 @@ void TcpServer::handleAccept(TcpConnection::pointer newConnection, const boost::
 {
     if (!error)
     {
-        std::cout << "Reçu un client!" << std::endl;
         newConnection->start();
         startAccept();
     }

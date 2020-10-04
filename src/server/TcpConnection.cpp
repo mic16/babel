@@ -63,7 +63,7 @@ void TcpConnection::handleRead(const boost::system::error_code& error)
     if (!error)
     {
         Request request = this->logic->executeLogic(Request(buf));
-        mMessage = "jew" + request.getRequestToSend();
+        mMessage = request.getRequestToSend() + "test";
         boost::asio::async_write(mSocket, boost::asio::buffer(mMessage),
             boost::bind(&TcpConnection::handleWrite, shared_from_this(),
             boost::asio::placeholders::error)

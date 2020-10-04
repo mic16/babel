@@ -35,20 +35,18 @@ ServerLogic::~ServerLogic()
 
 Request ServerLogic::connect(Request request)
 {
-    std::cout << "connect function" << std::endl;
-    return Request(Request::BADREQUEST);
+    return Request(Request::REFUSECONNECT);
 }
 
 Request ServerLogic::createUser(Request request)
 {
-    return Request(Request::BADREQUEST);
+    return Request(Request::REFUSECREATE);
 }
 
 Request ServerLogic::executeLogic(Request request)
 {
     Request reponse(Request::BADREQUEST);
 
-    std::cout << "logic" << request.getRequestType() << std::endl;
     switch (request.getRequestType())
     {
         case Request::CONNECT :
