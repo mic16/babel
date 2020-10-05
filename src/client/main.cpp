@@ -48,10 +48,8 @@ int main()
 		len = socket.read_some(boost::asio::buffer(buf), error);
 
 		Request rep = Request(buf.data() + 4);
-		std::cout << "res1 :";
-		std::cout.write(buf.data(), len); 
-		std::cout << std::endl; 
-		std::cout << "\nTerminé ! 1" << std::endl;
+		std::cout << "res1 : " << rep.getRequestType() << std::endl;
+		std::cout << "Terminé ! 1" << std::endl;
 		break;
 
 	}
@@ -74,11 +72,12 @@ int main()
 		len = socket.read_some(boost::asio::buffer(buf), error);
 
 		Request rep = Request(buf.data() + 4);
-		std::cout << "res2 :";
-		std::cout.write(buf.data(), len);
-		std::cout << std::endl; 
-		std::cout << "\nTerminé ! 2" << std::endl;
+		std::cout << "res2 : " << rep.getRequestType() << std::endl;
+		std::cout << "Terminé ! 2" << std::endl;
 		break;
+	}
+	while (1) {
+		
 	}
 	socket.close();
 	return 0;
