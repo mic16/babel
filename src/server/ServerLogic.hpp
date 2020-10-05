@@ -10,7 +10,11 @@
 
 #include <iostream>
 #include <sqlite3.h> 
+#include <list>
 #include "../utils/Request.hpp"
+#include "../dataBase/Data.hpp"
+#include "../dataBase/Data.hpp"
+
 
 class ServerLogic {
 
@@ -21,7 +25,7 @@ class ServerLogic {
         Request executeLogic(Request request);
 
     private:
-        sqlite3* dataBase;
+        Data dataBase;
         Request connect(Request request);
         Request createUser(Request request);
         ServerLogic();

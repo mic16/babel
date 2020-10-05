@@ -23,6 +23,7 @@ set(SRCSSERVER
     src/server/ServerLogic.cpp
     src/utils/Utils.cpp
     src/utils/Request.cpp
+    src/dataBase/Data.cpp
     )
 
 add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
@@ -57,6 +58,7 @@ set(HEADERSSERVER
     src/server/ServerLogic.hpp
     src/utils/Utils.hpp
     src/utils/Request.hpp
+    src/dataBase/Data.hpp
     )
 
 # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS

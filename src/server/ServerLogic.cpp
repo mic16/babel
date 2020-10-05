@@ -19,24 +19,21 @@ ServerLogic *ServerLogic::get()
 
 ServerLogic::ServerLogic()
 {
-    int error = 0; 
-    error = sqlite3_open("src/dataBase/data.db", &dataBase); 
-    if (error) { 
-        std::cerr << "Error open dataBase " << sqlite3_errmsg(dataBase) << std::endl; 
-    } 
-    else
-        std::cout << "Opened Database Successfully" << std::endl; 
+
 }
 
 ServerLogic::~ServerLogic()
 {
-    sqlite3_close(dataBase); 
+
 }
 
 Request ServerLogic::connect(Request request)
 {
-    // TODO code ici (le return c'est le cas en cas d'echec)
-    return Request(Request::REFUSECONNECT);
+    std::list<std::string> rep =  this->dataBase.select("SELECT * FROM users WHERE name='" + request.getRequestContent() + "'");
+    if (rep.size() > 0)
+        return (Request(Request::CONNECT));
+
+    return (Request(Request::REFUSECONNECT));
 }
 
 Request ServerLogic::createUser(Request request)

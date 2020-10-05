@@ -54,6 +54,7 @@ int main()
 		}
 		Request rep = Request(buf.data() + 4);
 		// On affiche (6)
+		std::cout << "res :";
 		std::cout.write(buf.data(), len); 
 	}
 					
