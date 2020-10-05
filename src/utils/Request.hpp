@@ -19,9 +19,15 @@ class Request {
             CONNECT,            // connect l'user passé en content de la request
 
             //Request Reponse
-            BADREQUEST,         // request non valid
-            REFUSECREATE,       // refus de creer l'user
-            REFUSECONNECT,      // refus de connecter l'user
+                // Refuse
+                BADREQUEST,         // request non valid
+                REFUSECREATEUSER,   // refus de creer l'user
+                REFUSECONNECT,      // refus de connecter l'user
+
+                // Validate
+                VALIDCONNECT,       // user conected
+                VALIDCREATEUSER,    // user created
+
         };
         std::string getRequestToSend();
         std::string getRequestContent();

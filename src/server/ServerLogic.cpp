@@ -29,17 +29,19 @@ ServerLogic::~ServerLogic()
 
 Request ServerLogic::connect(Request request)
 {
-    std::list<std::string> rep =  this->dataBase.select("SELECT * FROM users WHERE name='" + request.getRequestContent() + "'");
-    if (rep.size() > 0)
-        return (Request(Request::CONNECT));
-
-    return (Request(Request::REFUSECONNECT));
+    if (this->dataBase.userExist(request.getRequestContent()))
+        return (Request(Request::VALIDCONNECT));
+    else
+        return (Request(Request::REFUSECONNECT));
 }
 
 Request ServerLogic::createUser(Request request)
 {
-    // TODO code ici (le return c'est le cas en cas d'echec)
-    return Request(Request::REFUSECREATE);
+    if (this->dataBase.createUser(request.getRequestContent()))
+        return (Request(Request::VALIDCREATEUSER));
+    else {
+        return (Request::Request::REFUSECREATEUSER);
+    }
 }
 
 Request ServerLogic::executeLogic(Request request)

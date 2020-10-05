@@ -33,7 +33,7 @@ int main()
 	boost::array<char, 128> buf;
 
 
-	std::string content = Request(Request::CONNECT, "cyril").getRequestToSend();
+	std::string content = Request(Request::CREATEUSER, "mic").getRequestToSend();
 
 	while (1)
 	{

@@ -16,6 +16,8 @@ Data::Data()
     } 
     else
         std::cout << "Opened Database Successfully" << std::endl; 
+    
+    this->insertRemoveUpdate("CREATE TABLE users(name TEXT);");
 }
 
 Data::~Data()
@@ -57,4 +59,23 @@ void Data::insertRemoveUpdate(std::string str)
         fprintf(stderr, "SQL error: %s\n", err);
         sqlite3_free(err);
     }  
+}
+
+bool Data::userExist(std::string str)
+{
+    std::list<std::string> rep = this->select("SELECT * FROM users WHERE name='" + str + "'");
+    if (rep.size() > 0)
+        return (true);
+    else
+        return (false);
+}
+
+bool Data::createUser(std::string str)
+{
+    if (this->userExist(str))
+        return (false);
+    else {
+        this->insertRemoveUpdate("INSERT INTO users(name) VALUES ('" + str + "');");
+        return (true);
+    }
 }
