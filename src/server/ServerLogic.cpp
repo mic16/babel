@@ -48,6 +48,8 @@ Request ServerLogic::executeLogic(Request request)
 {
     Request reponse(Request::BADREQUEST);
 
+    std::cout << request.getRequestType() << " : " << request.getRequestContent() << std::endl;
+
     switch (request.getRequestType())
     {
         case Request::CONNECT :

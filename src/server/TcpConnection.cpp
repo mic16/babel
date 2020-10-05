@@ -58,4 +58,5 @@ void TcpConnection::handleRead(const boost::system::error_code& error)
             boost::asio::placeholders::error)
             );
     }
+    this->start();
 }

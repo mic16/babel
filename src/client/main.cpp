@@ -33,7 +33,7 @@ int main()
 	boost::array<char, 128> buf;
 
 
-	std::string content = Request(Request::CREATEUSER, "mic").getRequestToSend();
+	std::string content = Request(Request::CONNECT, "mic2").getRequestToSend();
 
 	while (1)
 	{
@@ -47,15 +47,40 @@ int main()
 		buf.empty();
 		len = socket.read_some(boost::asio::buffer(buf), error);
 
-		if (error == boost::asio::error::eof) // (5)
-		{
-			std::cout << "\nTerminé !" << std::endl;
-			break;
-		}
 		Request rep = Request(buf.data() + 4);
-		// On affiche (6)
-		std::cout << "res :";
+		std::cout << "res1 :";
 		std::cout.write(buf.data(), len); 
+		std::cout << std::endl; 
+		std::cout << "\nTerminé ! 1" << std::endl;
+		break;
+
 	}
+
+	// socket.close();
+	// socket.connect(endpoint);
+
+	content = Request(Request::CONNECT, "jew").getRequestToSend();
+	buf = boost::array<char, 128>();
+	while (1)
+	{
+		int len;
+		boost::system::error_code error;
+		// Réception des données, len = nombre d'octets reçus // (4)
+
+        std::copy(content.begin(),content.end(),buf.begin());
+		len = socket.write_some(boost::asio::buffer(buf, content.size()), error);
+
+		buf.empty();
+		len = socket.read_some(boost::asio::buffer(buf), error);
+
+		Request rep = Request(buf.data() + 4);
+		std::cout << "res2 :";
+		std::cout.write(buf.data(), len);
+		std::cout << std::endl; 
+		std::cout << "\nTerminé ! 2" << std::endl;
+		break;
+	}
+	socket.close();
 	return 0;
+
 }
