@@ -10,8 +10,13 @@ MainWindow::MainWindow(QWidget *parent) :
     _socket(this)
 {
     ui->setupUi(this);
-    _socket.connectToHost(QHostAddress("127.0.0.1"), 4242);
+    _socket.connectToHost(QHostAddress("127.0.0.1"), 7171);
+    _socket.waitForConnected();
     connect(&_socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+    Request r(Request::CONNECT, "mic");
+    QByteArray str = r.getRequestToSend().c_str();
+    std::cout << str.data() + 4 << std::endl;
+    _socket.write(str);
 }
 
 MainWindow::~MainWindow()
@@ -21,7 +26,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::onReadyRead()
 {
-    QByteArray datas = _socket.readAll();
-    qDebug() << datas;
-    _socket.write(QByteArray("ok !\n"));
+    QByteArray str = _socket.read(4);
+    QByteArray rep = _socket.read(Utils::convertBytesArrayToSizeT(reinterpret_cast<unsigned char *>(str.data())));
+
+    Request r(rep.data());
+    std::cout << r.getRequestType() << ":" << r.getRequestContent() << std::endl;
 }

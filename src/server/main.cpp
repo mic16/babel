@@ -1,15 +1,26 @@
-#include "mainwindow.hpp"
-#include <QApplication>
+/*
+** EPITECH PROJECT, 2020
+** B-CPP-500-MPL-5-1-babel-yoan.vessiere
+** File description:
+** main
+*/
 
-#include <iostream>
+#include "main.hpp"
 
-int main(int argc, char *argv[])
+int main()
 {
-    // std::cout << "server up\n";
-    QApplication a(argc, argv);
-    // std::cout << "server up\n";
-    MainWindow w;
-    w.show();
-
-    return a.exec();
+	try
+	{
+		boost::asio::io_service io_service;
+		
+		// Création d'un serveur
+		TcpServer server(io_service, 7171);
+		io_service.run();
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+			
+	return 0;
 }

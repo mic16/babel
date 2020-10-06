@@ -13,14 +13,21 @@ set (CMAKE_BUILD_TYPE RELEASE)
 # set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -g3")
 
 # Crée des variables avec les fichiers à compiler
-set(SRCS
+set(SRCSCLIENT
     src/client/main.cpp
     src/client/mainwindow.cpp
+    src/utils/Utils.cpp
+    src/utils/Request.cpp
     )
 
 set(SRCSSERVER
     src/server/main.cpp
-    src/server/mainwindow.cpp
+    src/server/TcpConnection.cpp
+    src/server/TcpServer.cpp
+    src/server/ServerLogic.cpp
+    src/utils/Utils.cpp
+    src/utils/Request.cpp
+    src/dataBase/Data.cpp
     )
 
 set(SRCSUDP
@@ -28,6 +35,7 @@ set(SRCSUDP
     src/udpclient/myudp.cpp
     )
 
+add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 add_definitions(-DDEBUG_PROFILE=0)
 add_definitions(-Wno-pointer-arith)
 add_definitions("-fPIC")
@@ -48,12 +56,20 @@ find_package(Threads REQUIRED)
 
 link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
-set(HEADERS
+set(HEADERSCLIENT
+    src/utils/Utils.hpp
+    src/utils/Request.hpp
     src/client/mainwindow.hpp
     )
 
 set(HEADERSSERVER
-    src/server/mainwindow.hpp
+    src/server/main.hpp
+    src/server/TcpConnection.hpp
+    src/server/TcpServer.hpp
+    src/server/ServerLogic.hpp
+    src/utils/Utils.hpp
+    src/utils/Request.hpp
+    src/dataBase/Data.hpp
     )
 
 set(HEADERSUDP
@@ -61,8 +77,8 @@ set(HEADERSUDP
     )
 
 # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
-add_executable(Babel ${SRCS} ${HEADERS})
 add_executable(BabelServer ${SRCSSERVER} ${HEADERSSERVER})
+add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
 add_executable(BabelUdp ${SRCSUDP} ${HEADERSUDP})
 
 qt5_use_modules(Babel Network)
@@ -70,5 +86,5 @@ qt5_use_modules(BabelServer Network)
 qt5_use_modules(BabelUdp Network)
 
 target_link_libraries(Babel ${CONAN_LIBS} Qt5::Widgets)
-target_link_libraries(BabelServer ${CONAN_LIBS} Qt5::Widgets)
+target_link_libraries(BabelServer ${CONAN_LIBS} sqlite3)
 target_link_libraries(BabelUdp ${CONAN_LIBS} Qt5::Widgets)

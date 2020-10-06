@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 #include <QTcpSocket>
+#include <QtCore>
+#include <QtNetwork>
+#include <iostream>
+#include "../utils/Request.hpp"
+#include "../utils/Utils.hpp"
 
 namespace Ui {
 class MainWindow;
