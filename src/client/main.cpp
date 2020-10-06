@@ -5,15 +5,16 @@
 ** Epitech File
 */
 
-#include <iostream>
-#include <stdio.h>
-#include <iostream>
-#include <boost/asio.hpp>
-#include <boost/bind.hpp>
-#include <boost/array.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include "../utils/Utils.hpp"
-#include "../utils/Request.hpp"
+#include "main.hpp"
+
+// int main (){
+// 	Request r(Request::CONNECT, "abricot", "judaisme");
+// 	std::cout << r.getRequestType() << "/" << r.getRequestToken() << "/" << r.getRequestContent() << std::endl;
+
+// 	Request q(((r.getRequestToSend().c_str()) + 4));
+// 	std::cout << q.getRequestType() << "/" << q.getRequestToken() << "/" << q.getRequestContent() << std::endl;
+// }
+
 
 int main()
 {
@@ -33,7 +34,7 @@ int main()
 	boost::array<char, 128> buf;
 
 
-	std::string content = Request(Request::CONNECT, "mic2").getRequestToSend();
+	std::string content = Request(Request::CONNECT, "cyril").getRequestToSend();
 
 	while (1)
 	{

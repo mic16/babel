@@ -16,8 +16,9 @@ class Data {
     public:
         Data();
         ~Data();
-        bool userExist(std::string str);
-        bool createUser(std::string str);
+        bool userIsConnected(std::string name);
+        bool userExist(std::string name);
+        bool createUser(std::string name);
         std::list<std::string> select(std::string str);
         void insertRemoveUpdate(std::string str);
 

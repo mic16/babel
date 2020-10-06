@@ -11,10 +11,13 @@
 #include <iostream>
 #include <sqlite3.h> 
 #include <list>
+#include <map> 
+// #include "TcpConnection.hpp"
 #include "../utils/Request.hpp"
 #include "../dataBase/Data.hpp"
 #include "../dataBase/Data.hpp"
 
+class TcpConnection;
 
 class ServerLogic {
 
@@ -22,11 +25,16 @@ class ServerLogic {
 
     public:
         static ServerLogic *get();
-        Request executeLogic(Request request);
+        Request executeLogic(Request request, TcpConnection *TcpUser);
 
     private:
+        int tokenId;
         Data dataBase;
-        Request connect(Request request);
+        std::map<std::string, TcpConnection *> usersMapTcp; // name - Tcp
+        std::map<std::string, std::string> usersMapToken;   // token - name
+
+        std::string generateToken();
+        Request connect(Request request, TcpConnection *TcpUser);
         Request createUser(Request request);
         ServerLogic();
         ~ServerLogic();

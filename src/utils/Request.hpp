@@ -31,13 +31,15 @@ class Request {
         };
         std::string getRequestToSend();
         std::string getRequestContent();
+        std::string getRequestToken();
         RequestType getRequestType();
-        Request(RequestType type, std::string content);
-        Request(RequestType type);
+
+        Request(RequestType type, std::string content = "", std::string token = "");
         Request(std::string request);
         ~Request();
 
     private:
+        std::string token;
         std::string content;
         RequestType type;
 };

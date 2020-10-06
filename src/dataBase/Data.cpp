@@ -61,21 +61,22 @@ void Data::insertRemoveUpdate(std::string str)
     }  
 }
 
-bool Data::userExist(std::string str)
+bool Data::userExist(std::string name)
 {
-    std::list<std::string> rep = this->select("SELECT * FROM users WHERE name='" + str + "'");
+    std::list<std::string> rep = this->select("SELECT * FROM users WHERE name='" + name + "'");
+    std::cout << rep.size() << " : " << name << std::endl;
     if (rep.size() > 0)
         return (true);
     else
         return (false);
 }
 
-bool Data::createUser(std::string str)
+bool Data::createUser(std::string name)
 {
-    if (this->userExist(str))
+    if (this->userExist(name))
         return (false);
     else {
-        this->insertRemoveUpdate("INSERT INTO users(name) VALUES ('" + str + "');");
+        this->insertRemoveUpdate("INSERT INTO users(name) VALUES ('" + name + "');");
         return (true);
     }
 }
