@@ -10,11 +10,22 @@ set (CMAKE_BUILD_TYPE RELEASE)
 # set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3")
 
 # Crée des variables avec les fichiers à compiler
-set(SRCS
+set(SRCSCLIENT
     src/client/main.cpp
+    src/utils/Utils.cpp
+    src/utils/Request.cpp
     )
 
+set(SRCSSERVER
+    src/server/main.cpp
+    src/server/TcpConnection.cpp
+    src/server/TcpServer.cpp
+    src/server/ServerLogic.cpp
+    src/utils/Utils.cpp
+    src/utils/Request.cpp
+    )
 
+add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 add_definitions(-DDEBUG_PROFILE=0)
 add_definitions(-Wno-pointer-arith)
 add_definitions("-fPIC")
@@ -32,10 +43,25 @@ find_package(Threads REQUIRED)
 
 link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
-set(HEADERS
+
+set(HEADERSCLIENT
+    src/client/LineWidget.hpp
+    src/utils/Utils.hpp
+    src/utils/Request.hpp
+    )
+
+set(HEADERSSERVER
+    src/server/main.hpp
+    src/server/TcpConnection.hpp
+    src/server/TcpServer.hpp
+    src/server/ServerLogic.hpp
+    src/utils/Utils.hpp
+    src/utils/Request.hpp
     )
 
 # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
-add_executable(Babel ${SRCS} ${HEADERS})
+add_executable(BabelServer ${SRCSSERVER} ${HEADERSSERVER})
+add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
 
 target_link_libraries(Babel ${CONAN_LIBS} Qt5::Widgets)
+target_link_libraries(BabelServer ${CONAN_LIBS} sqlite3)

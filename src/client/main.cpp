@@ -7,45 +7,53 @@
 
 #include <iostream>
 #include <stdio.h>
-#include <opus/opus.h>
-#include <portaudio.h>
-#include <QtWidgets>
-#include <QMainWindow>
-#include <QDesktopWidget>
-#include <QFrame>
-#include <QFont>
-#include <QLine>
-#include <portaudio.h>
+#include <iostream>
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
+#include <boost/array.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include "../utils/Utils.hpp"
+#include "../utils/Request.hpp"
 
-int main(int argc, char **argv)
+int main()
 {
-	QApplication app (argc, argv);
-	QMainWindow mainWindow;
-	QDesktopWidget dw;
-	// QLabel label ("Babel", &mainWindow);
-	// QFont font("Arial", 50, QFont::Bold);
-	// LineWidget myWidget(QLine(0, 100, 1400, 100), &mainWindow);
-	// LineWidget myWidget2(QLine(100, 0, 100, 1400), &mainWindow);
+	// Création du service principal et du résolveur.
+	boost::asio::io_service ios;
 
-	// mainWindow.setCentralWidget(&myWidget);
+	// On veut se connecter sur la machine locale, port 7171
+	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 7171);
 
-	// if (app.setStyle("windows") == nullptr)
-	// 	std::cout << "Style error" << std::endl;
+	// On crée une socket // (1)
+	boost::asio::ip::tcp::socket socket(ios);
 
-	int x=dw.width()*0.7;
-	int y=dw.height()*0.7;
-	mainWindow.setFixedSize(x,y);
-	mainWindow.show();
+	// Tentative de connexion, bloquante // (2)
+	socket.connect(endpoint);
 
-	// myWidget.show();
-	// myWidget2.show();
+	// Création du buffer de réception // (3)
+	boost::array<char, 128> buf;
 
-	// label.setFont(font);
-	// label.show();
 
-	// Pa_Initialize();
-    // Pa_Terminate();
-	// std::cout << "YOO les boys" << std::endl;
-    // return 0;
-	return app.exec();
+	std::string content = Request(Request::CONNECT, "cyril").getRequestToSend();
+
+	while (1)
+	{
+		int len;
+		boost::system::error_code error;
+		// Réception des données, len = nombre d'octets reçus // (4)
+
+        std::copy(content.begin(),content.end(),buf.begin());
+		len = socket.write_some(boost::asio::buffer(buf, content.size()), error);
+		buf.empty();
+		len = socket.read_some(boost::asio::buffer(buf), error);
+
+		if (error == boost::asio::error::eof) // (5)
+		{
+			std::cout << "\nTerminé !" << std::endl;
+			break;
+		}
+		Request rep = Request(buf.data() + 4);
+		// On affiche (6)
+		std::cout.write(buf.data(), len); 
+	}
+	return 0;
 }

@@ -30,12 +30,13 @@ make
 
 echo "\n\n\e[34m---------------------------------------------\e[39m"
 echo "              \e[93mCompilation \e[32mdone\e[39m !\n"
-echo "      The bin \e[96mbomberman\e[39m has been created\n"
+echo "      The bin \e[96mBabel\e[39m has been created\n"
 
 echo "            Script is \e[32mFINISHED\e[39m !!!"
 echo "\e[35m        -----------------------------\e[39m"
 
 cd ..
 mv build/bin/Babel .
+mv build/bin/BabelServer .
 
 echo "./Babel to launch the project"
