@@ -11,7 +11,8 @@ ServerLogic *ServerLogic::singleton = nullptr;
 
 std::string ServerLogic::generateToken()
 {
-    return (std::string("yolo" + this->tokenId++));
+    boost::uuids::uuid uuid = boost::uuids::random_generator()();
+    return (std::string(reinterpret_cast<char *>(uuid.data)));
 }
 
 ServerLogic *ServerLogic::get()
@@ -57,17 +58,17 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
     Request reponse(Request::BADREQUEST);
     std::string userName;
 
-    std::cout << request.getRequestType() << "/" << request.getRequestToken() << "/[" << request.getRequestContent() << "]" << std::endl;
-
-
     if (request.getRequestType() == Request::CONNECT) {
          return (connect(request, TcpUser));
     } else if (request.getRequestType() == Request::CREATEUSER) {
         return (createUser(request));
     }
 
-    if (this->usersMapToken.find(request.getRequestToken()) != this->usersMapToken.end())
+    if (this->usersMapToken.find(request.getRequestToken()) != this->usersMapToken.end()) {
         userName = this->usersMapToken.at(request.getRequestToken());
+    } else {
+        return (Request(Request::NOTCONNECTED));
+    }
 
     switch (request.getRequestType())
     {        

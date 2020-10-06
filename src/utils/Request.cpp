@@ -30,7 +30,7 @@ Request::Request(std::string request)
 std::string Request::getRequestToSend()
 {
     int type = this->type;
-    std::string request(std::to_string(type) + ":" + this->token + ":" + this->content);
+    std::string request(std::to_string(type) + ":" + this->token + ":" + this->content + ":");
     return (Utils::generateSocketMessage(request));
 }
 

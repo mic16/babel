@@ -12,7 +12,8 @@
 #include <sqlite3.h> 
 #include <list>
 #include <map> 
-// #include "TcpConnection.hpp"
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/random_generator.hpp>
 #include "../utils/Request.hpp"
 #include "../dataBase/Data.hpp"
 #include "../dataBase/Data.hpp"
@@ -28,7 +29,6 @@ class ServerLogic {
         Request executeLogic(Request request, TcpConnection *TcpUser);
 
     private:
-        int tokenId;
         Data dataBase;
         std::map<std::string, TcpConnection *> usersMapTcp; // name - Tcp
         std::map<std::string, std::string> usersMapToken;   // token - name

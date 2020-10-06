@@ -20,6 +20,7 @@ class Request {
 
             //Request Reponse
                 // Refuse
+                NOTCONNECTED,       // If the user is not connected
                 BADREQUEST,         // request non valid
                 REFUSECREATEUSER,   // refus de creer l'user
                 REFUSECONNECT,      // refus de connecter l'user

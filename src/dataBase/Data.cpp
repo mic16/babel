@@ -64,7 +64,6 @@ void Data::insertRemoveUpdate(std::string str)
 bool Data::userExist(std::string name)
 {
     std::list<std::string> rep = this->select("SELECT * FROM users WHERE name='" + name + "'");
-    std::cout << rep.size() << " : " << name << std::endl;
     if (rep.size() > 0)
         return (true);
     else
