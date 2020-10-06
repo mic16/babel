@@ -75,7 +75,8 @@
 //     return 0;
 // }
 
-#include "mainwindow.hpp"
+#include "Communication.hpp"
+
 #include <QApplication>
 
 #include <iostream>
@@ -83,7 +84,8 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    Communication *c = new Communication();
+    QMainWindow w;
     w.show();
 
     return a.exec();
