@@ -10,10 +10,13 @@
 
 #include <iostream>
 #include <sqlite3.h> 
-#include <list>
+#include <vector>
 #include <map> 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/algorithm/string.hpp> 
+#include "../utils/Utils.hpp"
 #include "../utils/Request.hpp"
 #include "../dataBase/Data.hpp"
 #include "../dataBase/Data.hpp"

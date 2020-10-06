@@ -34,7 +34,7 @@ int main()
 	boost::array<char, 128> buf;
 
 
-	std::string content = Request(Request::CONNECT, "cyril").getRequestToSend();
+	std::string content = Request(Request::CONNECT, "cyril,abricot").getRequestToSend();
 
 	while (1)
 	{
@@ -50,7 +50,6 @@ int main()
 
 		Request rep = Request(buf.data() + 4);
 		std::cout << "res1 : " << rep.getRequestType() << "/" << rep.getRequestToken() << "/" << rep.getRequestContent() << std::endl;
-		std::cout << "Terminé ! 1" << std::endl;
 		break;
 
 	}
@@ -58,7 +57,7 @@ int main()
 	// socket.close();
 	// socket.connect(endpoint);
 
-	content = Request(Request::CONNECT, "mic").getRequestToSend();
+	content = Request(Request::CREATEUSER, "cyril,abricot").getRequestToSend();
 	buf = boost::array<char, 128>();
 	while (1)
 	{
@@ -74,12 +73,11 @@ int main()
 
 		Request rep = Request(buf.data() + 4);
 		std::cout << "res2 : " << rep.getRequestType() << "/" << rep.getRequestToken() << "/" << rep.getRequestContent() << std::endl;
-		std::cout << "Terminé ! 2" << std::endl;
 		break;
 	}
 
 
-	content = Request(Request::CONNECT, "jew").getRequestToSend();
+	content = Request(Request::CONNECT, "cyril,abricot").getRequestToSend();
 	buf = boost::array<char, 128>();
 	while (1)
 	{
@@ -95,7 +93,6 @@ int main()
 
 		Request rep = Request(buf.data() + 4);
 		std::cout << "res3 : " << rep.getRequestType() << "/" << rep.getRequestToken() << "/" << rep.getRequestContent() << std::endl;
-		std::cout << "Terminé ! 3" << std::endl;
 		break;
 	}
 	while (1) {

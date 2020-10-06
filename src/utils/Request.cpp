@@ -16,15 +16,12 @@ Request::Request(RequestType type, std::string content, std::string token)
 
 Request::Request(std::string request)
 {
-    std::stringstream ss(request);
-    std::string token;
+    std::vector<std::string> data;
+    boost::split(data, request, boost::is_any_of(":"));
 
-    std::getline(ss, token, ':');
-    this->type = static_cast<RequestType>(std::atoi(token.c_str()));
-    std::getline(ss, token, ':');
-    this->token = token;
-    std::getline(ss, token, ':');
-    this->content = token;
+    this->type = static_cast<RequestType>(std::atoi(data[0].c_str()));
+    this->token = data[1];
+    this->content = data[2];
 }
 
 std::string Request::getRequestToSend()
