@@ -12,7 +12,7 @@ ServerLogic *ServerLogic::singleton = nullptr;
 std::string ServerLogic::generateToken()
 {
     boost::uuids::uuid uuid = boost::uuids::random_generator()();
-    return (std::string(reinterpret_cast<char *>(uuid.data)));
+    return (boost::uuids::to_string(uuid));
 }
 
 ServerLogic *ServerLogic::get()
@@ -35,10 +35,13 @@ ServerLogic::~ServerLogic()
 
 Request ServerLogic::connect(Request request, TcpConnection *TcpUser)
 {
-    if (this->dataBase.userExist(request.getRequestContent())) {
+    if (this->dataBase.userPwdConnect(request.getRequestContent())) {
         std::string token = generateToken();
-        this->usersMapToken.insert(std::pair<std::string, std::string>(token, request.getRequestContent()));
-        this->usersMapTcp.insert(std::pair<std::string, TcpConnection *>(request.getRequestContent(), TcpUser));
+        std::vector<std::string> vec;
+        boost::split(vec, request.getRequestContent(), boost::is_any_of(","));
+        std::string name = vec[0];
+        this->usersMapToken.insert(std::pair<std::string, std::string>(token, name));
+        this->usersMapTcp.insert(std::pair<std::string, TcpConnection *>(name, TcpUser));
         return (Request(Request::VALIDCONNECT, generateToken()));
     } else
         return (Request(Request::REFUSECONNECT));

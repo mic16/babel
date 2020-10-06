@@ -26,38 +26,103 @@ void Communication::onReadyRead()
     // std::cout << r.getRequestType() << ":" << r.getRequestContent() << std::endl;
 }
 
-bool createUser(std::string name, std::string password)
+bool Communication::createUser(std::string name, std::string password)
 {
     Request r(Request::CREATEUSER, name, password);
     QByteArray str(r.getRequestToSend().c_str(), r.getRequestToSend().size());
     _socket.write(str, r.getRequestToSend().size());
 }
 
-bool createTeam(std::map<std::string, std::vector<std::string>> team)
+bool Communication::createTeam(std::map<std::string, std::vector<std::string>> team)
 {
-    Request r(Request::CREATEUSER, name, password);
-    QByteArray str(r.getRequestToSend().c_str(), r.getRequestToSend().size());
-    _socket.write(str, r.getRequestToSend().size());
+
 }
 
-void callUser(std::string name);
-void getCall(std::string name);
-void acceptCall();
-void stopCall();
+void Communication::callUser(std::string name)
+{
 
-void addFriend(std::string name);
-void removeFriend(std::string name);
-std::vector<std::string> getFriends(); // Yoan en a pas
-std::vector<std::string> getFriendRequests();
-void acceptFriendRequest(std::string name);
+}
 
-std::string connect(std::string name, std::string password);
-void disconnect();
+void Communication::getCall(std::string name)
+{
 
-std::map<std::string, std::vector<std::string>> getTeams();
-void callTeam(std::string name);
-void getCallTeam(std::string name);
-void addUserToTeam(std::string name);
-void acceptTeamRequest(std::string name);
+}
 
-bool changeName(std::string name);
+void Communication::acceptCall()
+{
+
+}
+
+void Communication::stopCall()
+{
+
+}
+
+
+void Communication::addFriend(std::string name)
+{
+
+}
+
+void Communication::removeFriend(std::string name)
+{
+
+}
+
+std::vector<std::string> Communication::getFriends()
+{
+
+}
+
+std::vector<std::string> Communication::getFriendRequests()
+{
+
+}
+
+void Communication::acceptFriendRequest(std::string name)
+{
+
+}
+
+
+std::string Communication::connectUser(std::string name, std::string password)
+{
+
+}
+
+void Communication::disconnect()
+{
+
+}
+
+
+std::map<std::string, std::vector<std::string>> Communication::getTeams()
+{
+
+}
+
+void Communication::callTeam(std::string name)
+{
+
+}
+
+void Communication::getCallTeam(std::string name)
+{
+
+}
+
+void Communication::addUserToTeam(std::string name)
+{
+
+}
+
+void Communication::acceptTeamRequest(std::string name)
+{
+
+}
+
+
+bool Communication::changeName(std::string name)
+{
+
+}

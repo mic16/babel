@@ -40,7 +40,7 @@ public:
     std::vector<std::string> getFriendRequests();
     void acceptFriendRequest(std::string name);
 
-    std::string connect(std::string name, std::string password);
+    std::string connectUser(std::string name, std::string password);
     void disconnect();
 
     std::map<std::string, std::vector<std::string>> getTeams();

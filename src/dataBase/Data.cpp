@@ -17,7 +17,7 @@ Data::Data()
     else
         std::cout << "Opened Database Successfully" << std::endl; 
     
-    this->insertRemoveUpdate("CREATE TABLE users(name TEXT);");
+    this->insertRemoveUpdate("CREATE TABLE users(name TEXT, pwd TEXT);");
 }
 
 Data::~Data()
@@ -28,15 +28,15 @@ Data::~Data()
 int Data::callbackSelect(void *data, int argc, char **argv, char **colName)
 {
     for (int i = 0; i < argc; i++) {
-        static_cast<std::list<std::string>*>(data)->push_back(std::string(argv[i]));
+        static_cast<std::vector<std::string>*>(data)->push_back(std::string(argv[i]));
     }
     return (0);
 }
 
-std::list<std::string> Data::select(std::string str)
+std::vector<std::string> Data::select(std::string str)
 {
     int rc;
-    std::list<std::string> res;
+    std::vector<std::string> res;
     char *err = 0;
 
     rc = sqlite3_exec(this->dataBase, str.c_str(), callbackSelect, &res, &err);
@@ -63,19 +63,40 @@ void Data::insertRemoveUpdate(std::string str)
 
 bool Data::userExist(std::string name)
 {
-    std::list<std::string> rep = this->select("SELECT * FROM users WHERE name='" + name + "'");
+    std::vector<std::string> rep = this->select("SELECT * FROM users WHERE name='" + name + "'");
     if (rep.size() > 0)
         return (true);
     else
         return (false);
 }
 
-bool Data::createUser(std::string name)
+bool Data::userPwdConnect(std::string content)
 {
+    std::vector<std::string> data;
+    boost::split(data, content, boost::is_any_of(","));
+    std::string name = data[0];
+    std::string pwd = data[1];
+
+    if (!this->userExist(name))
+        return (false);
+    std::vector<std::string> rep = this->select("SELECT * FROM users WHERE name='" + name + "' AND pwd='" + pwd + "'");
+    if (rep.size() > 0)
+        return (true);
+    return (false);
+}
+
+bool Data::createUser(std::string content)
+{
+    std::vector<std::string> data;
+    boost::split(data, content, boost::is_any_of(","));
+
+    std::string name = data[0];
+    std::string pwd = data[1];
+
     if (this->userExist(name))
         return (false);
     else {
-        this->insertRemoveUpdate("INSERT INTO users(name) VALUES ('" + name + "');");
+        this->insertRemoveUpdate("INSERT INTO users(name, pwd) VALUES ('" + name + "', '" + pwd + "');");
         return (true);
     }
 }
