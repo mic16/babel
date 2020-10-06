@@ -28,9 +28,10 @@ void Communication::onReadyRead()
 
 bool Communication::createUser(std::string name, std::string password)
 {
-    Request r(Request::CREATEUSER, name, password);
+    Request r(Request::CREATEUSER, name + ',' + password);
     QByteArray str(r.getRequestToSend().c_str(), r.getRequestToSend().size());
     _socket.write(str, r.getRequestToSend().size());
+    return (true);
 }
 
 bool Communication::createTeam(std::map<std::string, std::vector<std::string>> team)
