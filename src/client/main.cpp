@@ -81,6 +81,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Communication *c = new Communication();
+	c->createUser("mic", "abricot");
     QMainWindow w;
     w.show();
 
