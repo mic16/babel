@@ -40,7 +40,6 @@ void TcpConnection::handleReadHeader(const boost::system::error_code& error)
 {
     if (!error)
     {
-        std::cout << "yolo" << std::endl;
         size_t size = Utils::convertBytesArrayToSizeT(bufForSize.data());
         buf = new char[size];
         mSocket.async_read_some(boost::asio::buffer(buf, size), boost::bind(&TcpConnection::handleRead, shared_from_this(),
@@ -52,8 +51,7 @@ void TcpConnection::handleRead(const boost::system::error_code& error)
 {
     if (!error)
     {
-        std::cout << "[" << buf << "]"<< std::endl;
-        Request request = this->logic->executeLogic(Request(buf));
+        Request request = this->logic->executeLogic(Request(buf), this);
         mMessage = request.getRequestToSend();
         boost::asio::async_write(mSocket, boost::asio::buffer(mMessage),
             boost::bind(&TcpConnection::handleWrite, shared_from_this(),

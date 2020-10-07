@@ -10,11 +10,18 @@
 
 #include <iostream>
 #include <sqlite3.h> 
-#include <list>
+#include <vector>
+#include <map> 
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/algorithm/string.hpp> 
+#include "../utils/Utils.hpp"
 #include "../utils/Request.hpp"
 #include "../dataBase/Data.hpp"
 #include "../dataBase/Data.hpp"
 
+class TcpConnection;
 
 class ServerLogic {
 
@@ -22,11 +29,15 @@ class ServerLogic {
 
     public:
         static ServerLogic *get();
-        Request executeLogic(Request request);
+        Request executeLogic(Request request, TcpConnection *TcpUser);
 
     private:
         Data dataBase;
-        Request connect(Request request);
+        std::map<std::string, TcpConnection *> usersMapTcp; // name - Tcp
+        std::map<std::string, std::string> usersMapToken;   // token - name
+
+        std::string generateToken();
+        Request connect(Request request, TcpConnection *TcpUser);
         Request createUser(Request request);
         ServerLogic();
         ~ServerLogic();

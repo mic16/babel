@@ -9,22 +9,25 @@
 #define DATA_HPP_
 
 #include <iostream>
-#include <list>
+#include <vector>
 #include <sqlite3.h> 
+#include "../utils/Utils.hpp"
 
 class Data {
     public:
         Data();
         ~Data();
-        bool userExist(std::string str);
-        bool createUser(std::string str);
-        std::list<std::string> select(std::string str);
+        bool userIsConnected(std::string name);
+        bool userExist(std::string name);
+        bool createUser(std::string content);
+        bool userPwdConnect(std::string content);
+        std::vector<std::string> select(std::string str);
         void insertRemoveUpdate(std::string str);
 
 
     private:
             sqlite3* dataBase;
-            std::list<std::string> reponse;
+            std::vector<std::string> reponse;
             static int callbackSelect(void *data, int argc, char **argv, char **colName);
 
 

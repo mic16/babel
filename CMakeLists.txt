@@ -16,6 +16,7 @@ set (CMAKE_BUILD_TYPE RELEASE)
 set(SRCSCLIENT
     src/client/main.cpp
     src/client/mainwindow.cpp
+    src/client/Communication.cpp
     src/utils/Utils.cpp
     src/utils/Request.cpp
     )
@@ -57,9 +58,10 @@ find_package(Threads REQUIRED)
 link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
 set(HEADERSCLIENT
+    src/client/mainwindow.hpp
+    src/client/Communication.hpp
     src/utils/Utils.hpp
     src/utils/Request.hpp
-    src/client/mainwindow.hpp
     )
 
 set(HEADERSSERVER

@@ -13,10 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _socket.connectToHost(QHostAddress("127.0.0.1"), 7171);
     _socket.waitForConnected();
     connect(&_socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    // Request r(Request::CONNECT, "mic");
-    // QByteArray str = r.getRequestToSend().c_str();
-    // std::cout << str.data() + 4 << std::endl;
-    _socket.write("AAAA1:mic");
+    Request r(Request::CONNECT, "mic");
+    QByteArray str(r.getRequestToSend().c_str(), r.getRequestToSend().size());
+    _socket.write(str, r.getRequestToSend().size());
 }
 
 MainWindow::~MainWindow()
@@ -30,5 +29,6 @@ void MainWindow::onReadyRead()
     QByteArray rep = _socket.read(Utils::convertBytesArrayToSizeT(reinterpret_cast<unsigned char *>(str.data())));
 
     Request r(rep.data());
+    // handleRequests();
     std::cout << r.getRequestType() << ":" << r.getRequestContent() << std::endl;
 }

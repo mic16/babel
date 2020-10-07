@@ -75,15 +75,16 @@
 //     return 0;
 // }
 
-#include "mainwindow.hpp"
-#include <QApplication>
-
-#include <iostream>
+#include "Communication.hpp"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    Communication *c = new Communication();
+    QMainWindow w;
+	
+	std::cout << c->createUser("mic", "abricot") << std::endl;
+
     w.show();
 
     return a.exec();

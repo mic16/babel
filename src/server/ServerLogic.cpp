@@ -9,6 +9,12 @@
 
 ServerLogic *ServerLogic::singleton = nullptr;
 
+std::string ServerLogic::generateToken()
+{
+    boost::uuids::uuid uuid = boost::uuids::random_generator()();
+    return (boost::uuids::to_string(uuid));
+}
+
 ServerLogic *ServerLogic::get()
 {
     if (!singleton) {
@@ -27,11 +33,17 @@ ServerLogic::~ServerLogic()
 
 }
 
-Request ServerLogic::connect(Request request)
+Request ServerLogic::connect(Request request, TcpConnection *TcpUser)
 {
-    if (this->dataBase.userExist(request.getRequestContent()))
-        return (Request(Request::VALIDCONNECT));
-    else
+    if (this->dataBase.userPwdConnect(request.getRequestContent())) {
+        std::string token = generateToken();
+        std::vector<std::string> vec;
+        boost::split(vec, request.getRequestContent(), boost::is_any_of(","));
+        std::string name = vec[0];
+        this->usersMapToken.insert(std::pair<std::string, std::string>(token, name));
+        this->usersMapTcp.insert(std::pair<std::string, TcpConnection *>(name, TcpUser));
+        return (Request(Request::VALIDCONNECT, generateToken()));
+    } else
         return (Request(Request::REFUSECONNECT));
 }
 
@@ -44,24 +56,30 @@ Request ServerLogic::createUser(Request request)
     }
 }
 
-Request ServerLogic::executeLogic(Request request)
+Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 {
     Request reponse(Request::BADREQUEST);
+    std::string userName;
+
+    if (request.getRequestType() == Request::CONNECT) {
+         return (connect(request, TcpUser));
+    } else if (request.getRequestType() == Request::CREATEUSER) {
+        return (createUser(request));
+    }
+
+    if (this->usersMapToken.find(request.getRequestToken()) != this->usersMapToken.end()) {
+        userName = this->usersMapToken.at(request.getRequestToken());
+    } else {
+        return (Request(Request::NOTCONNECTED));
+    }
 
     std::cout << request.getRequestContent() << ":" << request.getRequestType() << std::endl;
 
     switch (request.getRequestType())
-    {
-        case Request::CONNECT :
-            reponse = connect(request);
-            break;
+    {        
         
-        case Request::CREATEUSER :
-            reponse = createUser(request);
-            break;
     
-    default:
-        break;
+        default:
+            return (Request(Request::BADREQUEST));
     }
-    return (reponse);
 }
