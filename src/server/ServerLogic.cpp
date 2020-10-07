@@ -9,6 +9,16 @@
 
 ServerLogic *ServerLogic::singleton = nullptr;
 
+ServerLogic::ServerLogic()
+{
+
+}
+
+ServerLogic::~ServerLogic()
+{
+
+}
+
 std::string ServerLogic::generateToken()
 {
     boost::uuids::uuid uuid = boost::uuids::random_generator()();
@@ -23,26 +33,53 @@ ServerLogic *ServerLogic::get()
     return (singleton);
 }
 
-ServerLogic::ServerLogic()
+Request ServerLogic::addFriend(Request request, std::string userName)
 {
-
+    std::string friends = this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").at(0);
+    if (friends.length() != 0)
+        friends.append(",");
+    friends.append(request.getRequestContent());
+    if (this->dataBase.insertRemoveUpdate("UPDATE users set friends='" + friends + "' WHERE name='" + userName + "'"))
+        return (Request(Request::VALIDADDFRIEND));
+    else
+        return (Request(Request::REFUSEADDFRIEND));
 }
 
-ServerLogic::~ServerLogic()
+Request ServerLogic::removeFriend(Request request, std::string userName)
 {
-
+    std::string friends = this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").at(0);
+    boost::erase_first(friends, "," + request.getRequestContent());
+    boost::erase_first(friends, request.getRequestContent());
+    if (this->dataBase.insertRemoveUpdate("UPDATE users set friends='" + friends + "' WHERE name='" + userName + "'"))
+        return (Request(Request::VALIDREMOVEFRIEND));
+    else
+        return (Request(Request::REFUSEREMOVEFRIEND));
 }
 
-Request ServerLogic::changeName(Request request, std::string oldName)
+ Request ServerLogic::getFriends(Request request, std::string userName)
+ {
+    std::string friends = this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").at(0);
+    return (Request(Request::VALIDGETFRIENDS, friends));
+ }
+
+Request ServerLogic::disconnect(Request request, std::string userName)
 {
-    if (!this->dataBase.insertRemoveUpdate("UPDATE users SET nale='" + oldName + "' WHERE name='" + request.getRequestContent() + "'"))
-        return (Request(Request::REFUSECHANGENAME));
-    this->usersMapToken.find(request.getRequestContent())->second = request.getRequestContent();
-    TcpConnection *stock = this->usersMapTcp.find(oldName)->second;
-    this->usersMapTcp.erase(oldName);
-    this->usersMapTcp.insert(std::pair<std::string, TcpConnection *>(request.getRequestContent(), stock));
-    return (Request(Request::VALIDCHANGENAME));
+    this->usersMapTcp.erase(userName);
+    this->usersMapToken.erase(request.getRequestToken());
+    return (Request(Request::VALIDDISCONNECT));
 }
+
+
+// Request ServerLogic::changeName(Request request, std::string oldName)
+// {
+//     if (!this->dataBase.insertRemoveUpdate("UPDATE users SET nale='" + oldName + "' WHERE name='" + request.getRequestContent() + "'"))
+//         return (Request(Request::REFUSECHANGENAME));
+//     this->usersMapToken.find(request.getRequestContent())->second = request.getRequestContent();
+//     TcpConnection *stock = this->usersMapTcp.find(oldName)->second;
+//     this->usersMapTcp.erase(oldName);
+//     this->usersMapTcp.insert(std::pair<std::string, TcpConnection *>(request.getRequestContent(), stock));
+//     return (Request(Request::VALIDCHANGENAME));
+// }
 
 Request ServerLogic::connect(Request request, TcpConnection *TcpUser)
 {
@@ -69,7 +106,6 @@ Request ServerLogic::createUser(Request request)
 
 Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 {
-    Request reponse(Request::BADREQUEST);
     std::string userName;
 
     if (request.getRequestType() == Request::CONNECT) {
@@ -88,9 +124,17 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 
     switch (request.getRequestType())
     {        
-        case Request::CHANGENAME:
-            return (changeName(request, userName));
-    
+        // case Request::CHANGENAME:
+        //     return (changeName(request, userName));
+        case Request::ADDFRIEND:
+            return (addFriend(request, userName));
+        case Request::DISCONNECT:
+            return (disconnect(request, userName));
+        case Request::REMOVEFRIEND:
+            return (removeFriend(request, userName));
+        case Request::GETFRIENDS:
+            return (getFriends(request, userName));
+        
         default:
             return (Request(Request::BADREQUEST));
     }

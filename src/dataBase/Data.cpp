@@ -17,7 +17,7 @@ Data::Data()
     else
         std::cout << "Opened Database Successfully" << std::endl; 
     
-    this->insertRemoveUpdate("CREATE TABLE users(name TEXT, pwd TEXT);");
+    this->insertRemoveUpdate("CREATE TABLE users(name TEXT, pwd TEXT, friends TEXT);");
 }
 
 Data::~Data()
