@@ -78,6 +78,7 @@ class Request {
                 VALIDDISCONNECT,            // user disconnected
 
                 VALIDCREATEUSER,            // user created
+                VALIDCREATETEAM,
 
                 VALIDCALLUSER,              // user called
                 VALIDGETCALL,               // user a reçu le call
@@ -105,6 +106,7 @@ class Request {
         std::string getRequestToken();
         RequestType getRequestType();
 
+        Request();
         Request(RequestType type, std::string content = "", std::string token = "");
         Request(std::string request);
         ~Request();
