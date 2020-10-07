@@ -17,7 +17,7 @@ Data::Data()
     else
         std::cout << "Opened Database Successfully" << std::endl; 
     
-    this->insertRemoveUpdate("CREATE TABLE users(name TEXT, pwd TEXT);");
+    this->insertRemoveUpdate("CREATE TABLE users(name TEXT, pwd TEXT, friends TEXT);");
 }
 
 Data::~Data()
@@ -48,7 +48,7 @@ std::vector<std::string> Data::select(std::string str)
     return (res);
 }
 
-void Data::insertRemoveUpdate(std::string str)
+bool Data::insertRemoveUpdate(std::string str)
 {
     int rc;
     char *err = 0;
@@ -58,7 +58,9 @@ void Data::insertRemoveUpdate(std::string str)
     if( rc != SQLITE_OK ) {
         fprintf(stderr, "SQL error: %s\n", err);
         sqlite3_free(err);
-    }  
+        return (false);
+    }
+    return (true);
 }
 
 bool Data::userExist(std::string name)
@@ -96,7 +98,6 @@ bool Data::createUser(std::string content)
     if (this->userExist(name))
         return (false);
     else {
-        this->insertRemoveUpdate("INSERT INTO users(name, pwd) VALUES ('" + name + "', '" + pwd + "');");
-        return (true);
+        return(this->insertRemoveUpdate("INSERT INTO users(name, pwd) VALUES ('" + name + "', '" + pwd + "');"));
     }
 }
