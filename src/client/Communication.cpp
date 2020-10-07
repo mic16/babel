@@ -150,8 +150,7 @@ void Communication::callTeam(std::string name)
 
 void Communication::getCallTeam(std::string name)
 {
-    Request r(Request::GETCALLTEAM);
-    sendToServer(r);
+
 }
 
 void Communication::addUserToTeam(std::string name)
