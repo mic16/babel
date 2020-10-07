@@ -38,7 +38,5 @@ echo "\e[35m        -----------------------------\e[39m"
 cd ..
 mv build/bin/Babel .
 mv build/bin/BabelServer .
-mv build/bin/BabelUdp .
-
 
 echo "./Babel to launch the project"
