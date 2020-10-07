@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>../../assets/add-friend.png</file>
+        <file>../../assets/phone-call.png</file>
+        <file>../../assets/add-group.png</file>
+        <file>../../assets/qtquickwidget.pro</file>
+        <file>../../assets/checked.png</file>
+        <file>../../assets/cross-sign.png</file>
+        <file>../../assets/notification.png</file>
+        <file>../../assets/mute.png</file>
+    </qresource>
+</RCC>
