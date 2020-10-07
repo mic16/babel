@@ -208,7 +208,7 @@ bool BackEnd::callTeam(const QString &Name)
     return false;
 }
 
-void disconnect()
+void BackEnd::disconnect()
 {
     // TODO LE DISCONNECT
 }

@@ -65,7 +65,7 @@ bool Data::insertRemoveUpdate(std::string str)
 
 bool Data::userExist(std::string name)
 {
-    std::vector<std::string> rep = this->select("SELECT * FROM users WHERE name='" + name + "'");
+    std::vector<std::string> rep = this->select("SELECT name FROM users WHERE name='" + name + "'");
     if (rep.size() > 0)
         return (true);
     else
@@ -79,9 +79,11 @@ bool Data::userPwdConnect(std::string content)
     std::string name = data[0];
     std::string pwd = data[1];
 
-    if (!this->userExist(name))
+
+    if (!this->userExist(name)) {
         return (false);
-    std::vector<std::string> rep = this->select("SELECT * FROM users WHERE name='" + name + "' AND pwd='" + pwd + "'");
+    }
+    std::vector<std::string> rep = this->select("SELECT name FROM users WHERE name='" + name + "' AND pwd='" + pwd + "'");
     if (rep.size() > 0)
         return (true);
     return (false);
@@ -94,7 +96,6 @@ bool Data::createUser(std::string content)
 
     std::string name = data[0];
     std::string pwd = data[1];
-
     if (this->userExist(name))
         return (false);
     else {
