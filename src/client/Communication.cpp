@@ -59,6 +59,10 @@ void Communication::callUser(std::string name)
 {
     Request r(Request::CALLUSER, name, token);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCALLUSER) {
+        // TO DO prendre l'IP et se connecter dessus
+    }
 }
 
 void Communication::getCall(std::string name)
@@ -126,7 +130,7 @@ void Communication::disconnect()
     sendToServer(r);
 }
 
-vostd::map<std::string, std::vector<std::string>>id Communication::parse()
+std::map<std::string, std::vector<std::string>> Communication::parse()
 {
     std::string content = lastRequestRecieve.getRequestContent();
     std::map<std::string, std::vector<std::string>> team;
@@ -167,7 +171,10 @@ std::map<std::string, std::vector<std::string>> Communication::getTeams()
     if (lastRequestRecieve.getRequestType() == Request::VALIDGETTEAMS)
         return (parse());
     else {
-        
+        std::map<std::string, std::vector<std::string>> team;
+        std::vector<std::string> tmp;
+        team.insert(std::make_pair("Error", tmp));
+        return (team);
     }
 }
 

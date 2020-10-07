@@ -15,6 +15,7 @@
 
 #include "../utils/Request.hpp"
 #include "../utils/Utils.hpp"
+#include "../udpclient/myudp.hpp"
 
 class Communication : public QObject{
 
