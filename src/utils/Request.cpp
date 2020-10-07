@@ -7,41 +7,43 @@
 
 #include "Request.hpp"
 
+Request::Request()
+{
 
-Request::Request(RequestType type, std::string content)
+}
+
+Request::Request(RequestType type, std::string content, std::string token)
 {
     this->content = content;
     this->type = type;
-}
-
-Request::Request(RequestType type)
-{
-    this->type = type;
-    this->content = "";
+    this->token = token;
 }
 
 Request::Request(std::string request)
 {
-    int posSeparation = request.find(":");
-    if (posSeparation != -1) {
-        this->type = static_cast<RequestType>(std::atoi(request.substr(0, posSeparation).c_str()));
-        this->content = request.substr(posSeparation + 1, request.size() - posSeparation - 1);
-    } else {
-        this->type = static_cast<RequestType>(std::atoi(request.c_str()));
-        this->content = "";
-    }
+    std::vector<std::string> data;
+    boost::split(data, request, boost::is_any_of(":"));
+
+    this->type = static_cast<RequestType>(std::atoi(data[0].c_str()));
+    this->token = data[1];
+    this->content = data[2];
 }
 
 std::string Request::getRequestToSend()
 {
     int type = this->type;
-    std::string request(std::to_string(type) + ":" + this->content);
+    std::string request(std::to_string(type) + ":" + this->token + ":" + this->content + ":");
     return (Utils::generateSocketMessage(request));
 }
 
 std::string Request::getRequestContent()
 {
     return (this->content);
+}
+
+std::string Request::getRequestToken()
+{
+    return (this->token);
 }
 
 Request::RequestType Request::getRequestType()

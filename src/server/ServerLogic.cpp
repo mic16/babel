@@ -9,6 +9,12 @@
 
 ServerLogic *ServerLogic::singleton = nullptr;
 
+std::string ServerLogic::generateToken()
+{
+    boost::uuids::uuid uuid = boost::uuids::random_generator()();
+    return (boost::uuids::to_string(uuid));
+}
+
 ServerLogic *ServerLogic::get()
 {
     if (!singleton) {
@@ -19,48 +25,60 @@ ServerLogic *ServerLogic::get()
 
 ServerLogic::ServerLogic()
 {
-    int error = 0; 
-    error = sqlite3_open("src/dataBase/data.db", &dataBase); 
-    if (error) { 
-        std::cerr << "Error open dataBase " << sqlite3_errmsg(dataBase) << std::endl; 
-    } 
-    else
-        std::cout << "Opened Database Successfully" << std::endl; 
 }
 
 ServerLogic::~ServerLogic()
 {
-    sqlite3_close(dataBase); 
+
 }
 
-Request ServerLogic::connect(Request request)
+Request ServerLogic::connect(Request request, TcpConnection *TcpUser)
 {
-    // TODO code ici (le return c'est le cas en cas d'echec)
-    return Request(Request::REFUSECONNECT);
+    if (this->dataBase.userPwdConnect(request.getRequestContent())) {
+        std::string token = generateToken();
+        std::vector<std::string> vec;
+        boost::split(vec, request.getRequestContent(), boost::is_any_of(","));
+        std::string name = vec[0];
+        this->usersMapToken.insert(std::pair<std::string, std::string>(token, name));
+        this->usersMapTcp.insert(std::pair<std::string, TcpConnection *>(name, TcpUser));
+        return (Request(Request::VALIDCONNECT, generateToken()));
+    } else
+        return (Request(Request::REFUSECONNECT));
 }
 
 Request ServerLogic::createUser(Request request)
 {
-    // TODO code ici (le return c'est le cas en cas d'echec)
-    return Request(Request::REFUSECREATE);
+    if (this->dataBase.createUser(request.getRequestContent()))
+        return (Request(Request::VALIDCREATEUSER));
+    else {
+        return (Request::Request::REFUSECREATEUSER);
+    }
 }
 
-Request ServerLogic::executeLogic(Request request)
+Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 {
     Request reponse(Request::BADREQUEST);
+    std::string userName;
 
-    switch (request.getRequestType())
-    {
-        case Request::CONNECT :
-            reponse = connect(request);
-            break;
-        
-        case Request::CREATEUSER :
-            reponse = createUser(request);
-            break;
-    
-    default:
-        break;
+    if (request.getRequestType() == Request::CONNECT) {
+         return (connect(request, TcpUser));
+    } else if (request.getRequestType() == Request::CREATEUSER) {
+        return (createUser(request));
     }
-    return (reponse);
+
+    if (this->usersMapToken.find(request.getRequestToken()) != this->usersMapToken.end()) {
+        userName = this->usersMapToken.at(request.getRequestToken());
+    } else {
+        return (Request(Request::NOTCONNECTED));
+    }
+
+    std::cout << request.getRequestContent() << ":" << request.getRequestType() << std::endl;
+
+    // switch (request.getRequestType())
+    // {        
+        
+    
+    //     default:
+    //         return (Request(Request::BADREQUEST));
+    // }
 }

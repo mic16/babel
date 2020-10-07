@@ -10,12 +10,13 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
+#include <boost/algorithm/string.hpp> 
 
 class Utils {
     public:
         static std::string generateSocketMessage(std::string str);
         static size_t convertBytesArrayToSizeT(unsigned char *bytes);
-
 };
 
 #endif /* !UTILS_HPP_ */
