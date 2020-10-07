@@ -94,13 +94,37 @@ void Communication::removeFriend(std::string name)
 std::vector<std::string> Communication::getFriends()
 {
     Request r(Request::GETFRIENDS);
+    std::string delim = ",";
+    std::vector<std::string> vec;
+
+    if (lastRequestRecieve.getRequestType() == Request::GETFRIENDS) {
+        std::string str = lastRequestRecieve.getRequestContent();
+        while (str.find(delim) != std::string::npos) {
+            vec.push_back(str.substr(0, str.find(delim)));
+            str.erase(0, str.substr(0, str.find(delim)).length() + delim.length());
+        }
+        vec.push_back(str);
+    }
     sendToServer(r);
+    return (vec);
 }
 
 std::vector<std::string> Communication::getFriendRequests()
 {
     Request r(Request::GETFRIENDREQUESTS);
+    std::string delim = ",";
+    std::vector<std::string> vec;
+
+    if (lastRequestRecieve.getRequestType() == Request::GETFRIENDREQUESTS) {
+        std::string str = lastRequestRecieve.getRequestContent();
+        while (str.find(delim) != std::string::npos) {
+            vec.push_back(str.substr(0, str.find(delim)));
+            str.erase(0, str.substr(0, str.find(delim)).length() + delim.length());
+        }
+        vec.push_back(str);
+    }
     sendToServer(r);
+    return (vec);
 }
 
 void Communication::acceptFriendRequest(std::string name)
