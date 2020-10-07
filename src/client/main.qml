@@ -18,6 +18,7 @@ Window {
     property var global_i: 0
     property var is_on: false
     property var listTeamMembersName: [[]]
+    property var on_call: false
     Material.theme: Material.Dark
     Material.accent: Material.Orange
 
@@ -31,6 +32,12 @@ Window {
         }
         onFriendlistAddChanged: {
             console.log("FRIEND LIST HAS ADD")
+        }
+        onFriendlistChanged: {
+            backend.updateDatabaseFriendList()
+        }
+        onTeamlistChanged: {
+            console.log("TEAM LIST HAS CHANGED")
         }
     }
 
@@ -103,7 +110,8 @@ Window {
                         width: parent.width
 
                         highlighted: {
-                            if (is_on === true && teamAddMembersButton.checked === false) {
+                            if ((is_on === true && teamAddMembersButton.checked === false) || on_call) {
+                                console.log("J'HIGHLIGHT")
                                 return contactList.currentIndex === index
                             } else
                                 return false
@@ -121,19 +129,29 @@ Window {
                                 }
                                 return
                             }
-                            teamFrame.visible = false
-                            homeFrame.visible = false
-                            notiFrame.visible = false
-                            is_on = true
-                            contactList.currentIndex = index
-                            contactNameText.text = contactModel.get(index).text
-                            contactFrame.visible = true
-                            global_i = index
-                            callButton.enabled = true
-                            removeFriendButton.enabled = true
-                            if (index === 0) {
-                                callButton.enabled = false
-                                removeFriendButton.enabled = false
+                            console.log(on_call, " is ", callName.text, " and ", contactModel.get(index).text)
+                            if (on_call && callName.text === contactModel.get(index).text) {
+                                callFrame.visible = true
+                                contactFrame.visible = false
+                                console.log("SUR LE CALL")
+                                contactList.currentIndex = index
+                                teamFrame.visible = false
+                            } else {
+                                teamFrame.visible = false
+                                homeFrame.visible = false
+                                notiFrame.visible = false
+                                callFrame.visible = false
+                                is_on = true
+                                contactList.currentIndex = index
+                                contactNameText.text = contactModel.get(index).text
+                                contactFrame.visible = true
+                                global_i = index
+                                removeFriendButton.enabled = true
+                                if (index === 0) {
+                                    callButton.enabled = false
+                                    removeFriendButton.enabled = false
+                                } else if (on_call === false)
+                                       callButton.enabled = true
                             }
                         }
                     }
@@ -152,28 +170,35 @@ Window {
                         text: model.text
                         width: parent.width
                         highlighted: {
-                            if (is_on === true) {
+                            if (is_on === true || on_call) {
                                 return teamList.currentIndex === index
                             } else
                                 return false
                         }
                         onClicked: {
-                            homeFrame.visible = false
-                            contactFrame.visible = false
-                            notiFrame.visible = false
-                            is_on = true
-                            teamList.currentIndex = index
-                            teamNameText.text = teamModel.get(index).text
-                            teamFrame.visible = true
-                            global_i = index
-                            callButton.enabled = true
-                            removeFriendButton.enabled = true
+                            if (on_call && callName.text === teamModel.get(index).text) {
+                                callFrame.visible = true
+                                teamFrame.visible = false
+                                contactFrame.visible = false
+                                console.log("SUR LE CALL")
+                                teamList.currentIndex = index
+                            } else {
+                                callFrame.visible = false
+                                homeFrame.visible = false
+                                contactFrame.visible = false
+                                notiFrame.visible = false
+                                is_on = true
+                                teamList.currentIndex = index
+                                teamNameText.text = teamModel.get(index).text
+                                teamFrame.visible = true
+                                global_i = index
+                                removeFriendButton.enabled = true
+                            }
                         }
                     }
                     ScrollBar.vertical: ScrollBar {}
                 }
             }
-
 
             TabBar {
                 id: tabBar
@@ -381,10 +406,13 @@ Window {
                 Material.background: Material.Green
                 font.capitalization: Font.MixedCase
                 onClicked: {
+                    on_call = true
+                    callButton.enabled = false
+                    teamCallButton.enabled = false
                     callFrame.visible = true
                     callName.text = contactNameText.text
                     contactFrame.visible = false
-                    // TODO Fonction signal de call a l'user
+                    backend.callFriend(callName.text)
                 }
 
                 Text {
@@ -500,9 +528,11 @@ Window {
                 height: 88
                 font.capitalization: Font.MixedCase
                 onClicked: {
+                    on_call = true
                     callFrame.visible = true
                     callName.text = teamNameText.text
                     teamFrame.visible = false
+                    backend.callTeam(callName.text)
                 }
 
                 Text {
@@ -587,6 +617,54 @@ Window {
             height: 504
             visible: false
 
+            Popup {
+                    id: callPopup
+                    x: 100
+                    y: 100
+                    width: 220
+                    height: 200
+                    modal: true
+                    focus: true
+                    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+                    onOpened: {
+                        callerName.text = callerName.text + "\n\n is calling you !"
+                    }
+
+                    Text {
+                        id: callerName
+                        color: "#ffffff"
+                        text: "AAAAAAAAAAAAAA"
+                        font.pixelSize: 20
+                        width: 220
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        x: -12
+                        y: 0
+                    }
+
+                    RoundButton {
+                        id: callValidation
+                        Material.background: Material.Green
+                        icon.source: "../../assets/checked.png"
+                        x: 10
+                        y: 100
+                        width: 75
+                        height: 75
+
+                    }
+                    RoundButton {
+                        id: callRefuse
+                        Material.background: Material.Red
+                        icon.source: "../../assets/cross-sign.png"
+                        x: 110
+                        y: 100
+                        width: 75
+                        height: 75
+
+                    }
+
+                }
+
             RoundButton {
                 id: muteCallButton
                 x: 94
@@ -598,9 +676,11 @@ Window {
                 onCheckedChanged: {
                     if (checked === true) {
                         muteText.text = "Unmute"
+                        backend.microphone = false
                         // TODO SEND A SIGNAL WHEN IT'S MUTE
                     } else {
                         muteText.text = "Mute"
+                        backend.microphone = true
                     }
                 }
 
@@ -641,7 +721,9 @@ Window {
                 font.pointSize: 20
                 Material.background: Material.Red
                 onClicked: {
-                    console.log(backend.existingTeam(callName.text), " avec ", callName.text)
+                    on_call = false
+                    callButton.enabled = true
+                    teamCallButton.enabled = true
                     if (backend.existingTeam(callName.text)) {
                         callFrame.visible = false
                         teamFrame.visible = true
@@ -649,7 +731,6 @@ Window {
                         callFrame.visible = false
                         contactFrame.visible = true
                     }
-
                 }
             }
 
@@ -788,7 +869,8 @@ Window {
                     addButton.visible = true
                     refuseButton.visible = true
                 }
-                backend.display()
+//                backend.display()
+                callPopup.open()
             }
         }
 
@@ -838,6 +920,10 @@ Window {
                 placeholderText: qsTr("Ex: Guest")
                 maximumLength: 14
                 selectByMouse: true
+                onFocusChanged: {
+                    if (pseudoRegisterTextField.focus === true)
+                        registerButton.Material.background = Material.Blue
+                }
             }
 
             Button {
@@ -853,7 +939,11 @@ Window {
                 font.capitalization: Font.MixedCase
                 Material.background: Material.Blue
                 onClicked: {
-                    if (pseudoRegisterTextField.text === "" && pseudoRegisterTextField.text.replace(" ", "") === "") {
+                    if (pseudoRegisterTextField.text === "" || pseudoRegisterTextField.text.replace(" ", "") === "" || passwordRegisterTextField.text !== passwordRegisterValidTextField.text || passwordRegisterTextField.text === "" || passwordRegisterTextField.text.replace(" ", "") === "") {
+                        registerButton.Material.background = Material.Red
+                        passwordRegisterValidTextField.Material.accent = Material.Red
+                        return
+
                     } else {
                         pseudoPane.visible = false
                         homePane.visible = true
@@ -862,9 +952,11 @@ Window {
                         contactModel.clear()
                         contactModel.append(({text: pseudoRegisterTextField.text}))
                         backend.userName = pseudoRegisterTextField.text
+                        backend.passWord = passwordRegisterTextField.text
                     }
                     teamModel.clear()
                     notifModel.clear()
+                    backend.addUserToDataBase()
                     // TODO Function to send new user info
                 }
             }
@@ -894,6 +986,10 @@ Window {
                 anchors.rightMargin: 9
                 anchors.topMargin: 126
                 echoMode: TextInput.Password
+                onFocusChanged: {
+                    if (passwordRegisterTextField.focus === true)
+                        registerButton.Material.background = Material.Blue
+                }
             }
 
             Text {
@@ -917,10 +1013,14 @@ Window {
                 horizontalAlignment: Text.AlignHCenter
                 placeholderText: qsTr("")
                 maximumLength: 14
-                anchors.leftMargin: 92
-                anchors.rightMargin: 18
+                anchors.leftMargin: 101
+                anchors.rightMargin: 9
                 anchors.topMargin: 195
                 echoMode: TextInput.Password
+                onFocusChanged: {
+                    if (passwordRegisterValidTextField.focus === true)
+                        registerButton.Material.background = Material.Blue
+                }
             }
 
             Text {
@@ -970,7 +1070,19 @@ Window {
                 anchors.topMargin: 184
                 Material.background: Material.Green
                 onClicked: {
+                    teamModel.clear()
                     notifModel.clear()
+                    if (backend.existingCredential(pseudoSigninTextField.text, passwordSigninTextField.text)) {
+                        pseudoPane.visible = false
+                        homePane.visible = true
+                        if (contactModel.get(0).text === "") {
+                            contactModel.clear()
+                            contactModel.append(({text: pseudoSigninTextField.text}))
+                            backend.fillUserInfo() // friend list, team list, etc....
+                            backend.userName = pseudoSigninTextField.text
+                            backend.passWord = passwordRegisterTextField.text
+                        }
+                    }
                     // TODO GET TOUTE LES INFO USERS
                 }
             }
