@@ -31,10 +31,10 @@ Window {
             console.log("FRIEND LIST HAS REMOVE")
         }
         onFriendlistAddChanged: {
-            console.log("FRIEND LIST HAS ADD")
+            console.log("FRIEND LIST HAS ADD", addFriendTextField.text)
+            backend.addFriendDataBase(addFriendTextField.text)
         }
         onFriendlistChanged: {
-            backend.updateDatabaseFriendList()
         }
         onTeamlistChanged: {
             console.log("TEAM LIST HAS CHANGED")
@@ -957,7 +957,10 @@ Window {
                     }
                     teamModel.clear()
                     notifModel.clear()
-                    backend.addUserToDataBase()
+                    if (backend.addUserToDataBase())
+                        console.log("J'AI CREER MON USER")
+                    else
+                        console.log("J'AI PAS CREER MON USER")
                     // TODO Function to send new user info
                 }
             }

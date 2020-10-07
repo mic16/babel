@@ -4,6 +4,7 @@ BackEnd::BackEnd(QObject *parent) :
     QObject(parent)
 {
     m_microphone = true;
+    m_com = new Communication;
 }
 
 QString BackEnd::userName()
@@ -162,12 +163,14 @@ bool BackEnd::existingTeam(const QString &Name)
 
 bool BackEnd::existingCredential(const QString &UserName, const QString &PassWord)
 {
-    // TODO REQUETE TO SERVER TO KNOW IF CREDS ARE OK
-    return false;
+    // std::cout << "je vais appeler la fonction de mic" << std::endl;
+    // std::cout << "j'ai appeler la fonction de mic" << std::endl;
+    return (m_com->connectUser(UserName.toUtf8().constData(), PassWord.toUtf8().constData()));
 }
 
-void BackEnd::addUserToDataBase()
+bool BackEnd::addUserToDataBase()
 {
+    return (m_com->createUser(m_userName, m_passWord));
     // TODO REQUETE TO ADD ALL USER INFO TO DATABASE
 }
 
@@ -176,8 +179,15 @@ void BackEnd::fillUserInfo()
     // TODO REQUETE TO GET ALL USER INFO FROM DATABASE
 }
 
-void BackEnd::updateDatabaseFriendList()
+void BackEnd::addFriendDataBase(const QString &userName)
 {
+    m_com->addFriend(userName.toUtf8().constData());
+    // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
+}
+
+void BackEnd::removeFriendDataBase(const QString &userName)
+{
+    m_com->removeFriend(userName.toUtf8().constData());
     // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
 }
 

@@ -36,7 +36,13 @@ echo "            Script is \e[32mFINISHED\e[39m !!!"
 echo "\e[35m        -----------------------------\e[39m"
 
 cd ..
-mv build/bin/Babel .
-mv build/bin/BabelServer .
+
+if test -e build/bin/Babel ; then
+    mv build/bin/Babel .
+    mv build/bin/BabelServer .
+else
+    mv build/Babel .
+fi
+
 
 echo "./Babel to launch the project"

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <qqml.h>
 #include <iostream>
+#include "Communication.hpp"
 
 class BackEnd : public QObject
 {
@@ -38,9 +39,10 @@ public:
     Q_INVOKABLE bool existInTeam(const QString &teamName, const QString &friendName);
     Q_INVOKABLE bool existingTeam(const QString &Name);
     Q_INVOKABLE bool existingCredential(const QString &UserName, const QString &PassWord);
-    Q_INVOKABLE void addUserToDataBase();
+    Q_INVOKABLE bool addUserToDataBase();
     Q_INVOKABLE void fillUserInfo();
-    Q_INVOKABLE void updateDatabaseFriendList();
+    Q_INVOKABLE void addFriendDataBase(const QString &userName);
+    Q_INVOKABLE void removeFriendDataBase(const QString &userName);
     Q_INVOKABLE void updateDatabaseTeamList();
     Q_INVOKABLE bool callFriend(const QString &Name);
     Q_INVOKABLE bool callTeam(const QString &Name);
@@ -64,6 +66,7 @@ signals:
 
 
 private:
+    Communication *m_com;
     std::string m_userName;
     std::string m_passWord;
     std::vector<std::string> m_friendlist;
