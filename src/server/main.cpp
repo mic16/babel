@@ -13,6 +13,7 @@ int main()
 	{
 		boost::asio::io_service io_service;
 		
+		// Création d'un serveur
 		TcpServer server(io_service, 7171);
 		io_service.run();
 	}

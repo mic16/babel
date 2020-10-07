@@ -122,6 +122,7 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 
     std::cout << request.getRequestContent() << ":" << request.getRequestType() << std::endl;
 
+<<<<<<< HEAD
     switch (request.getRequestType())
     {        
         // case Request::CHANGENAME:
@@ -138,4 +139,13 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
         default:
             return (Request(Request::BADREQUEST));
     }
+=======
+    // switch (request.getRequestType())
+    // {        
+        
+    
+    //     default:
+    //         return (Request(Request::BADREQUEST));
+    // }
+>>>>>>> master
 }

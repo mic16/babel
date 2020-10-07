@@ -2,6 +2,7 @@
 
 MyUDP::MyUDP(QObject *parent) : QObject(parent)
 {
+    audio.Start();
     socket = new QUdpSocket(this);
 
     socket->bind(QHostAddress::LocalHost, 1234);
@@ -10,21 +11,25 @@ MyUDP::MyUDP(QObject *parent) : QObject(parent)
 
 void MyUDP::HelloUDP()
 {
-    QByteArray Data;
-    Data.append("Hello from UDP");
-    socket->writeDatagram(Data, QHostAddress::LocalHost, 1234);
+    while (1) {
+        QByteArray Data;
+        PaStream *d = audio.Record();
+        Data.append(static_cast<char *>(d), 10240);
+        socket->writeDatagram(Data, 10240, QHostAddress::LocalHost, 1234);
+    }
 }
 
 void MyUDP::readyRead()
 {
     QByteArray buffer;
-    buffer.resize(socket->pendingDatagramSize());
+    buffer.resize(10240);
     
     QHostAddress sender;
     quint16 senderPort;
 
-    socket->readDatagram(buffer.data(), buffer.size(), &sender, &senderPort);
+    socket->readDatagram(buffer.data(), 10240, &sender, &senderPort);
     
+    audio.Play(static_cast<PaStream *>(buffer.data()));
     qDebug() << "Message from: " << sender.toString(); 
     qDebug() << "Message port: " << senderPort;
     qDebug() << "Message: " << buffer;
