@@ -34,6 +34,7 @@ set(SRCSSERVER
 set(SRCSUDP
     src/udpclient/main.cpp
     src/udpclient/myudp.cpp
+    src/udpclient/PortAudioRecord.cpp
     )
 
 add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
@@ -76,6 +77,7 @@ set(HEADERSSERVER
 
 set(HEADERSUDP
     src/udpclient/myudp.hpp
+    src/udpclient/PortAudioRecord.hpp
     )
 
 # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS

@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QUdpSocket>
+#include "portaudio.h"
+#include "PortAudioRecord.hpp"
 
 class MyUDP : public QObject
 {
@@ -16,6 +18,7 @@ public slots:
     void readyRead();
 
 private:
+    PortAudioRecord audio;
     QUdpSocket *socket;
     
 };
