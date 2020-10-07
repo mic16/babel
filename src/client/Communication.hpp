@@ -25,7 +25,7 @@ public:
     ~Communication();
 
     void sendToServer(Request r);
-    void parse();
+    std::map<std::string, std::vector<std::string>> parse();
 
     void connectToServer();
 

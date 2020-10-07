@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     Communication *c = new Communication();
     QMainWindow w;
 	
-	std::cout << c->createUser("mic", "abricot") << std::endl;
+	c->parse();
 
     w.show();
 
