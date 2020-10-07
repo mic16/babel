@@ -37,6 +37,10 @@ ServerLogic *ServerLogic::get()
 Request ServerLogic::addFriend(Request request, std::string userName)
 {
     std::string friends = this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").at(0);
+    std::vector<std::string> friendsList;
+    boost::split(friendsList, friends, boost::is_any_of(","));
+    if (std::find(friendsList.begin(), friendsList.end(), request.getRequestContent()) != friendsList.end())
+        return (Request(Request::REFUSEADDFRIEND));
     if (friends.length() != 0)
         friends.append(",");
     friends.append(request.getRequestContent());
