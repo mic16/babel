@@ -369,6 +369,7 @@ Window {
             Material.background: Material.Red
             onClicked: {
                 window.close()
+                backend.disconnect()
             }
         }
 

@@ -46,6 +46,7 @@ public:
     Q_INVOKABLE void updateDatabaseTeamList();
     Q_INVOKABLE bool callFriend(const QString &Name);
     Q_INVOKABLE bool callTeam(const QString &Name);
+    Q_INVOKABLE void disconnect();
 
     Q_INVOKABLE void display();
 

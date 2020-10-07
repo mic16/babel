@@ -208,6 +208,11 @@ bool BackEnd::callTeam(const QString &Name)
     return false;
 }
 
+void disconnect()
+{
+    // TODO LE DISCONNECT
+}
+
 void BackEnd::display()
 {
     std::map<std::string, std::vector<std::string>>::iterator it = m_teamlist.begin();
