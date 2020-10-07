@@ -870,6 +870,7 @@ Window {
                     refuseButton.visible = true
                 }
 //                backend.display()
+                callerName.text = "AAAAAAAAAAAAAA"
                 callPopup.open()
             }
         }
