@@ -169,7 +169,6 @@ bool Communication::acceptFriendRequest(std::string name)
 bool Communication::connectUser(std::string name, std::string password)
 {
     Request r(Request::CONNECT, name + "," + password, token);
-    std::cout << "ok : " << r.getRequestContent() << std::endl;
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDCONNECT) {

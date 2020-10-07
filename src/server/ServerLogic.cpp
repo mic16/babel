@@ -44,9 +44,10 @@ Request ServerLogic::addFriend(Request request, std::string userName)
     if (friends.length() != 0)
         friends.append(",");
     friends.append(request.getRequestContent());
-    if (this->dataBase.insertRemoveUpdate("UPDATE users set friends='" + friends + "' WHERE name='" + userName + "'"))
+    if (this->dataBase.insertRemoveUpdate("UPDATE users SET friends='" + friends + "' WHERE name='" + userName + "'")) {
+      
         return (Request(Request::VALIDADDFRIEND));
-    else
+    } else
         return (Request(Request::REFUSEADDFRIEND));
 }
 
@@ -104,7 +105,7 @@ Request ServerLogic::connect(Request request, TcpConnection *TcpUser)
         std::string name = vec[0];
         this->usersMapToken.insert(std::pair<std::string, std::string>(token, name));
         this->usersMapTcp.insert(std::pair<std::string, TcpConnection *>(name, TcpUser));
-        return (Request(Request::VALIDCONNECT, generateToken()));
+        return (Request(Request::VALIDCONNECT, token));
     } else
         return (Request(Request::REFUSECONNECT));
 }
@@ -121,7 +122,6 @@ Request ServerLogic::createUser(Request request)
 Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 {
     std::string userName;
-
     if (request.getRequestType() == Request::CONNECT) {
          return (connect(request, TcpUser));
     } else if (request.getRequestType() == Request::CREATEUSER) {
@@ -133,9 +133,6 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
     } else {
         return (Request(Request::NOTCONNECTED));
     }
-
-    std::cout << request.getRequestContent() << ":" << request.getRequestType() << std::endl;
-
     switch (request.getRequestType())
     {        
         // case Request::CHANGENAME:

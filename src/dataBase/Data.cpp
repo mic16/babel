@@ -28,6 +28,9 @@ Data::~Data()
 int Data::callbackSelect(void *data, int argc, char **argv, char **colName)
 {
     for (int i = 0; i < argc; i++) {
+        if (argv[i] == NULL) {
+            break;
+        }
         static_cast<std::vector<std::string>*>(data)->push_back(std::string(argv[i]));
     }
     return (0);
