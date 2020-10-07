@@ -32,25 +32,25 @@ public:
     bool createUser(std::string name, std::string password);
     bool createTeam(std::string teamName);
 
-    void callUser(std::string name);
-    void getCall(std::string name);
-    void acceptCall();
-    void stopCall();
+    bool callUser(std::string name);
+    bool getCall(std::string name);
+    bool acceptCall();
+    bool stopCall();
 
-    void addFriend(std::string name);
-    void removeFriend(std::string name);
+    bool addFriend(std::string name);
+    bool removeFriend(std::string name);
     std::vector<std::string> getFriends(); // Yoan en a pas
     std::vector<std::string> getFriendRequests();
-    void acceptFriendRequest(std::string name);
+    bool acceptFriendRequest(std::string name);
 
     bool connectUser(std::string name, std::string password);
-    void disconnect();
+    bool disconnect();
 
     std::map<std::string, std::vector<std::string>> getTeams();
-    void callTeam(std::string name);
-    void getCallTeam(std::string name);
-    void addUserToTeam(std::string name);
-    void acceptTeamRequest(std::string name);
+    bool callTeam(std::string name);
+    bool getCallTeam(std::string name);
+    bool addUserToTeam(std::string name);
+    bool acceptTeamRequest(std::string name);
 
     bool changeName(std::string name);
 

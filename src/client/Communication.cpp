@@ -55,40 +55,65 @@ bool Communication::createTeam(std::string teamName)
         return (false);
 }
 
-void Communication::callUser(std::string name)
+bool Communication::callUser(std::string name)
 {
     Request r(Request::CALLUSER, name);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCALLUSER)
+        return (true);
+    else
+        return (false);
 }
 
-void Communication::getCall(std::string name)
+bool Communication::getCall(std::string name)
 {
 
 }
 
-void Communication::acceptCall()
+bool Communication::acceptCall()
 {
     Request r(Request::ACCEPTCALL);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTCALL)
+        return (true);
+    else
+        return (false);
 }
 
-void Communication::stopCall()
+bool Communication::stopCall()
 {
     Request r(Request::STOPCALL);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDSTOPCALL)
+        return (true);
+    else
+        return (false);
 }
 
 
-void Communication::addFriend(std::string name)
+bool Communication::addFriend(std::string name)
 {
     Request r(Request::ADDFRIEND);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDADDFRIEND)
+        return (true);
+    else
+        return (false);
 }
 
-void Communication::removeFriend(std::string name)
+bool Communication::removeFriend(std::string name)
 {
     Request r(Request::REMOVEFRIEND);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDREMOVEFRIEND)
+        return (true);
+    else
+        return (false);
 }
 
 std::vector<std::string> Communication::getFriends()
@@ -97,13 +122,15 @@ std::vector<std::string> Communication::getFriends()
     std::string delim = ",";
     std::vector<std::string> vec;
 
-    if (lastRequestRecieve.getRequestType() == Request::GETFRIENDS) {
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETFRIENDS) {
         std::string str = lastRequestRecieve.getRequestContent();
         while (str.find(delim) != std::string::npos) {
             vec.push_back(str.substr(0, str.find(delim)));
             str.erase(0, str.substr(0, str.find(delim)).length() + delim.length());
         }
         vec.push_back(str);
+    } else {
+        vec.push_back("error");
     }
     sendToServer(r);
     return (vec);
@@ -115,22 +142,29 @@ std::vector<std::string> Communication::getFriendRequests()
     std::string delim = ",";
     std::vector<std::string> vec;
 
-    if (lastRequestRecieve.getRequestType() == Request::GETFRIENDREQUESTS) {
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETFRIENDREQUESTS) {
         std::string str = lastRequestRecieve.getRequestContent();
         while (str.find(delim) != std::string::npos) {
             vec.push_back(str.substr(0, str.find(delim)));
             str.erase(0, str.substr(0, str.find(delim)).length() + delim.length());
         }
         vec.push_back(str);
+    } else {
+        vec.push_back("error");
     }
     sendToServer(r);
     return (vec);
 }
 
-void Communication::acceptFriendRequest(std::string name)
+bool Communication::acceptFriendRequest(std::string name)
 {
     Request r(Request::ACCEPTFRIENDREQUEST);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTFRIENDREQUEST)
+        return (true);
+    else
+        return (false);
 }
 
 bool Communication::connectUser(std::string name, std::string password)
@@ -138,17 +172,22 @@ bool Communication::connectUser(std::string name, std::string password)
     Request r(Request::CONNECT);
     sendToServer(r);
 
-    if (lastRequestRecieve.getRequestType() == Request::VALIDCREATEUSER) {
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCONNECT) {
         token = lastRequestRecieve.getRequestContent();
         return (true);
     } else
         return (false);
 }
 
-void Communication::disconnect()
+bool Communication::disconnect()
 {
     Request r(Request::DISCONNECT);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDDISCONNECT)
+        return (true);
+    else
+        return (false);
 }
 
 void Communication::parse()
@@ -166,27 +205,42 @@ std::map<std::string, std::vector<std::string>> Communication::getTeams()
     }
 }
 
-void Communication::callTeam(std::string name)
+bool Communication::callTeam(std::string name)
 {
     Request r(Request::CALLTEAM);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCALLTEAM)
+        return (true);
+    else
+        return (false);
 }
 
-void Communication::getCallTeam(std::string name)
+bool Communication::getCallTeam(std::string name)
 {
 
 }
 
-void Communication::addUserToTeam(std::string name)
+bool Communication::addUserToTeam(std::string name)
 {
     Request r(Request::ADDUSERTOTEAM);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDADDUSERTOTEAM)
+        return (true);
+    else
+        return (false);
 }
 
-void Communication::acceptTeamRequest(std::string name)
+bool Communication::acceptTeamRequest(std::string name)
 {
     Request r(Request::ACCEPTTEAMREQUEST);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTTEAMREQUEST)
+        return (true);
+    else
+        return (false);
 }
 
 bool Communication::changeName(std::string name)
