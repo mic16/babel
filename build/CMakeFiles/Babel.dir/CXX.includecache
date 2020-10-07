@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/mathilde/.conan/data/portaudio/v190600.20161030/bincrafters/stable/package/4a037d686351c9b2d330e4ccb681a6fb3848d6ac/include/portaudio.h
+
+/home/mathilde/EPITECH/TEK3/PROJECTS/CPP/BABEL/B-CPP-500-MPL-5-1-babel-yoan.vessiere/src/client/PortAudioRecord.cpp
+PortAudioRecord.hpp
+/home/mathilde/EPITECH/TEK3/PROJECTS/CPP/BABEL/B-CPP-500-MPL-5-1-babel-yoan.vessiere/src/client/PortAudioRecord.hpp
+
+/home/mathilde/EPITECH/TEK3/PROJECTS/CPP/BABEL/B-CPP-500-MPL-5-1-babel-yoan.vessiere/src/client/PortAudioRecord.hpp
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+iostream
+-
+portaudio.h
+/home/mathilde/EPITECH/TEK3/PROJECTS/CPP/BABEL/B-CPP-500-MPL-5-1-babel-yoan.vessiere/src/client/portaudio.h
+
+/home/mathilde/EPITECH/TEK3/PROJECTS/CPP/BABEL/B-CPP-500-MPL-5-1-babel-yoan.vessiere/src/client/main.cpp
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+portaudio.h
+/home/mathilde/EPITECH/TEK3/PROJECTS/CPP/BABEL/B-CPP-500-MPL-5-1-babel-yoan.vessiere/src/client/portaudio.h
+PortAudioRecord.hpp
+/home/mathilde/EPITECH/TEK3/PROJECTS/CPP/BABEL/B-CPP-500-MPL-5-1-babel-yoan.vessiere/src/client/PortAudioRecord.hpp
+
