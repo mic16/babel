@@ -6,6 +6,7 @@
 */
 
 #include "ServerLogic.hpp"
+#include "TcpConnection.hpp"
 
 ServerLogic *ServerLogic::singleton = nullptr;
 
@@ -67,6 +68,15 @@ Request ServerLogic::disconnect(Request request, std::string userName)
     this->usersMapTcp.erase(userName);
     this->usersMapToken.erase(request.getRequestToken());
     return (Request(Request::VALIDDISCONNECT));
+}
+
+Request ServerLogic::callUser(Request request)
+{
+    if (this->usersMapTcp.find(request.getRequestContent()) != this->usersMapTcp.end()) {
+        TcpConnection *tcp = this->usersMapTcp.find(request.getRequestContent())->second;
+        return (Request(Request::VALIDCALLUSER), tcp->socket().remote_endpoint().address().to_string());
+    } else
+        return (Request(Request::REFUSECALLUSER));
 }
 
 

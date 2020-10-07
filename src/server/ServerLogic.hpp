@@ -42,6 +42,7 @@ class ServerLogic {
         Request addFriend(Request request, std::string userName);
         Request removeFriend(Request request, std::string userName);
         Request getFriends(Request request, std::string userName); // Yoan en a pas
+        Request callUser(Request request);
         
         // Request changeName(Request request, std::string oldName);
 
@@ -55,7 +56,6 @@ class ServerLogic {
 
 
 
-        void callUser(std::string name);
         void getCall(std::string name);
         void acceptCall();
         void stopCall();
