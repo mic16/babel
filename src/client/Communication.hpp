@@ -15,6 +15,7 @@
 
 #include "../utils/Request.hpp"
 #include "../utils/Utils.hpp"
+#include "../udpclient/myudp.hpp"
 
 class Communication : public QObject{
 
@@ -24,10 +25,13 @@ public:
     Communication();
     ~Communication();
 
+    void sendToServer(Request r);
+    std::map<std::string, std::vector<std::string>> parse();
+
     void connectToServer();
 
     bool createUser(std::string name, std::string password);
-    bool createTeam(std::map<std::string, std::vector<std::string>> team);
+    bool createTeam(std::string teamName);
 
     void callUser(std::string name);
     void getCall(std::string name);
@@ -40,7 +44,7 @@ public:
     std::vector<std::string> getFriendRequests();
     void acceptFriendRequest(std::string name);
 
-    std::string connectUser(std::string name, std::string password);
+    bool connectUser(std::string name, std::string password);
     void disconnect();
 
     std::map<std::string, std::vector<std::string>> getTeams();
@@ -57,7 +61,7 @@ public slots:
 private:
     QTcpSocket  _socket;
     std::string token;
-
+    Request lastRequestRecieve;
 };
 
 #endif // COMMUNICATION_H

@@ -1,6 +1,6 @@
 #include "Communication.hpp"
 
-Communication::Communication() : _socket(this)
+Communication::Communication()
 {
     connectToServer();
 }
@@ -17,30 +17,52 @@ void Communication::connectToServer()
     connect(&_socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
 
+void Communication::sendToServer(Request r)
+{
+    QByteArray str(r.getRequestToSend().c_str(), r.getRequestToSend().size());
+    _socket.write(str, r.getRequestToSend().size());
+    _socket.waitForReadyRead();
+}
+
 void Communication::onReadyRead()
 {
     QByteArray str = _socket.read(4);
     QByteArray rep = _socket.read(Utils::convertBytesArrayToSizeT(reinterpret_cast<unsigned char *>(str.data())));
 
-    Request r(rep.data());
-    // std::cout << r.getRequestType() << ":" << r.getRequestContent() << std::endl;
+    lastRequestRecieve = Request(rep.data());
+    std::cout << lastRequestRecieve.getRequestType() << ":" << lastRequestRecieve.getRequestContent()  << ":" << lastRequestRecieve.getRequestToken() << std::endl;
 }
 
 bool Communication::createUser(std::string name, std::string password)
 {
-    Request r(Request::CREATEUSER, name, password);
-    QByteArray str(r.getRequestToSend().c_str(), r.getRequestToSend().size());
-    _socket.write(str, r.getRequestToSend().size());
+    Request r(Request::CREATEUSER, name + "," + password);
+    sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCREATEUSER)
+        return (true);
+    else
+        return (false);
 }
 
-bool Communication::createTeam(std::map<std::string, std::vector<std::string>> team)
+bool Communication::createTeam(std::string teamName)
 {
+    Request r(Request::CREATETEAM, teamName, token);
+    sendToServer(r);
 
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCREATETEAM)
+        return (true);
+    else
+        return (false);
 }
 
 void Communication::callUser(std::string name)
 {
+    Request r(Request::CALLUSER, name, token);
+    sendToServer(r);
 
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCALLUSER) {
+        // TO DO prendre l'IP et se connecter dessus
+    }
 }
 
 void Communication::getCall(std::string name)
@@ -50,60 +72,116 @@ void Communication::getCall(std::string name)
 
 void Communication::acceptCall()
 {
-
+    Request r(Request::ACCEPTCALL, "",token);
+    sendToServer(r);
 }
 
 void Communication::stopCall()
 {
-
+    Request r(Request::STOPCALL, "", token);
+    sendToServer(r);
 }
-
 
 void Communication::addFriend(std::string name)
 {
-
+    Request r(Request::ADDFRIEND, name, token);
+    sendToServer(r);
 }
 
 void Communication::removeFriend(std::string name)
 {
-
+    Request r(Request::REMOVEFRIEND, name, token);
+    sendToServer(r);
 }
 
 std::vector<std::string> Communication::getFriends()
 {
-
+    Request r(Request::GETFRIENDS, "", token);
+    sendToServer(r);
 }
 
 std::vector<std::string> Communication::getFriendRequests()
 {
-
+    Request r(Request::GETFRIENDREQUESTS, "", token);
+    sendToServer(r);
 }
 
 void Communication::acceptFriendRequest(std::string name)
 {
-
+    Request r(Request::ACCEPTFRIENDREQUEST, name, token);
+    sendToServer(r);
 }
 
-
-std::string Communication::connectUser(std::string name, std::string password)
+bool Communication::connectUser(std::string name, std::string password)
 {
+    Request r(Request::CONNECT, name + "," + password, token);
+    sendToServer(r);
 
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCREATEUSER) {
+        token = lastRequestRecieve.getRequestContent();
+        return (true);
+    } else
+        return (false);
 }
 
 void Communication::disconnect()
 {
-
+    Request r(Request::DISCONNECT, "", token);
+    sendToServer(r);
 }
 
+std::map<std::string, std::vector<std::string>> Communication::parse()
+{
+    std::string content = lastRequestRecieve.getRequestContent();
+    std::map<std::string, std::vector<std::string>> team;
+    std::vector<std::string> members;
+    std::string name;
+
+    for (; content != "";) {
+        if (content[0] == ';')
+            content.erase(0, 1);
+        name = content.substr(0, content.find("("));
+        size_t pos = content.find(name);
+        if (pos != std::string::npos)
+            content.erase(pos, name.length() + 1);
+        for (; content[0] != ')';) {
+            if (content[0] == ',')
+                content.erase(0, 1);
+            if (content.find(",") < content.find(")"))
+                members.push_back(content.substr(0, content.find(",")));
+            else
+                members.push_back(content.substr(0, content.find(")")));
+            pos = content.find(members.back());
+            if (pos != std::string::npos)
+                content.erase(pos, members.back().length());
+        }
+        team.insert(std::make_pair(name, members));
+        members.clear();
+        if (content[0] == ')')
+            content.erase(0, 1);
+    }
+    return (team);
+}
 
 std::map<std::string, std::vector<std::string>> Communication::getTeams()
 {
+    Request r(Request::GETTEAMS, "", token);
+    sendToServer(r);
 
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETTEAMS)
+        return (parse());
+    else {
+        std::map<std::string, std::vector<std::string>> team;
+        std::vector<std::string> tmp;
+        team.insert(std::make_pair("Error", tmp));
+        return (team);
+    }
 }
 
 void Communication::callTeam(std::string name)
 {
-
+    Request r(Request::CALLTEAM, name, token);
+    sendToServer(r);
 }
 
 void Communication::getCallTeam(std::string name)
@@ -113,16 +191,23 @@ void Communication::getCallTeam(std::string name)
 
 void Communication::addUserToTeam(std::string name)
 {
-
+    Request r(Request::ADDUSERTOTEAM, name, token);
+    sendToServer(r);
 }
 
 void Communication::acceptTeamRequest(std::string name)
 {
-
+    Request r(Request::ACCEPTTEAMREQUEST, name, token);
+    sendToServer(r);
 }
-
 
 bool Communication::changeName(std::string name)
 {
+    Request r(Request::CHANGENAME, name, token);
+    sendToServer(r);
 
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCHANGENAME)
+        return (true);
+    else
+        return (false);
 }

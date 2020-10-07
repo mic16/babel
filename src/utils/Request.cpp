@@ -7,6 +7,11 @@
 
 #include "Request.hpp"
 
+Request::Request()
+{
+
+}
+
 Request::Request(RequestType type, std::string content, std::string token)
 {
     this->content = content;
