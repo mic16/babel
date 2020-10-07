@@ -38,9 +38,10 @@ bool Communication::createUser(std::string name, std::string password)
     Request r(Request::CREATEUSER, name + "," + password);
     sendToServer(r);
 
-    if (lastRequestRecieve.getRequestType() == Request::VALIDCREATEUSER)
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCREATEUSER) {
+        token = lastRequestRecieve.getRequestContent();
         return (true);
-    else
+    } else
         return (false);
 }
 

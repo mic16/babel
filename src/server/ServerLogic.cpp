@@ -36,7 +36,12 @@ ServerLogic *ServerLogic::get()
 
 Request ServerLogic::addFriend(Request request, std::string userName)
 {
-    std::string friends = this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").at(0);
+    std::string friends;
+
+    if (request.getRequestContent().compare(userName) == 0 || !this->dataBase.userExist(request.getRequestContent()))
+        return (Request(Request::REFUSEADDFRIEND));
+    if (this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").size() > 0)
+        friends.append(this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").at(0));
     std::vector<std::string> friendsList;
     boost::split(friendsList, friends, boost::is_any_of(","));
     if (std::find(friendsList.begin(), friendsList.end(), request.getRequestContent()) != friendsList.end())
@@ -45,7 +50,6 @@ Request ServerLogic::addFriend(Request request, std::string userName)
         friends.append(",");
     friends.append(request.getRequestContent());
     if (this->dataBase.insertRemoveUpdate("UPDATE users SET friends='" + friends + "' WHERE name='" + userName + "'")) {
-      
         return (Request(Request::VALIDADDFRIEND));
     } else
         return (Request(Request::REFUSEADDFRIEND));
@@ -53,7 +57,11 @@ Request ServerLogic::addFriend(Request request, std::string userName)
 
 Request ServerLogic::removeFriend(Request request, std::string userName)
 {
+    if (!this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").size() > 0)
+        return (Request(Request::REFUSEREMOVEFRIEND));
     std::string friends = this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").at(0);
+    if (!friends.find(request.getRequestContent()))
+        return (Request(Request::REFUSEREMOVEFRIEND));
     boost::erase_first(friends, "," + request.getRequestContent());
     boost::erase_first(friends, request.getRequestContent());
     if (this->dataBase.insertRemoveUpdate("UPDATE users set friends='" + friends + "' WHERE name='" + userName + "'"))
@@ -64,6 +72,8 @@ Request ServerLogic::removeFriend(Request request, std::string userName)
 
  Request ServerLogic::getFriends(Request request, std::string userName)
  {
+    if (!this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").size() > 0)
+        return (Request(Request::REFUSEGETFRIENDS));
     std::string friends = this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").at(0);
     return (Request(Request::VALIDGETFRIENDS, friends));
  }
@@ -110,12 +120,12 @@ Request ServerLogic::connect(Request request, TcpConnection *TcpUser)
         return (Request(Request::REFUSECONNECT));
 }
 
-Request ServerLogic::createUser(Request request)
+Request ServerLogic::createUser(Request request, TcpConnection *TcpUser)
 {
     if (this->dataBase.createUser(request.getRequestContent()))
-        return (Request(Request::VALIDCREATEUSER));
+        return (Request(Request::VALIDCREATEUSER, connect(request, TcpUser).getRequestContent()));
     else {
-        return (Request::Request::REFUSECREATEUSER);
+        return (Request(Request::REFUSECREATEUSER));
     }
 }
 
@@ -125,7 +135,7 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
     if (request.getRequestType() == Request::CONNECT) {
          return (connect(request, TcpUser));
     } else if (request.getRequestType() == Request::CREATEUSER) {
-        return (createUser(request));
+        return (createUser(request, TcpUser));
     }
 
     if (this->usersMapToken.find(request.getRequestToken()) != this->usersMapToken.end()) {
