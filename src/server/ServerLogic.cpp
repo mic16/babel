@@ -155,7 +155,8 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
             return (removeFriend(request, userName));
         case Request::GETFRIENDS:
             return (getFriends(request, userName));
-        
+        case Request::CALLUSER:
+            return (callUser(request));
         default:
             return (Request(Request::BADREQUEST));
     }
