@@ -39,6 +39,31 @@ class ServerLogic {
         std::string generateToken();
         Request connect(Request request, TcpConnection *TcpUser);
         Request createUser(Request request);
+
+
+
+        bool createTeam(std::map<std::string, std::vector<std::string>> team);
+
+        void callUser(std::string name);
+        void getCall(std::string name);
+        void acceptCall();
+        void stopCall();
+
+        void addFriend(std::string name);
+        void removeFriend(std::string name);
+        std::vector<std::string> getFriends(); // Yoan en a pas
+        std::vector<std::string> getFriendRequests();
+        void acceptFriendRequest(std::string name);
+        void disconnect();
+        std::map<std::string, std::vector<std::string>> getTeams();
+        void callTeam(std::string name);
+        void getCallTeam(std::string name);
+        void addUserToTeam(std::string name);
+        void acceptTeamRequest(std::string name);
+
+        Request changeName(Request request, std::string oldName);
+
+
         ServerLogic();
         ~ServerLogic();
 

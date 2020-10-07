@@ -33,6 +33,17 @@ ServerLogic::~ServerLogic()
 
 }
 
+Request ServerLogic::changeName(Request request, std::string oldName)
+{
+    if (!this->dataBase.insertRemoveUpdate("UPDATE users SET nale='" + oldName + "' WHERE name='" + request.getRequestContent() + "'"))
+        return (Request(Request::REFUSECHANGENAME));
+    this->usersMapToken.find(request.getRequestContent())->second = request.getRequestContent();
+    TcpConnection *stock = this->usersMapTcp.find(oldName)->second;
+    this->usersMapTcp.erase(oldName);
+    this->usersMapTcp.insert(std::pair<std::string, TcpConnection *>(request.getRequestContent(), stock));
+    return (Request(Request::VALIDCHANGENAME));
+}
+
 Request ServerLogic::connect(Request request, TcpConnection *TcpUser)
 {
     if (this->dataBase.userPwdConnect(request.getRequestContent())) {
@@ -77,7 +88,8 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 
     switch (request.getRequestType())
     {        
-        
+        case Request::CHANGENAME:
+            return (changeName(request, userName));
     
         default:
             return (Request(Request::BADREQUEST));

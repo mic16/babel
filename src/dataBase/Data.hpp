@@ -22,7 +22,7 @@ class Data {
         bool createUser(std::string content);
         bool userPwdConnect(std::string content);
         std::vector<std::string> select(std::string str);
-        void insertRemoveUpdate(std::string str);
+        bool insertRemoveUpdate(std::string str);
 
 
     private:
