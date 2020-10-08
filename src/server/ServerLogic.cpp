@@ -25,7 +25,6 @@ ServerLogic *ServerLogic::get()
 
 ServerLogic::ServerLogic()
 {
-
 }
 
 ServerLogic::~ServerLogic()
@@ -75,11 +74,11 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 
     std::cout << request.getRequestContent() << ":" << request.getRequestType() << std::endl;
 
-    switch (request.getRequestType())
-    {        
+    // switch (request.getRequestType())
+    // {        
         
     
-        default:
-            return (Request(Request::BADREQUEST));
-    }
+    //     default:
+    //         return (Request(Request::BADREQUEST));
+    // }
 }

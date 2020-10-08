@@ -13,11 +13,10 @@
 #include <QApplication>
 #include <QMainWindow>
 
-#include "../utils/Request.hpp"
 #include "../utils/Utils.hpp"
-#include "../udpclient/myudp.hpp"
+#include "../udpclient/Udpclient.hpp"
 
-class Communication : public QObject{
+class Communication : public QObject {
 
     Q_OBJECT
 
@@ -62,6 +61,7 @@ private:
     QTcpSocket  _socket;
     std::string token;
     Request lastRequestRecieve;
+    UDPClient *udp;
 };
 
 #endif // COMMUNICATION_H

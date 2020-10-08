@@ -30,7 +30,14 @@ void Communication::onReadyRead()
     QByteArray rep = _socket.read(Utils::convertBytesArrayToSizeT(reinterpret_cast<unsigned char *>(str.data())));
 
     lastRequestRecieve = Request(rep.data());
-    std::cout << lastRequestRecieve.getRequestType() << ":" << lastRequestRecieve.getRequestContent()  << ":" << lastRequestRecieve.getRequestToken() << std::endl;
+    std::cout << lastRequestRecieve.getRequestType() << ":" << lastRequestRecieve.getRequestContent() << ":" << lastRequestRecieve.getRequestToken() << std::endl;
+    if (lastRequestRecieve.getRequestType() == Request::CONNECTUDP) {
+        udp = new UDPClient(lastRequestRecieve.getRequestContent());
+        // TO DO show call window (check with Yoan)
+    }
+    if (lastRequestRecieve.getRequestType() == Request::ACCEPTCALL) {
+        udp->HelloUDP();
+    }
 }
 
 bool Communication::createUser(std::string name, std::string password)
@@ -62,7 +69,10 @@ bool Communication::callUser(std::string name)
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDCALLUSER) {
         // TO DO prendre l'IP et se connecter dessus
-    }
+        udp = new UDPClient(lastRequestRecieve.getRequestContent());
+        return (true);
+    } else
+        return (false);
 }
 
 bool Communication::getCall(std::string name)
@@ -72,13 +82,11 @@ bool Communication::getCall(std::string name)
 
 bool Communication::acceptCall()
 {
-    Request r(Request::ACCEPTCALL, "",token);
-    sendToServer(r);
-
-    if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTCALL)
-        return (true);
-    else
-        return (false);
+    Request r(Request::ACCEPTCALL, "", token);
+    // sendToServer(r);
+    udp->sendAcceptCall(r);
+    udp->HelloUDP();
+    return (true);
 }
 
 bool Communication::stopCall()
@@ -121,6 +129,7 @@ std::vector<std::string> Communication::getFriends()
     std::string delim = ",";
     std::vector<std::string> vec;
 
+    sendToServer(r);
     if (lastRequestRecieve.getRequestType() == Request::VALIDGETFRIENDS) {
         std::string str = lastRequestRecieve.getRequestContent();
         while (str.find(delim) != std::string::npos) {
@@ -131,7 +140,6 @@ std::vector<std::string> Communication::getFriends()
     } else {
         vec.push_back("error");
     }
-    sendToServer(r);
     return (vec);
 }
 
@@ -141,6 +149,7 @@ std::vector<std::string> Communication::getFriendRequests()
     std::string delim = ",";
     std::vector<std::string> vec;
 
+    sendToServer(r);
     if (lastRequestRecieve.getRequestType() == Request::VALIDGETFRIENDREQUESTS) {
         std::string str = lastRequestRecieve.getRequestContent();
         while (str.find(delim) != std::string::npos) {
@@ -151,7 +160,6 @@ std::vector<std::string> Communication::getFriendRequests()
     } else {
         vec.push_back("error");
     }
-    sendToServer(r);
     return (vec);
 }
 
@@ -182,6 +190,12 @@ bool Communication::disconnect()
 {
     Request r(Request::DISCONNECT, "", token);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCONNECT) {
+        token = "";
+        return (true);
+    } else
+        return (false);
 }
 
 std::map<std::string, std::vector<std::string>> Communication::parse()
@@ -227,7 +241,7 @@ std::map<std::string, std::vector<std::string>> Communication::getTeams()
     else {
         std::map<std::string, std::vector<std::string>> team;
         std::vector<std::string> tmp;
-        team.insert(std::make_pair("Error", tmp));
+        team.insert(std::make_pair("error", tmp));
         return (team);
     }
 }

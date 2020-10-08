@@ -38,6 +38,8 @@ class Request {
 
             CHANGENAME,         // changer le nom d'un user (pas sûr encore)
 
+            CONNECTUDP,
+
             //Request from server
             GETCALL,            // get le call du user passé en content de la request
             GETCALLTEAM,        // get le call de la team passé en content de la request
@@ -71,6 +73,8 @@ class Request {
                 REFUSEACCEPTTEAMREQUEST,    // refus d'accept une demande de team
 
                 REFUSECHANGENAME,           // refus de géchan le nom
+
+                REFUSECONNECTUDP,
                 
 
                 // Validate
@@ -98,6 +102,8 @@ class Request {
                 VALIDACCEPTTEAMREQUEST,     // user a accepté la demande de team
 
                 VALIDCHANGENAME,            // user a changé de nom
+
+                VALIDCONNECTUDP,
 
         };
 

@@ -1,11 +1,11 @@
 #include <QCoreApplication>
-#include "myudp.hpp"
+#include "Udpclient.hpp"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     
-    MyUDP client;
+    UDPClient client;
 
     if (argc > 1)
         client.HelloUDP();    
