@@ -249,9 +249,9 @@ bool Communication::getCallTeam(std::string name)
 
 }
 
-bool Communication::addUserToTeam(std::string name)
+bool Communication::addUserToTeam(std::string userName, std::string teamName)
 {
-    Request r(Request::ADDUSERTOTEAM, name, token);
+    Request r(Request::ADDUSERTOTEAM, teamName + "," + userName, token);
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDADDUSERTOTEAM)

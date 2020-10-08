@@ -43,6 +43,11 @@ class ServerLogic {
         Request removeFriend(Request request, std::string userName);
         Request getFriends(Request request, std::string userName); // Yoan en a pas
         Request callUser(Request request);
+        Request createTeam(Request request, std::string userName);
+        Request addUserToTeam(Request request);
+
+        bool teamExist(std::string name);
+        bool userExistInTeam(std::string teamName, std::string userName);
         
         // Request changeName(Request request, std::string oldName);
 
@@ -52,7 +57,6 @@ class ServerLogic {
 
 
 
-        bool createTeam(std::string team);
 
 
 
