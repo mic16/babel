@@ -62,6 +62,7 @@ private:
     QTcpSocket  _socket;
     std::string token;
     Request lastRequestRecieve;
+    bool call;
 };
 
 #endif // COMMUNICATION_H

@@ -68,7 +68,11 @@ bool Communication::callUser(std::string name)
 
 bool Communication::getCall(std::string name)
 {
-
+    if (call) {
+        call = false;
+        return (true)
+    } else
+        return (false);
 }
 
 bool Communication::acceptCall()
