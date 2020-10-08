@@ -11,6 +11,7 @@
 
 class BackEnd : public QObject
 {
+    static BackEnd *singleton;
     Q_OBJECT;
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged);
     Q_PROPERTY(QString passWord READ passWord WRITE setpassWord NOTIFY passWordChanged);
@@ -20,12 +21,15 @@ class BackEnd : public QObject
 
 public:
     explicit BackEnd(QObject *parent = nullptr);
+    static BackEnd *get(QObject *parent = nullptr);
 
     QString userName();
     QString passWord();
     QList<QString> friendlist();
     QMap<QString, QList<QString>> teamlist();
     bool microphone();
+
+    bool getQuit();
 
     void setUserName(const QString &userName);
     void setpassWord(const QString &passWord);
@@ -43,7 +47,8 @@ public:
     Q_INVOKABLE void fillUserInfo();
     Q_INVOKABLE void addFriendDataBase(const QString &userName);
     Q_INVOKABLE void removeFriendDataBase(const QString &userName);
-    Q_INVOKABLE void updateDatabaseTeamList();
+    Q_INVOKABLE void addMembersTeamListDatabase();
+    Q_INVOKABLE void removeMembersTeamListDatabase();
     Q_INVOKABLE bool callFriend(const QString &Name);
     Q_INVOKABLE bool callTeam(const QString &Name);
     Q_INVOKABLE void disconnect();
@@ -74,6 +79,7 @@ private:
     std::map<std::string, std::vector<std::string>> m_teamlist;
     std::vector<std::string> notiflist;
     bool m_microphone;
+    bool m_quit;
 };
 
 #endif // BACKEND_H

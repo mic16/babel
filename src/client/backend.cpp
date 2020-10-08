@@ -1,10 +1,20 @@
 #include "backend.hpp"
 
+BackEnd *BackEnd::singleton = nullptr;
+
 BackEnd::BackEnd(QObject *parent) :
     QObject(parent)
 {
     m_microphone = true;
     m_com = new Communication;
+    m_quit = false;
+}
+
+BackEnd *BackEnd::get(QObject *parent)
+{
+    if (!singleton)
+        singleton = new BackEnd(parent);
+    return singleton;
 }
 
 QString BackEnd::userName()
@@ -104,6 +114,7 @@ void BackEnd::addToTeamlist(const QString &teamName)
     if (m_teamlist.find(teamname) != m_teamlist.end())
         return;
     m_teamlist.insert({teamname, std::vector<std::string>()});
+    m_com->createTeam(teamname);
     emit teamlistChanged();
     emit teamlistAddChanged();
 }
@@ -114,6 +125,7 @@ void BackEnd::removeToTeamlist(const QString &teamName)
     if (m_teamlist.find(teamname) == m_teamlist.end())
         return;
     m_teamlist.erase(teamname);
+    // m_com->removeTeam(teamname);
     emit teamlistChanged();
     emit teamlistRemoveChanged();
 }
@@ -181,7 +193,8 @@ void BackEnd::fillUserInfo()
 
 void BackEnd::addFriendDataBase(const QString &userName)
 {
-    m_com->addFriend(userName.toUtf8().constData());
+    std::cout << "j'add l'ami " << userName.toUtf8().constData() << std::endl;
+    std::cout << m_com->addFriend(userName.toUtf8().constData()) << " " << true << std::endl;
     // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
 }
 
@@ -191,7 +204,12 @@ void BackEnd::removeFriendDataBase(const QString &userName)
     // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
 }
 
-void BackEnd::updateDatabaseTeamList()
+void BackEnd::addMembersTeamListDatabase()
+{
+    // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
+}
+
+void BackEnd::removeMembersTeamListDatabase()
 {
     // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
 }
@@ -211,6 +229,12 @@ bool BackEnd::callTeam(const QString &Name)
 void BackEnd::disconnect()
 {
     // TODO LE DISCONNECT
+    m_quit = true;
+}
+
+bool BackEnd::getQuit()
+{
+    return m_quit;
 }
 
 void BackEnd::display()

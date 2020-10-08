@@ -33,5 +33,13 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
+    // BackEnd *backend = BackEnd::get();
+    // while (true) {
+    //     backend = BackEnd::get();
+    //     if (backend->getQuit()) {
+    //         std::cout << "QUIT" << std::endl;
+    //         break;
+    //     }
+    // }
     return app.exec();
 }
