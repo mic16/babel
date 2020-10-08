@@ -70,7 +70,7 @@ bool Communication::getCall(std::string name)
 {
     if (call) {
         call = false;
-        return (true)
+        return (true);
     } else
         return (false);
 }
