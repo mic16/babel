@@ -52,7 +52,7 @@ void PortAudio::Stop(void)
     PaError _err = Pa_CloseStream(_stream);
 }
 
-void PortAudio::Read(void)
+std::vector<uint32_t> *PortAudio::Read(void)
 {
     PaError err = paNoError;
 
@@ -63,14 +63,15 @@ void PortAudio::Read(void)
         err = Pa_ReadStream(_stream, _sampleBlock->data(), size);
     else
         err = Pa_ReadStream(_stream, _sampleBlock->data(), FRAMES_PER_BUFFER);
+    return (_sampleBlock);
 }
 
-void PortAudio::Write(void)
+void PortAudio::Write(std::vector<uint32_t> *sample)
 {
     PaError err = paNoError;
 
-    while (Pa_GetStreamWriteAvailable(_stream) < _sampleBlock->size());
-    err = Pa_WriteStream(_stream, _sampleBlock->data(), FRAMES_PER_BUFFER);
+    while (Pa_GetStreamWriteAvailable(_stream) < sample->size());
+    err = Pa_WriteStream(_stream, sample->data(), FRAMES_PER_BUFFER);
 }
 
 void PortAudio::error()

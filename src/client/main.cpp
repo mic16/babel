@@ -18,8 +18,8 @@ int main(void)
     audio->Start();
 
     while (1) {
-        audio->Read();
-        audio->Write();
+        // audio->Read();
+        audio->Write(audio->Read());
     }
 
     audio->Stop();

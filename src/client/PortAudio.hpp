@@ -55,8 +55,8 @@ class PortAudio {
         PortAudio();
         ~PortAudio();
 
-        void Write(void);
-        void Read(void);
+        void Write(std::vector<uint32_t> *);
+        std::vector<uint32_t> *Read(void);
 
         void Start(void);
         void Stop(void);
