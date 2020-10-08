@@ -5,8 +5,8 @@
 ** PortAudio
 */
 
-#ifndef PORTAUDIOECHO_HPP_
-#define PORTAUDIOECHO_HPP_
+#ifndef PORTAUDIO_HPP_
+#define PORTAUDIO_HPP_
 
 /* #define SAMPLE_RATE  (17932) // Test failure to open with this value. */
 #define SAMPLE_RATE       (44100)
@@ -46,15 +46,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
+#include <iostream>
 #include "portaudio.h"
 
-class PortAudioEcho {
+class PortAudio {
     public:
-        PortAudioEcho();
-        ~PortAudioEcho();
+        PortAudio();
+        ~PortAudio();
 
-        void Listen(char **input);
-        void Read(char *input);
+        void Write(void);
+        void Read(void);
+
+        void Start(void);
+        void Stop(void);
+
         void error();
 
     protected:
@@ -62,11 +68,9 @@ class PortAudioEcho {
         PaStreamParameters _inputParameters;
         PaStreamParameters _outputParameters;
         PaStream *_stream;
-        PaError _err;
-        const PaDeviceInfo* _inputInfo;
-        const PaDeviceInfo* _outputInfo;
         int _numBytes;
         int _numChannels;
+        std::vector<uint32_t> *_sampleBlock;
 };
 
-#endif /* !PORTAUDIOECHO_HPP_ */
+#endif /* !PORTAUDIO_HPP_ */

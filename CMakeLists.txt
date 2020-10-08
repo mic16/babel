@@ -12,8 +12,7 @@ set (CMAKE_BUILD_TYPE RELEASE)
 # Crée des variables avec les fichiers à compiler
 set(SRCS
     src/client/main.cpp
-    # src/client/PortAudioEcho.cpp
-    src/client/PortAudioRecord.cpp
+    src/client/PortAudio.cpp
     )
 
 

@@ -9,20 +9,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include "portaudio.h"
-// #include "PortAudioEcho.hpp"
-#include "PortAudioRecord.hpp"
+#include "PortAudio.hpp"
 
 int main(void)
 {
-    PortAudioRecord *audio = new PortAudioRecord();
-    // char *input = NULL;
+    PortAudio *audio = new PortAudio();
 
     audio->Start();
 
-    // audio->Listen(&input);
-    // // audio->Read(input);
+    while (1) {
+        audio->Read();
+        audio->Write();
+    }
 
-
+    audio->Stop();
 
     return (0);
 }
