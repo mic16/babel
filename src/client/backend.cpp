@@ -2,12 +2,25 @@
 
 BackEnd *BackEnd::singleton = nullptr;
 
+void thread_func(BackEnd *backend)
+{
+    int aze = 0;
+
+    while (true) {
+        std::cout << aze << std::endl;
+        aze += 1;
+        if (backend->getQuit())
+            break;
+    }
+}
+
 BackEnd::BackEnd(QObject *parent) :
     QObject(parent)
 {
     m_microphone = true;
     m_com = new Communication;
     m_quit = false;
+    m_thread_obj = std::thread(thread_func, this);
 }
 
 BackEnd *BackEnd::get(QObject *parent)
@@ -60,6 +73,7 @@ bool BackEnd::microphone()
 
 void BackEnd::setUserName(const QString &userName)
 {
+    m_quit = true;
     std::string username = userName.toUtf8().constData();
     if (username == m_userName)
         return;
@@ -175,19 +189,20 @@ bool BackEnd::existingTeam(const QString &Name)
 
 bool BackEnd::existingCredential(const QString &UserName, const QString &PassWord)
 {
-    // std::cout << "je vais appeler la fonction de mic" << std::endl;
-    // std::cout << "j'ai appeler la fonction de mic" << std::endl;
     return (m_com->connectUser(UserName.toUtf8().constData(), PassWord.toUtf8().constData()));
 }
 
 bool BackEnd::addUserToDataBase()
 {
     return (m_com->createUser(m_userName, m_passWord));
-    // TODO REQUETE TO ADD ALL USER INFO TO DATABASE
 }
 
 void BackEnd::fillUserInfo()
 {
+    m_com->getFriends();
+    
+    // m_com->getTeams();
+    // m_com->getFriendsRequest();
     // TODO REQUETE TO GET ALL USER INFO FROM DATABASE
 }
 
@@ -195,21 +210,19 @@ void BackEnd::addFriendDataBase(const QString &userName)
 {
     std::cout << "j'add l'ami " << userName.toUtf8().constData() << std::endl;
     std::cout << m_com->addFriend(userName.toUtf8().constData()) << " " << true << std::endl;
-    // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
 }
 
 void BackEnd::removeFriendDataBase(const QString &userName)
 {
     m_com->removeFriend(userName.toUtf8().constData());
-    // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
 }
 
-void BackEnd::addMembersTeamListDatabase()
+void BackEnd::addMembersTeamListDatabase(const QString &teamname, const QString &username)
 {
-    // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
+    m_com->addUserToTeam(username.toUtf8().constData(), teamname.toUtf8().constData());
 }
 
-void BackEnd::removeMembersTeamListDatabase()
+void BackEnd::removeMembersTeamListDatabase(const QString &teamname, const QString &username)
 {
     // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
 }
@@ -230,6 +243,7 @@ void BackEnd::disconnect()
 {
     // TODO LE DISCONNECT
     m_quit = true;
+    m_thread_obj.join();
 }
 
 bool BackEnd::getQuit()
@@ -256,4 +270,10 @@ void BackEnd::display()
         }
         std::cout << "]" << std::endl;
     }
+}
+
+void BackEnd::alwaysCall()
+{
+    
+    // thread_obj.join();
 }

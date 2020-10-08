@@ -18,6 +18,7 @@ Data::Data()
         std::cout << "Opened Database Successfully" << std::endl; 
     
     this->insertRemoveUpdate("CREATE TABLE users(name TEXT, pwd TEXT, friends TEXT);");
+    this->insertRemoveUpdate("CREATE TABLE teams(name TEXT, members TEXT)");
 }
 
 Data::~Data()
@@ -28,6 +29,9 @@ Data::~Data()
 int Data::callbackSelect(void *data, int argc, char **argv, char **colName)
 {
     for (int i = 0; i < argc; i++) {
+        if (argv[i] == NULL) {
+            break;
+        }
         static_cast<std::vector<std::string>*>(data)->push_back(std::string(argv[i]));
     }
     return (0);
@@ -80,9 +84,8 @@ bool Data::userPwdConnect(std::string content)
     std::string pwd = data[1];
 
 
-    if (!this->userExist(name)) {
+    if (!this->userExist(name))
         return (false);
-    }
     std::vector<std::string> rep = this->select("SELECT name FROM users WHERE name='" + name + "' AND pwd='" + pwd + "'");
     if (rep.size() > 0)
         return (true);
@@ -98,7 +101,6 @@ bool Data::createUser(std::string content)
     std::string pwd = data[1];
     if (this->userExist(name))
         return (false);
-    else {
-        return(this->insertRemoveUpdate("INSERT INTO users(name, pwd) VALUES ('" + name + "', '" + pwd + "');"));
-    }
+    else
+        return (this->insertRemoveUpdate("INSERT INTO users(name, pwd) VALUES ('" + name + "', '" + pwd + "');"));
 }

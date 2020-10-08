@@ -38,9 +38,10 @@ bool Communication::createUser(std::string name, std::string password)
     Request r(Request::CREATEUSER, name + "," + password);
     sendToServer(r);
 
-    if (lastRequestRecieve.getRequestType() == Request::VALIDCREATEUSER)
+    if (lastRequestRecieve.getRequestType() == Request::VALIDCREATEUSER) {
+        token = lastRequestRecieve.getRequestContent();
         return (true);
-    else
+    } else
         return (false);
 }
 
@@ -169,7 +170,6 @@ bool Communication::acceptFriendRequest(std::string name)
 bool Communication::connectUser(std::string name, std::string password)
 {
     Request r(Request::CONNECT, name + "," + password, token);
-    std::cout << "ok : " << r.getRequestContent() << std::endl;
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDCONNECT) {
@@ -249,9 +249,9 @@ bool Communication::getCallTeam(std::string name)
 
 }
 
-bool Communication::addUserToTeam(std::string name)
+bool Communication::addUserToTeam(std::string userName, std::string teamName)
 {
-    Request r(Request::ADDUSERTOTEAM, name, token);
+    Request r(Request::ADDUSERTOTEAM, teamName + "," + userName, token);
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDADDUSERTOTEAM)

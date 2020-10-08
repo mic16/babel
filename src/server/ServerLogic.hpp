@@ -38,11 +38,16 @@ class ServerLogic {
         std::string generateToken();
         Request connect(Request request, TcpConnection *TcpUser);
         Request disconnect(Request request, std::string userName);
-        Request createUser(Request request);
+        Request createUser(Request request, TcpConnection *TcpUser);
         Request addFriend(Request request, std::string userName);
         Request removeFriend(Request request, std::string userName);
         Request getFriends(Request request, std::string userName); // Yoan en a pas
         Request callUser(Request request);
+        Request createTeam(Request request, std::string userName);
+        Request addUserToTeam(Request request);
+
+        bool teamExist(std::string name);
+        bool userExistInTeam(std::string teamName, std::string userName);
         
         // Request changeName(Request request, std::string oldName);
 
@@ -52,7 +57,6 @@ class ServerLogic {
 
 
 
-        bool createTeam(std::string team);
 
 
 

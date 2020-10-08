@@ -50,7 +50,7 @@ public:
     std::map<std::string, std::vector<std::string>> getTeams();
     bool callTeam(std::string name);
     bool getCallTeam(std::string name);
-    bool addUserToTeam(std::string name);
+    bool addUserToTeam(std::string userName, std::string teamName);
     bool acceptTeamRequest(std::string name);
 
     bool changeName(std::string name);

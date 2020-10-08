@@ -118,7 +118,7 @@ if (EXISTS /home/$ENV{USER}/Qt)
     target_compile_definitions(Babel
     PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
-    target_link_libraries(Babel PRIVATE ${CONAN_LIBS} Qt5::Widgets PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+    target_link_libraries(Babel PRIVATE ${CONAN_LIBS} Qt5::Widgets PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick ${CMAKE_THREAD_LIBS_INIT})
     target_link_libraries(BabelServer ${CONAN_LIBS} sqlite3)
 else()
     set(HEADERSCLIENT

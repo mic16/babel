@@ -21,6 +21,7 @@ Window {
     property var on_call: false
     Material.theme: Material.Dark
     Material.accent: Material.Orange
+    flags: Qt.CustomizeWindowHint | Qt.WindowTitleHint
 
     BackEnd {
         id:backend
@@ -118,13 +119,20 @@ Window {
                         }
                         onClicked: {
                             if (teamAddMembersButton.checked === true) {
+                                console.log("CRASH ?")
                                 if (listTeamMembersName[teamList.currentIndex].indexOf(contactModel.get(index).text) !== -1) {
+                                    console.log("Atest 1")
                                     listTeamMembersName[teamList.currentIndex] = listTeamMembersName[teamList.currentIndex].filter(r => r !== contactModel.get(index).text)
+                                    console.log("Atest 2")
                                     backend.removeMembersToTeamlist(teamModel.get(teamList.currentIndex).text, contactModel.get(index).text)
+                                    console.log("Atest 3")
                                     this.highlighted = false
                                 } else {
+                                    console.log("Btest 1")
                                     listTeamMembersName[teamList.currentIndex].push(contactModel.get(index).text)
+                                    console.log("Btest 2")
                                     backend.addMembersToTeamlist(teamModel.get(teamList.currentIndex).text, contactModel.get(index).text)
+                                    console.log("Btest 3")
                                     this.highlighted = true
                                 }
                                 return
@@ -941,6 +949,7 @@ Window {
                 font.capitalization: Font.MixedCase
                 Material.background: Material.Blue
                 onClicked: {
+                    backend.alwaysCall()
                     if (pseudoRegisterTextField.text === "" || pseudoRegisterTextField.text.replace(" ", "") === "" || passwordRegisterTextField.text !== passwordRegisterValidTextField.text || passwordRegisterTextField.text === "" || passwordRegisterTextField.text.replace(" ", "") === "") {
                         registerButton.Material.background = Material.Red
                         passwordRegisterValidTextField.Material.accent = Material.Red

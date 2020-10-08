@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <qqml.h>
 #include <iostream>
+#include <thread>
 #include "Communication.hpp"
 
 class BackEnd : public QObject
@@ -47,11 +48,12 @@ public:
     Q_INVOKABLE void fillUserInfo();
     Q_INVOKABLE void addFriendDataBase(const QString &userName);
     Q_INVOKABLE void removeFriendDataBase(const QString &userName);
-    Q_INVOKABLE void addMembersTeamListDatabase();
-    Q_INVOKABLE void removeMembersTeamListDatabase();
+    Q_INVOKABLE void addMembersTeamListDatabase(const QString &teamname, const QString &username);
+    Q_INVOKABLE void removeMembersTeamListDatabase(const QString &teamname, const QString &username);
     Q_INVOKABLE bool callFriend(const QString &Name);
     Q_INVOKABLE bool callTeam(const QString &Name);
     Q_INVOKABLE void disconnect();
+    Q_INVOKABLE void alwaysCall();
 
     Q_INVOKABLE void display();
 
@@ -80,6 +82,7 @@ private:
     std::vector<std::string> notiflist;
     bool m_microphone;
     bool m_quit;
+    std::thread m_thread_obj;
 };
 
 #endif // BACKEND_H
