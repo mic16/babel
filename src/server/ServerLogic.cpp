@@ -175,7 +175,7 @@ Request ServerLogic::createTeam(Request request, std::string userName)
 Request ServerLogic::addUserToTeam(Request request)
 {
     std::vector<std::string> vec;
-    boost::split(vec, request.getRequestContent(), boost::is_any_of(","));
+    boost::split(vec, request.getRequestContent(), boost::is_any_of(";"));
     std::string teamName = vec[0];
     std::string userName = vec[1];
 
@@ -186,7 +186,7 @@ Request ServerLogic::addUserToTeam(Request request)
             return (Request(Request::REFUSEADDUSERTOTEAM));
         std::string members = this->dataBase.select("SELECT members FROM teams WHERE name='" + teamName + "'").at(0);
         if (members.length() != 0)
-            members.append(",");
+            members.append(";");
         members.append(userName);
         if (this->dataBase.insertRemoveUpdate("UPDATE teams set members='" + members + "' WHERE name='" + teamName + "'"))
             return (Request(Request::VALIDADDUSERTOTEAM));
@@ -206,6 +206,29 @@ Request ServerLogic::getFriendRequests(Request request, std::string userName)
     friendsRequest = "";
     return (Request(Request::VALIDGETFRIENDREQUESTS, friendsRequest));
 }
+
+Request ServerLogic::getTeams(Request request, std::string userName)
+{
+    std::vector<std::string> listTeam;
+    std::string res;
+    if (this->dataBase.select("SELECT name FROM teams").size() > 0) {
+        listTeam = this->dataBase.select("SELECT name FROM teams");
+    } else {
+        return (Request(Request::VALIDGETTEAMS, ""));
+    }
+    for (std::string team : listTeam) {
+        if (this->dataBase.select("SELECT members FROM teams WHERE name='" + team + "'").size() > 0) {
+            std::string t = this->dataBase.select("SELECT members FROM teams WHERE name='" + team + "'").at(0);
+            if (t.find(userName) != -1) {
+                if (res.length() != 0)
+                    res.append(",");
+                res.append(team + "(" + t + ")");
+            }
+        }
+    }
+    return (Request(Request::VALIDGETTEAMS, res));
+}
+
 
 Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 {
@@ -241,6 +264,8 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
             return (addUserToTeam(request));
         case Request::GETFRIENDREQUESTS:
             return (getFriendRequests(request, userName));
+        case Request::GETTEAMS:
+            return (getTeams(request, userName));
         default:
             return (Request(Request::BADREQUEST));
     }

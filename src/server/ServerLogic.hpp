@@ -47,10 +47,10 @@ class ServerLogic {
         Request addUserToTeam(Request request);
         Request addUserToTeam(std::string name);
         Request getFriendRequests(Request request, std::string userName);
+        Request getTeams(Request request, std::string userName);
 
         bool teamExist(std::string name);
         bool userExistInTeam(std::string teamName, std::string userName);
-        std::map<std::string, std::vector<std::string>> getTeams();
         
         // Request changeName(Request request, std::string oldName);
 
