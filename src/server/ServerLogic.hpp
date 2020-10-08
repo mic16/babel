@@ -45,31 +45,30 @@ class ServerLogic {
         Request callUser(Request request);
         Request createTeam(Request request, std::string userName);
         Request addUserToTeam(Request request);
+        Request addUserToTeam(std::string name);
+        Request getFriendRequests(Request request, std::string userName);
 
         bool teamExist(std::string name);
         bool userExistInTeam(std::string teamName, std::string userName);
+        std::map<std::string, std::vector<std::string>> getTeams();
         
         // Request changeName(Request request, std::string oldName);
 
 
 
-        Request addUserToTeam(std::string name);
+
+        void acceptTeamRequest(std::string name);
 
 
 
+        void getCallTeam(std::string name);
 
 
-
-        void getCall(std::string name);
         void acceptCall();
         void stopCall();
 
-        std::vector<std::string> getFriendRequests();
         void acceptFriendRequest(std::string name);
-        std::map<std::string, std::vector<std::string>> getTeams();
         void callTeam(std::string name);
-        void getCallTeam(std::string name);
-        void acceptTeamRequest(std::string name);
 
 
 
