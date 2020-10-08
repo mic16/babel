@@ -50,6 +50,13 @@ Request ServerLogic::addFriend(Request request, std::string userName)
         friends.append(",");
     friends.append(request.getRequestContent());
     if (this->dataBase.insertRemoveUpdate("UPDATE users SET friends='" + friends + "' WHERE name='" + userName + "'")) {
+        std::string friendsRequest;
+        if (this->dataBase.select("SELECT friends_request FROM users WHERE name='" + request.getRequestContent() + "';").size() > 0)
+            friendsRequest.append(this->dataBase.select("SELECT friends_request FROM users WHERE name='" + request.getRequestContent() + "';").at(0));
+        if (friendsRequest.length() != 0)
+            friendsRequest.append(",");
+        friendsRequest.append(userName);
+        this->dataBase.insertRemoveUpdate("UPDATE users SET friends_request='" + friendsRequest + "' WHERE name='" + request.getRequestContent() + "'");
         return (Request(Request::VALIDADDFRIEND));
     } else
         return (Request(Request::REFUSEADDFRIEND));
@@ -188,6 +195,18 @@ Request ServerLogic::addUserToTeam(Request request)
     }
 }
 
+Request ServerLogic::getFriendRequests(Request request, std::string userName)
+{
+    std::string friendsRequest;
+
+    if (this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").size() > 0) {
+        friendsRequest.append(this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").at(0));
+        this->dataBase.insertRemoveUpdate("UPDATE users SET friends_request='' WHERE name='" + userName + "'");
+    }
+    friendsRequest = "";
+    return (Request(Request::VALIDGETFRIENDREQUESTS, friendsRequest));
+}
+
 Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 {
     std::string userName;
@@ -220,6 +239,8 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
             return (createTeam(request, userName));
         case Request::ADDUSERTOTEAM:
             return (addUserToTeam(request));
+        case Request::GETFRIENDREQUESTS:
+            return (getFriendRequests(request, userName));
         default:
             return (Request(Request::BADREQUEST));
     }
