@@ -1,17 +1,17 @@
 /*
 ** EPITECH PROJECT, 2020
-** PortAudioRecord
+** PortAudio
 ** File description:
-** PortAudioRecord
+** PortAudio
 */
 
-#ifndef PORTAUDIORECORD_HPP_
-#define PORTAUDIORECORD_HPP_
+#ifndef PORTAUDIO_HPP_
+#define PORTAUDIO_HPP_
 
  /* #define SAMPLE_RATE  (17932) // Test failure to open with this value. */
 #define SAMPLE_RATE  (44100)
 #define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS     (0.2)
+#define NUM_SECONDS     (5)
 #define NUM_CHANNELS    (2)
 /* #define DITHER_FLAG     (paDitherOff) */
 #define DITHER_FLAG     (0) 
@@ -51,16 +51,16 @@ typedef struct
 {
     int          frameIndex;  /* Index into sample array. */
     int          maxFrameIndex;
-    SAMPLE      *recordedSamples;
+    SAMPLE      *edSamples;
 }
 paTestData;
 
-class PortAudioRecord {
+class PortAudio {
     public:
-        PortAudioRecord();
-        ~PortAudioRecord();
+        PortAudio();
+        ~PortAudio();
 
-        // static int RecordCallback(const void *inputBuffer, void *outputBuffer,
+        // static int Callback(const void *inputBuffer, void *outputBuffer,
         //                     unsigned long framesPerBuffer,
         //                     const PaStreamCallbackTimeInfo* timeInfo,
         //                     PaStreamCallbackFlags statusFlags,
@@ -71,8 +71,8 @@ class PortAudioRecord {
         //                     PaStreamCallbackFlags statusFlags,
         //                     void *userData);
 
-        PaStream *Record();
-        void Play(PaStream* _stream);
+        void ();
+        void Play();
 
         void Start();
 
@@ -90,4 +90,4 @@ class PortAudioRecord {
         double _average;
 };
 
-#endif /* !PORTAUDIORECORD_HPP_ */
+#endif /* !PORTAUDIO_HPP_ */
