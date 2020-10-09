@@ -1,13 +1,17 @@
 #include <QCoreApplication>
 #include "myudp.hpp"
-#include "../PortAudio/PortAudio.hpp"
+#include "../PortAudio/PortAudioRecord.hpp"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    MyUDP client;
+    PortAudioRecord *audio = new PortAudioRecord();
 
-    if (argc > 1)
-        client.HelloUDP();    
-    return a.exec();
+    
+
+    // QCoreApplication a(argc, argv);
+    // MyUDP client;
+
+    // if (argc > 1)
+    //     client.HelloUDP();    
+    // return a.exec();
 }
