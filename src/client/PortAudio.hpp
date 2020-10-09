@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2020
-** PortAudioEcho
+** PortAudio
 ** File description:
 ** PortAudio
 */
@@ -8,37 +8,35 @@
 #ifndef PORTAUDIO_HPP_
 #define PORTAUDIO_HPP_
 
-/* #define SAMPLE_RATE  (17932) // Test failure to open with this value. */
-#define SAMPLE_RATE       (44100)
-#define FRAMES_PER_BUFFER   (512)
-#define NUM_SECONDS          (10)
-/* #define DITHER_FLAG     (paDitherOff)  */
-#define DITHER_FLAG           (0)
+ /* #define SAMPLE_RATE  (17932) // Test failure to open with this value. */
+#define SAMPLE_RATE  (44100)
+#define FRAMES_PER_BUFFER (512)
+#define NUM_SECONDS     (5)
+#define NUM_CHANNELS    (2)
+/* #define DITHER_FLAG     (paDitherOff) */
+#define DITHER_FLAG     (0) 
+
+#define WRITE_TO_FILE   (0)
 
 /* Select sample format. */
 #if 1
 #define PA_SAMPLE_TYPE  paFloat32
-#define SAMPLE_SIZE (4)
+typedef float SAMPLE;
 #define SAMPLE_SILENCE  (0.0f)
 #define PRINTF_S_FORMAT "%.8f"
-#elif 0
+#elif 1
 #define PA_SAMPLE_TYPE  paInt16
-#define SAMPLE_SIZE (2)
-#define SAMPLE_SILENCE (0)
-#define PRINTF_S_FORMAT "%d"
-#elif 0
-#define PA_SAMPLE_TYPE  paInt24
-#define SAMPLE_SIZE (3)
+typedef short SAMPLE;
 #define SAMPLE_SILENCE  (0)
 #define PRINTF_S_FORMAT "%d"
 #elif 0
 #define PA_SAMPLE_TYPE  paInt8
-#define SAMPLE_SIZE (1)
+typedef char SAMPLE;
 #define SAMPLE_SILENCE  (0)
 #define PRINTF_S_FORMAT "%d"
 #else
 #define PA_SAMPLE_TYPE  paUInt8
-#define SAMPLE_SIZE (1)
+typedef unsigned char SAMPLE;
 #define SAMPLE_SILENCE  (128)
 #define PRINTF_S_FORMAT "%d"
 #endif
@@ -46,31 +44,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <vector>
 #include <iostream>
 #include "portaudio.h"
+
+typedef struct
+{
+    int          frameIndex;  /* Index into sample array. */
+    int          maxFrameIndex;
+    SAMPLE      *edSamples;
+}
+paTestData;
 
 class PortAudio {
     public:
         PortAudio();
         ~PortAudio();
 
-        void Write(std::vector<uint32_t> *);
-        std::vector<uint32_t> *Read(void);
+        // static int Callback(const void *inputBuffer, void *outputBuffer,
+        //                     unsigned long framesPerBuffer,
+        //                     const PaStreamCallbackTimeInfo* timeInfo,
+        //                     PaStreamCallbackFlags statusFlags,
+        //                     void *userData);
+        // static int PlayCallback(const void *inputBuffer, void *outputBuffer,
+        //                     unsigned long framesPerBuffer,
+        //                     const PaStreamCallbackTimeInfo* timeInfo,
+        //                     PaStreamCallbackFlags statusFlags,
+        //                     void *userData);
 
-        void Start(void);
-        void Stop(void);
+        void ();
+        void Play();
 
-        void error();
+        void Start();
 
     protected:
     private:
         PaStreamParameters _inputParameters;
         PaStreamParameters _outputParameters;
-        PaStream *_stream;
+        PaStream* _stream;
+        PaError _err;
+        paTestData _data;
+        int _totalFrames;
+        int _numSamples;
         int _numBytes;
-        int _numChannels;
-        std::vector<uint32_t> *_sampleBlock;
+        SAMPLE _max, _val;
+        double _average;
 };
 
 #endif /* !PORTAUDIO_HPP_ */
