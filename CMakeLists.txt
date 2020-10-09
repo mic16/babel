@@ -36,6 +36,10 @@ set(SRCSUDP
     src/udpclient/myudp.cpp
     )
 
+set(SRCSPORTAUDIO
+    src/PortAudio/PortAudio.cpp
+    )
+
 add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 add_definitions(-DDEBUG_PROFILE=0)
 add_definitions(-Wno-pointer-arith)
@@ -78,10 +82,14 @@ set(HEADERSUDP
     src/udpclient/myudp.hpp
     )
 
+set(HEADERSPORTAUDIO
+    src/PortAudio/PortAudio.hpp
+    )
+
 # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
 add_executable(BabelServer ${SRCSSERVER} ${HEADERSSERVER})
 add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
-add_executable(BabelUdp ${SRCSUDP} ${HEADERSUDP})
+add_executable(BabelUdp ${SRCSUDP} ${HEADERSUDP} ${SRCSPORTAUDIO} ${HEADERSPORTAUDIO})
 
 qt5_use_modules(Babel Network)
 qt5_use_modules(BabelServer Network)
