@@ -8,5 +8,12 @@ zlib/1.2.11@conan/stable
 bzip2/1.0.8@conan/stable
 boost/1.71.0@conan/stable
 
+sqlite3/3.29.0@bincrafters/stable
+sqlite_orm/1.5@bincrafters/stable
+zlib/1.2.11@conan/stable
+bzip2/1.0.8@conan/stable
+boost/1.71.0@conan/stable
+
+
 [generators]
 cmake

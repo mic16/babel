@@ -19,7 +19,6 @@
 #include "../utils/Utils.hpp"
 #include "../utils/Request.hpp"
 #include "../dataBase/Data.hpp"
-#include "../dataBase/Data.hpp"
 
 class TcpConnection;
 
@@ -38,30 +37,39 @@ class ServerLogic {
 
         std::string generateToken();
         Request connect(Request request, TcpConnection *TcpUser);
-        Request createUser(Request request);
+        Request disconnect(Request request, std::string userName);
+        Request createUser(Request request, TcpConnection *TcpUser);
+        Request addFriend(Request request, std::string userName);
+        Request removeFriend(Request request, std::string userName);
+        Request getFriends(Request request, std::string userName); // Yoan en a pas
+        Request callUser(Request request);
+        Request createTeam(Request request, std::string userName);
+        Request addUserToTeam(Request request);
+        Request addUserToTeam(std::string name);
+        Request getFriendRequests(Request request, std::string userName);
+        Request getTeams(Request request, std::string userName);
+
+        bool teamExist(std::string name);
+        bool userExistInTeam(std::string teamName, std::string userName);
+        
+        // Request changeName(Request request, std::string oldName);
 
 
 
-        bool createTeam(std::map<std::string, std::vector<std::string>> team);
 
-        void callUser(std::string name);
-        void getCall(std::string name);
+        void acceptTeamRequest(std::string name);
+
+
+
+        void getCallTeam(std::string name);
+
+
         void acceptCall();
         void stopCall();
 
-        void addFriend(std::string name);
-        void removeFriend(std::string name);
-        std::vector<std::string> getFriends(); // Yoan en a pas
-        std::vector<std::string> getFriendRequests();
         void acceptFriendRequest(std::string name);
-        void disconnect();
-        std::map<std::string, std::vector<std::string>> getTeams();
         void callTeam(std::string name);
-        void getCallTeam(std::string name);
-        void addUserToTeam(std::string name);
-        void acceptTeamRequest(std::string name);
 
-        Request changeName(Request request, std::string oldName);
 
 
         ServerLogic();
