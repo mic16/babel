@@ -86,7 +86,7 @@ QList<QString> BackEnd::friendlist()
     std::cout << "JE GET MA FRIEND LIST avec " << m_friendlist[0] << " et " << m_friendlist.size() << std::endl;
     for (size_t i = 0; i < m_friendlist.size(); i++)
         list.append(QString::fromStdString(m_friendlist[i]));
-    std::cout << "JE GET MA QQQQQQQQQFRIEND LIST avec " << list[0].toStdString() << std::endl;
+    std::cout << "JE GET MA QQQQQQQQQFRIEND LIST avec " << list.size() << std::endl;
     return list;
 }
 
@@ -120,6 +120,11 @@ void BackEnd::setUserName(const QString &userName)
 
     m_userName = username;
     emit userNameChanged();
+}
+
+int BackEnd::getFriendlistSize()
+{
+    return m_friendlist.size();
 }
 
 void BackEnd::setpassWord(const QString &passWord)

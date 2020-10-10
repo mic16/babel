@@ -58,16 +58,15 @@ Window {
             console.log("FRIEND LIST HAS ADD", addFriendTextField.text)
             contactModel.clear()
             contactModel.append(({text: backend.userName}))
-            for(var i = 0; backend.friendlist.size < i; i++)
+            for(var i = 0; backend.getFriendlistSize() > i; i++)
                 contactModel.append(({text: backend.friendlist[i]}))
-
+            console.log("QUAND LA FRIEND LIST ADD HAS CHANGED", backend.friendlist.size)
         }
         onNotifListChanged: {
-            contactModel.clear()
-            contactModel.append(({text: backend.userName}))
-            for(var i = 0; backend.friendlist.size < i; i++)
-                contactModel.append(({text: backend.friendlist[i]}))
-
+            // contactModel.clear()
+            // contactModel.append(({text: backend.userName}))
+            // for(var i = 0; backend.friendlist.size() > i; i++)
+            //     contactModel.append(({text: backend.friendlist[i]}))
         }
         onTeamlistChanged: {
             console.log("TEAM LIST HAS CHANGED")
@@ -1108,9 +1107,16 @@ Window {
                         if (contactModel.get(0).text === "") {
                             contactModel.clear()
                             contactModel.append(({text: pseudoSigninTextField.text}))
-                            for(var i = 0; backend.friendlist.size < i; i++)
-                                contactModel.append(({text: backend.friendlist[i]}))
-                            console.log("LA LISTE DE MES AMIS S'ELEVE A ", backend.friendlist.size)
+
+
+                            console.log("LA LISTE AVANT LE FOR EST ", backend.friendlist[0], " et ", backend.friendlist)
+                            for(var j = 0; backend.getFriendlistSize() > j; j++) {
+                                contactModel.append(({text: backend.friendlist[j]}))
+                                console.log("JE FAIS UN TOURRRRRRRRRRRRRRRRRRRRRRRRRR DE BOUCLE AVEC ", backend.friendlist[j])
+                            }
+                            console.log("LA LISTE DE MES AMIS S'ELEVE A ", backend.getFriendlistSize())
+
+
                             backend.userName = pseudoSigninTextField.text
                             backend.passWord = passwordSigninTextField.text
                             // --------------------------------------------
