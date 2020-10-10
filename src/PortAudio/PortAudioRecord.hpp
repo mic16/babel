@@ -8,86 +8,52 @@
 #ifndef PORTAUDIO_HPP_
 #define PORTAUDIO_HPP_
 
- /* #define SAMPLE_RATE  (17932) // Test failure to open with this value. */
-#define SAMPLE_RATE  (44100)
-#define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS     (5)
-#define NUM_CHANNELS    (2)
-/* #define DITHER_FLAG     (paDitherOff) */
-#define DITHER_FLAG     (0) 
-
-#define WRITE_TO_FILE   (0)
-
-/* Select sample format. */
-#if 1
-#define PA_SAMPLE_TYPE  paFloat32
-typedef float SAMPLE;
-#define SAMPLE_SILENCE  (0.0f)
-#define PRINTF_S_FORMAT "%.8f"
-#elif 1
-#define PA_SAMPLE_TYPE  paInt16
-typedef short SAMPLE;
-#define SAMPLE_SILENCE  (0)
-#define PRINTF_S_FORMAT "%d"
-#elif 0
-#define PA_SAMPLE_TYPE  paInt8
-typedef char SAMPLE;
-#define SAMPLE_SILENCE  (0)
-#define PRINTF_S_FORMAT "%d"
-#else
-#define PA_SAMPLE_TYPE  paUInt8
-typedef unsigned char SAMPLE;
-#define SAMPLE_SILENCE  (128)
-#define PRINTF_S_FORMAT "%d"
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
 #include "portaudio.h"
 
-typedef struct
-{
-    int          frameIndex;  /* Index into sample array. */
-    int          maxFrameIndex;
-    SAMPLE      *edSamples;
-}
-paTestData;
+// classe que tu vas devoir hériter de client
+class IAudioStreamCallback {
+    public:
+        // /!\ pour avoir la taille totale de inputSamples/outSamples tu dois faire samplesCount * sizeof(float)
+
+        // dans inputSamples il y a la data de l'audio que tu dois envoyer à l'autre user udp
+        virtual int onAudioReady(const float *inputSamples, unsigned long samplesCount) = 0; // Called when Audio frames has been recorded
+        // outputSamples c'est un float * (déjà malloc) et tu dois écrire le son dedans pour que portaudio le play tout seul
+        virtual int onAudioNeeded(float *outputSamples, unsigned long samplesCount) = 0; // Called when Audio frames are needed to be played
+};
 
 class PortAudio {
     public:
-        PortAudio();
+        PortAudio(int sampleRate, int framePerBuffer, int nbChannels);
         ~PortAudio();
 
-        // static int Callback(const void *inputBuffer, void *outputBuffer,
-        //                     unsigned long framesPerBuffer,
-        //                     const PaStreamCallbackTimeInfo* timeInfo,
-        //                     PaStreamCallbackFlags statusFlags,
-        //                     void *userData);
-        // static int PlayCallback(const void *inputBuffer, void *outputBuffer,
-        //                     unsigned long framesPerBuffer,
-        //                     const PaStreamCallbackTimeInfo* timeInfo,
-        //                     PaStreamCallbackFlags statusFlags,
-        //                     void *userData);
+        static int outputCallback(const void *inputBuffer, void *outputBuffer,
+                            unsigned long framesPerBuffer,
+                            const PaStreamCallbackTimeInfo* timeInfo,
+                            PaStreamCallbackFlags statusFlags,
+                            void *userData);
+        static int inputCallback(const void *inputBuffer, void *outputBuffer,
+                            unsigned long framesPerBuffer,
+                            const PaStreamCallbackTimeInfo* timeInfo,
+                            PaStreamCallbackFlags statusFlags,
+                            void *userData);
 
-        void Record();
-        void Play();
-
-        void Start();
-
+        int getNbChannels();
+        void start();
+        void stop();
+        void setCallback(IAudioStreamCallback *callback);
     protected:
     private:
-        PaStreamParameters _inputParameters;
-        PaStreamParameters _outputParameters;
-        PaStream* _stream;
+        IAudioStreamCallback *_callback = nullptr;
+        PaStream *_inputStream;
+        PaStream *_outputStream;
         PaError _err;
-        paTestData _data;
-        int _totalFrames;
-        int _numSamples;
-        int _numBytes;
-        SAMPLE _max, _val;
-        double _average;
+        int _sampleRate;
+        int _framePerBuffer;
+        int _nbChannels;
 };
 
 #endif /* !PORTAUDIO_HPP_ */

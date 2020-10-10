@@ -60,6 +60,8 @@ if (EXISTS /home/$ENV{USER}/Qt)
         src/client/backend.cpp
         src/client/mainwindow.cpp
         src/client/Communication.cpp
+        src/udpclient/MyUdp.cpp
+        src/PortAudio/PortAudioRecord.cpp
         )
 
     set(SRCSSERVER
@@ -71,12 +73,6 @@ if (EXISTS /home/$ENV{USER}/Qt)
         src/utils/Request.cpp
         src/dataBase/Data.cpp
         )
-
-    set(SRCSUDP
-        src/udpclient/main.cpp
-        src/udpclient/myudp.cpp
-        src/PortAudio/PortAudioRecord.cpp
-    )
 
 
     add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
@@ -105,6 +101,8 @@ if (EXISTS /home/$ENV{USER}/Qt)
         src/utils/Request.hpp
         src/client/mainwindow.hpp
         src/client/Communication.hpp
+        src/udpclient/MyUdp.hpp
+        src/PortAudio/PortAudioRecord.hpp
         )
 
     set(HEADERSSERVER
@@ -116,26 +114,19 @@ if (EXISTS /home/$ENV{USER}/Qt)
         src/utils/Request.hpp
         src/dataBase/Data.hpp
         )
-    set(HEADERSUDP
-        src/udpclient/myudp.hpp
-        src/PortAudio/PortAudioRecord.hpp
-        )
 
     # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
     add_executable(BabelServer ${SRCSSERVER} ${HEADERSSERVER})
     add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
-    add_executable(BabelUdp ${SRCSUDP} ${HEADERSUDP})
 
     # qt5_use_modules(Babel Network)
     # qt5_use_modules(BabelServer Network)
-    qt5_use_modules(BabelUdp Network)
 
     target_compile_definitions(Babel
     PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
     target_link_libraries(Babel PRIVATE ${CONAN_LIBS} Qt5::Widgets PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
     target_link_libraries(BabelServer ${CONAN_LIBS} sqlite3)
-    target_link_libraries(BabelUdp ${CONAN_LIBS} Qt5::Widgets)
 else()
     set(HEADERSCLIENT
         src/error/main.cpp

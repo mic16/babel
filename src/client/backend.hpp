@@ -8,8 +8,10 @@
 #include <qqml.h>
 #include <iostream>
 #include "Communication.hpp"
+#include "../PortAudio/PortAudioRecord.hpp"
+#include "../udpclient/MyUdp.hpp"
 
-class BackEnd : public QObject
+class BackEnd : public QObject, IAudioStreamCallback 
 {
     Q_OBJECT;
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged);
@@ -30,6 +32,9 @@ public:
     void setUserName(const QString &userName);
     void setpassWord(const QString &passWord);
     void setMicrophone(const bool &microphone);
+    int onAudioReady(const float *inputSamples, unsigned long samplesCount);
+    int onAudioNeeded(float *outputSamples, unsigned long samplesCount);
+
     Q_INVOKABLE void addToFriendlist(const QString &friendName);
     Q_INVOKABLE void removeToFriendlist(const QString &friendName);
     Q_INVOKABLE void addToTeamlist(const QString &teamName);
@@ -67,6 +72,8 @@ signals:
 
 
 private:
+    PortAudio *audio;
+    MyUdp callfriend;
     Communication *m_com;
     std::string m_userName;
     std::string m_passWord;

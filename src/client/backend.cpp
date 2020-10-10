@@ -5,6 +5,8 @@ BackEnd::BackEnd(QObject *parent) :
 {
     m_microphone = true;
     m_com = new Communication;
+    audio = new PortAudio(48000, 256, 2);
+    audio->setCallback(this);
 }
 
 QString BackEnd::userName()
@@ -198,6 +200,8 @@ void BackEnd::updateDatabaseTeamList()
 
 bool BackEnd::callFriend(const QString &Name)
 {
+    callfriend.setFriend(QHostAddress::LocalHost);
+    audio->start();
     // TODO FAIRE LA REQUETE D'APEL A UN AMI
     return false;
 }
@@ -233,3 +237,16 @@ void BackEnd::display()
         std::cout << "]" << std::endl;
     }
 }
+
+int BackEnd::onAudioReady(const float *inputSamples, unsigned long samplesCount)
+{
+    callfriend.write(inputSamples, samplesCount);
+    return (0);
+}
+
+int BackEnd::onAudioNeeded(float *outputSamples, unsigned long samplesCount)
+{
+    std::memcpy(outputSamples, callfriend.read(samplesCount), samplesCount * sizeof(float));
+    return (0);
+}
+
