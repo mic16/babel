@@ -8,6 +8,8 @@
 #include <qqml.h>
 #include <iostream>
 #include <thread>
+#include "Clock.hpp"
+#include <mutex>
 #include "Communication.hpp"
 
 class BackEnd : public QObject

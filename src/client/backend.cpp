@@ -1,14 +1,19 @@
 #include "backend.hpp"
 
 BackEnd *BackEnd::singleton = nullptr;
+std::mutex p_mutex;
 
 void thread_func(BackEnd *backend)
 {
-    int aze = 0;
+    Clock<float> time;
 
+    time.start();
     while (true) {
-        std::cout << aze << std::endl;
-        aze += 1;
+        if (time.getElapsedTime() == 1) {
+            std::cout << "TEST 1 SECONDE" << std::endl;
+            time.reset();
+            backend->fillUserInfo();
+        }
         if (backend->getQuit())
             break;
     }
@@ -199,10 +204,10 @@ bool BackEnd::addUserToDataBase()
 
 void BackEnd::fillUserInfo()
 {
-    m_com->getFriends();
-    
-    // m_com->getTeams();
-    // m_com->getFriendsRequest();
+    const std::lock_guards<std::mutex> lock(p_mutex);
+    m_friendlist = m_com->getFriends();
+    m_teamlist = m_com->getTeams();
+    notiflist = m_com->getFriendRequests();
     // TODO REQUETE TO GET ALL USER INFO FROM DATABASE
 }
 
