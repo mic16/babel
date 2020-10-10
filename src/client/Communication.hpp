@@ -35,10 +35,11 @@ public:
     bool createTeam(std::string teamName);
 
     bool callUser(std::string name);
-    std::string getCall(std::string name);
+    std::string getCall();
     bool acceptCall(bool response);
     bool stopCall();
     int getAcceptCall();
+    bool hangUpFriend();
 
     bool addFriend(std::string name);
     bool removeFriend(std::string name);

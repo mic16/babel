@@ -81,7 +81,17 @@ bool Communication::callUser(std::string name)
         return (false);
 }
 
-std::string Communication::getCall(std::string name)
+bool Communication::hangUpFriend()
+{
+    Request r(Request::STOPCALL, "", token);
+    sendToServer(r);
+    if (lastRequestRecieve.getRequestType() == Request::VALIDSTOPCALL)
+        return (true);
+    else
+        return (false);
+}
+
+std::string Communication::getCall()
 {
     Request r(Request::GETCALL, "", token);
     sendToServer(r);

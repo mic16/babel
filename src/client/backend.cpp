@@ -10,24 +10,26 @@ void BackEnd::update()
         m_teamlist = m_com->getTeams();
         m_notiflist = m_com->getFriendRequests();
 
-        // if (m_onPending) {
-        //     count = m_com->getAcceptCall();
-        //     if (count == 0) {
-        //         m_inCall = true;
-        //         m_onPending = false; // TODO APPELER L'AUDIO START
-        //     }
-        //     if (count == 1) {
-        //         m_inCall = false;
-        //         m_onPending = false;
-        //     }
-        // }
-        // else {
-        //     std::string name = m_com->getCall();
-        //     if (string_name.compare("") != 0) {
-        //         m_calledFriend = string_name
-        //         m_onPopup = true
-        //     }
-        // }
+        if (m_onPending) {
+            count = m_com->getAcceptCall();
+            if (count == 0) {
+                m_inCall = true;
+                m_onPending = false; // TODO APPELER L'AUDIO START
+                callfriend.setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
+                audio->start();
+            }
+            if (count == 1) {
+                m_inCall = false;
+                m_onPending = false;
+            }
+        }
+        else {
+            std::string name = m_com->getCall();
+            if (name.compare("") != 0) {
+                m_calledFriend = name;
+                m_onPopup = true;
+            }
+        }
     }
 }
 
@@ -267,17 +269,16 @@ void BackEnd::removeMembersTeamListDatabase(const QString &teamname, const QStri
 
 void BackEnd::callFriend(const QString &Name)
 {
-    callfriend.setFriend(QHostAddress::LocalHost);
-    audio->start();
     // TODO FAIRE LA REQUETE D'APEL A UN AMI
-    // m_com->callUser(Name.toUtf8().constData());
-    // m_onPending = true;
-    // m_calledFriend = Name.toUtf8().constData();
+    m_com->callUser(Name.toUtf8().constData());
+    m_onPending = true;
+    m_calledFriend = Name.toUtf8().constData();
 }
 
 void BackEnd::hangUpFriend()
 {
-    // m_com->hangUpFriend(m_calledFriend);
+    m_com->hangUpFriend();
+    audio->stop();
 }
 
 bool BackEnd::callTeam(const QString &Name)
@@ -288,7 +289,11 @@ bool BackEnd::callTeam(const QString &Name)
 
 void BackEnd::callAccept(bool bool_accept)
 {
-    // c_com->acceptCall(bool_accept);
+    m_com->acceptCall(bool_accept);
+    if (bool_accept) {
+        callfriend.setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
+        audio->start();
+    }
     // TODO DIRE AU SERVEUR SI LE CALL EST ACCEPTER
 }
 
@@ -301,6 +306,7 @@ void BackEnd::disconnect()
     std::cout << "WOAAW" << std::endl;
     // m_com->disconnect();
     std::cout << "FIN" << std::endl;
+    audio->stop();
 }
 
 bool BackEnd::isAuth() // add to qml
