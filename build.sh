@@ -40,6 +40,7 @@ cd ..
 if test -e build/bin/Babel ; then
     mv build/bin/Babel .
     mv build/bin/BabelServer .
+    mv build/bin/BabelUdp .
 else
     mv build/Babel .
 fi

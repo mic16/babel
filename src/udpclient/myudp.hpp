@@ -18,7 +18,7 @@ public slots:
     void readyRead();
 
 private:
-    // PortAudioRecord audio;
+    PortAudio *audio;
     QUdpSocket *socket;
 
 };

@@ -5,7 +5,7 @@
 ** PortAudio
 */
 
-#include "PortAudio.hpp"
+#include "PortAudioRecord.hpp"
 
 PortAudio::PortAudio()
 {
@@ -88,7 +88,7 @@ void PortAudio::Record()
                SAMPLE_RATE,
                FRAMES_PER_BUFFER,
                paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-               Callback,
+               RecordCallback,
                &_data );
     // if( _err != paNoError ) goto done;
     _err = Pa_StartStream( _stream );

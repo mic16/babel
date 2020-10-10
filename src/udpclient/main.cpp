@@ -4,10 +4,10 @@
 
 int main(int argc, char *argv[])
 {
-    PortAudioRecord *audio = new PortAudioRecord();
+    PortAudio *audio = new PortAudio();
 
     while (1)
-        this->Start();
+        audio->Start();
 
     return (0);
 
