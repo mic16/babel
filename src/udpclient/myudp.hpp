@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QUdpSocket>
 #include "portaudio.h"
-#include "PortAudioRecord.hpp"
+#include "../PortAudio/PortAudioRecord.hpp"
 
 class MyUDP : public QObject
 {
@@ -13,14 +13,14 @@ public:
     explicit MyUDP(QObject *parent = 0);
     void HelloUDP();
 signals:
-    
+
 public slots:
     void readyRead();
 
 private:
     // PortAudioRecord audio;
     QUdpSocket *socket;
-    
+
 };
 
 #endif // MYUDP_H
