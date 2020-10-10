@@ -1,33 +1,26 @@
 /*
 ** EPITECH PROJECT, 2020
-** PortAudioRecord
+** PortAudio
 ** File description:
-** PortAudioRecord
+** PortAudio
 */
 
-#include "PortAudioRecord.hpp"
+#include "PortAudio.hpp"
 
-PortAudioRecord::PortAudioRecord()
+PortAudio::PortAudio()
 {
     _err = paNoError;
 }
 
-PortAudioRecord::~PortAudioRecord()
+PortAudio::~PortAudio()
 {
-done:
-    Pa_Terminate();
-    if( _data.recordedSamples )       /* Sure it is NULL or valid. */
-        free( _data.recordedSamples );
-    if( _err != paNoError ) {
-        _err = 1;          /* Always return 0 or 1, but no other return codes. */
-    }
 }
 
 static int RecordCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
 {
     paTestData *data = (paTestData*)userData;
     const SAMPLE *rptr = (const SAMPLE*)inputBuffer;
-    SAMPLE *wptr = &data->recordedSamples[data->frameIndex * NUM_CHANNELS];
+    SAMPLE *wptr = &data->edSamples[data->frameIndex * NUM_CHANNELS];
     long framesToCalc;
     long i;
     int finished;
@@ -58,7 +51,7 @@ static int RecordCallback(const void *inputBuffer, void *outputBuffer, unsigned 
 static int PlayCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
 {
     paTestData *data = (paTestData*)userData;
-    SAMPLE *rptr = &data->recordedSamples[data->frameIndex * NUM_CHANNELS];
+    SAMPLE *rptr = &data->edSamples[data->frameIndex * NUM_CHANNELS];
     SAMPLE *wptr = (SAMPLE*)outputBuffer;
     unsigned int i;
     int finished;
@@ -86,7 +79,7 @@ static int PlayCallback(const void *inputBuffer, void *outputBuffer, unsigned lo
     return finished;
 }
 
-PaStream *PortAudioRecord::Record()
+void PortAudio::Record()
 {
     _err = Pa_OpenStream(
                &_stream,
@@ -95,12 +88,12 @@ PaStream *PortAudioRecord::Record()
                SAMPLE_RATE,
                FRAMES_PER_BUFFER,
                paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-               RecordCallback,
+               Callback,
                &_data );
     // if( _err != paNoError ) goto done;
     _err = Pa_StartStream( _stream );
     // if( _err != paNoError ) goto done;
-    std::cout << "\n=== Now recording!! Please speak into the microphone. ===\n" << std::endl; fflush(stdout);
+    std::cout << "\n=== Now ing!! Please speak into the microphone. ===\n" << std::endl; fflush(stdout);
     while( ( _err = Pa_IsStreamActive( _stream ) ) == 1 ) {
         Pa_Sleep(1000);
         std::cout << "index = %d\n" << _data.frameIndex << std::endl; fflush(stdout);
@@ -113,7 +106,7 @@ PaStream *PortAudioRecord::Record()
     _max = 0;
     _average = 0.0;
     for(int i=0; i<_numSamples; i++ ) {
-        _val = _data.recordedSamples[i];
+        _val = _data.edSamples[i];
         if( _val < 0 ) _val = -_val; /* ABS */
         if( _val > _max ) _max = _val;
         _average += _val;
@@ -121,10 +114,9 @@ PaStream *PortAudioRecord::Record()
     _average = _average / (double)_numSamples;
     // std::cout << "sample max amplitude = "PRINTF_S_FORMAT"\n" << _max << std::endl;
     std::cout << "sample average = %lf\n" << _average << std::endl;
-    return (_stream);
 }
 
-void PortAudioRecord::Play(PaStream* _stream)
+void PortAudio::Play()
 {
     _data.frameIndex = 0;
     _outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
@@ -158,18 +150,18 @@ void PortAudioRecord::Play(PaStream* _stream)
     }
 }
 
-void PortAudioRecord::Start()
+void PortAudio::Start()
 {
-    _data.maxFrameIndex = _totalFrames = NUM_SECONDS * SAMPLE_RATE; /* Record for a few seconds. */
+    _data.maxFrameIndex = _totalFrames = NUM_SECONDS * SAMPLE_RATE; /*  for a few seconds. */
     _data.frameIndex = 0;
     _numSamples = _totalFrames * NUM_CHANNELS;
     _numBytes = _numSamples * sizeof(SAMPLE);
-    _data.recordedSamples = (SAMPLE *) malloc( _numBytes ); /* From now on, recordedSamples is initialised. */
-    // if( _data.recordedSamples == NULL ) {
-    //     std::cout << "Could not allocate record array.\n" << std::endl;
+    _data.edSamples = (SAMPLE *) malloc( _numBytes ); /* From now on, edSamples is initialised. */
+    // if( _data.edSamples == NULL ) {
+    //     std::cout << "Could not allocate  array.\n" << std::endl;
     //     goto done;
     // }
-    for(int i=0; i<_numSamples; i++ ) _data.recordedSamples[i] = 0;
+    for(int i=0; i<_numSamples; i++ ) _data.edSamples[i] = 0;
     _err = Pa_Initialize();
     // if( _err != paNoError ) goto done;
     _inputParameters.device = Pa_GetDefaultInputDevice(); /* default input device */
@@ -181,27 +173,37 @@ void PortAudioRecord::Start()
     _inputParameters.suggestedLatency = Pa_GetDeviceInfo( _inputParameters.device )->defaultLowInputLatency;
     _inputParameters.hostApiSpecificStreamInfo = NULL;
 
-    /* Record some audio. -------------------------------------------- */
+    /*  some audio. -------------------------------------------- */
+    this->Record();
 
-    /* Playback recorded _data.  -------------------------------------------- */
+    /* Playback ed _data.  -------------------------------------------- */
+    this->Play();
 
+done:
+    Pa_Terminate();
+    if( _data.edSamples )       /* Sure it is NULL or valid. */
+        free( _data.edSamples );
+    if( _err != paNoError ) {
+        _err = 1;          /* Always return 0 or 1, but no other return codes. */
+    }
+    exit(0);
 }
 
 
-//     /* Write recorded _data to a file. */
+//     /* Write ed _data to a file. */
 //  #if WRITE_TO_FILE
 //      {
 //          FILE  *fid;
-//          fid = fopen("recorded.raw" << "wb" << std::endl;
+//          fid = fopen("ed.raw" << "wb" << std::endl;
 //          if( fid == NULL )
 //          {
 //              std::cout << "Could not open file." << std::endl;
 //          }
 //          else
 //          {
-//              fwrite( _data.recordedSamples, NUM_CHANNELS * sizeof(SAMPLE), _totalFrames, fid );
+//              fwrite( _data.edSamples, NUM_CHANNELS * sizeof(SAMPLE), _totalFrames, fid );
 //              fclose( fid );
-//              std::cout << "Wrote _data to 'recorded.raw'\n" << std::endl;
+//              std::cout << "Wrote _data to 'ed.raw'\n" << std::endl;
 //          }
 //      }
 //  #endif

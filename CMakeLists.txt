@@ -73,9 +73,14 @@ if (EXISTS /home/$ENV{USER}/Qt)
         )
 
     set(SRCSPORTAUDIO
+        src/PortAudio/PortAudio.cpp
         src/PortAudio/PortAudioRecord.cpp
-        )
+    )
 
+    set(SRCSUDP
+        src/udpclient/main.cpp
+        src/udpclient/myudp.cpp
+    )
 
     add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
     add_definitions(-DDEBUG_PROFILE=0)
@@ -116,12 +121,19 @@ if (EXISTS /home/$ENV{USER}/Qt)
         )
 
     set(HEADERSPORTAUDIO
+        src/PortAudio/PortAudio.hpp
         src/PortAudio/PortAudioRecord.hpp
         )
 
+    set(HEADERSUDP
+        src/udpclient/main.hpp
+        src/udpclient/myudp.hpp
+    )
+
     # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
     add_executable(BabelServer ${SRCSSERVER} ${HEADERSSERVER} ${SRCSPORTAUDIO} ${HEADERSPORTAUDIO})
-    add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT} ${SRCSPORTAUDIO} ${HEADERSPORTAUDIO})
+    add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
+    add_executable(BabelUDP ${SRCSUDP} ${HEADERSUDP} ${SRCSPORTAUDIO} ${HEADERSPORTAUDIO})
 
     target_compile_definitions(Babel
     PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
