@@ -56,7 +56,12 @@ Window {
         }
         onFriendlistAddChanged: {
             console.log("FRIEND LIST HAS ADD", addFriendTextField.text)
-            backend.addFriendDataBase(addFriendTextField.text)
+            backend.friendlist
+            contactModel.clear()
+            contactModel.append(({text: backend.userName}))
+            for(var i = 0; backend.friendlist.size < i; i++)
+                contactModel.append(({text: backend.friendlist[i]}))
+
         }
         onFriendlistChanged: {
         }
@@ -135,27 +140,19 @@ Window {
 
                         highlighted: {
                             if ((is_on === true && teamAddMembersButton.checked === false) || on_call) {
-                                console.log("J'HIGHLIGHT")
                                 return contactList.currentIndex === index
                             } else
                                 return false
                         }
                         onClicked: {
                             if (teamAddMembersButton.checked === true) {
-                                console.log("CRASH ?")
                                 if (listTeamMembersName[teamList.currentIndex].indexOf(contactModel.get(index).text) !== -1) {
-                                    console.log("Atest 1")
                                     listTeamMembersName[teamList.currentIndex] = listTeamMembersName[teamList.currentIndex].filter(r => r !== contactModel.get(index).text)
-                                    console.log("Atest 2")
                                     backend.removeMembersToTeamlist(teamModel.get(teamList.currentIndex).text, contactModel.get(index).text)
-                                    console.log("Atest 3")
                                     this.highlighted = false
                                 } else {
-                                    console.log("Btest 1")
                                     listTeamMembersName[teamList.currentIndex].push(contactModel.get(index).text)
-                                    console.log("Btest 2")
                                     backend.addMembersToTeamlist(teamModel.get(teamList.currentIndex).text, contactModel.get(index).text)
-                                    console.log("Btest 3")
                                     this.highlighted = true
                                 }
                                 return
@@ -164,7 +161,6 @@ Window {
                             if (on_call && callName.text === contactModel.get(index).text) {
                                 callFrame.visible = true
                                 contactFrame.visible = false
-                                console.log("SUR LE CALL")
                                 contactList.currentIndex = index
                                 teamFrame.visible = false
                             } else {
@@ -961,7 +957,7 @@ Window {
                         console.log("Server isn't on")
                         return
                     }
-                    if (pseudoRegisterTextField.text === "" || pseudoRegisterTextField.text.replace(" ", "") === "" || passwordRegisterTextField.text !== passwordRegisterValidTextField.text || passwordRegisterTextField.text === "" || passwordRegisterTextField.text.replace(" ", "") === "" || backend.addUserToDataBase(pseudoRegisterTextField, passwordRegisterTextField) === false) {
+                    if (pseudoRegisterTextField.text === "" || pseudoRegisterTextField.text.replace(" ", "") === "" || passwordRegisterTextField.text !== passwordRegisterValidTextField.text || passwordRegisterTextField.text === "" || passwordRegisterTextField.text.replace(" ", "") === "" || backend.addUserToDataBase(pseudoRegisterTextField.text, passwordRegisterTextField.text) === false) {
                         registerButton.Material.background = Material.Red
                         passwordRegisterValidTextField.Material.accent = Material.Red
                         return
@@ -1109,6 +1105,11 @@ Window {
                             contactModel.append(({text: pseudoSigninTextField.text}))
                             backend.userName = pseudoSigninTextField.text
                             backend.passWord = passwordRegisterTextField.text
+                            // --------------------------------------------
+                            // var QListIterator<QString> i(backend.friendlist)
+                            // while (i.hasNext())
+                            //     contactModel.append(({text: i.next()}))
+                            // --------------------------------------------
                         }
                     }
                 }

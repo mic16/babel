@@ -5,7 +5,29 @@ BackEnd *BackEnd::singleton = nullptr;
 void BackEnd::update()
 {
     if (isAuth()) {
-        fillUserInfo();
+        int count = 0;
+        m_friendlist = m_com->getFriends();
+        m_teamlist = m_com->getTeams();
+        m_notiflist = m_com->getFriendRequests();
+
+        // if (m_onPending) {
+        //     count = m_com->getAcceptCall();
+        //     if (count == 0) {
+        //         m_inCall = true;
+        //         m_onPending = false; // TODO APPELER L'AUDIO START
+        //     }
+        //     if (count == 1) {
+        //         m_inCall = false;
+        //         m_onPending = false;
+        //     }
+        // }
+        // else {
+        //     std::string name = m_com->getCall();
+        //     if (string_name.compare("") != 0) {
+        //         m_calledFriend = string_name
+        //         m_onPopup = true
+        //     }
+        // }
     }
 }
 
@@ -17,7 +39,7 @@ BackEnd::BackEnd(QObject *parent) :
     m_quit = false;
     m_onPending = false;
     m_inCall = false;
-    m_onPopup = false
+    m_onPopup = false;
 }
 
 BackEnd *BackEnd::get(QObject *parent)
@@ -117,6 +139,7 @@ void BackEnd::addToFriendlist(const QString &friendName)
     if (std::find(m_friendlist.begin(), m_friendlist.end(), friendNameString) != m_friendlist.end())
         return;
     m_friendlist.push_back(friendNameString);
+    m_com->addFriend(friendNameString);
     emit friendlistAddChanged();
     emit friendlistChanged();
 }
@@ -204,39 +227,14 @@ bool BackEnd::existingCredential(const QString &UserName, const QString &PassWor
 
 bool BackEnd::addUserToDataBase(const QString &UserName, const QString &PassWord)
 {
+    std::string aze = UserName.toStdString();
+    std::cout << "AZE EST EGAL A " << aze << std::endl;
     return (m_com->createUser(UserName.toUtf8().constData(), PassWord.toUtf8().constData()));
 }
 
 bool BackEnd::isServerOn()
 {
     return(m_com->isServerOn());
-}
-
-void BackEnd::fillUserInfo()
-{
-    int count = 0;
-    m_friendlist = m_com->getFriends();
-    m_teamlist = m_com->getTeams();
-    m_notiflist = m_com->getFriendRequests();
-
-    // if (m_onPending) {
-    //     count = m_com->getAcceptCall();
-    //     if (count == 0) {
-    //         m_inCall = true;
-    //         m_onPending = false; // TODO APPELER L'AUDIO START
-    //     }
-    //     if (count == 1) {
-    //         m_inCall = false;
-    //         m_onPending = false;
-    //     }
-    // }
-    // else {
-    //     std::string name = m_com->getCall();
-    //     if (string_name.compare("") != 0) {
-    //         m_calledFriend = string_name
-    //         m_onPopup = true
-    //     }
-    // }
 }
 
 bool BackEnd::getOnPending()
@@ -247,12 +245,6 @@ bool BackEnd::getOnPending()
 bool BackEnd::getOnPopup()
 {
     return m_onPopup;
-}
-
-void BackEnd::addFriendDataBase(const QString &userName)
-{
-    std::cout << "j'add l'ami " << userName.toUtf8().constData() << std::endl;
-    std::cout << m_com->addFriend(userName.toUtf8().constData()) << " " << true << std::endl;
 }
 
 void BackEnd::removeFriendDataBase(const QString &userName)
@@ -273,9 +265,9 @@ void BackEnd::removeMembersTeamListDatabase(const QString &teamname, const QStri
 void BackEnd::callFriend(const QString &Name)
 {
     // TODO FAIRE LA REQUETE D'APEL A UN AMI
-    m_com->callUser(Name.toUtf8().constData());
-    m_onPending = true;
-    m_calledFriend = Name.toUtf8().constData();
+    // m_com->callUser(Name.toUtf8().constData());
+    // m_onPending = true;
+    // m_calledFriend = Name.toUtf8().constData();
 }
 
 void BackEnd::hangUpFriend()

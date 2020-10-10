@@ -18,6 +18,7 @@ class BackEnd : public QObject
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged);
     Q_PROPERTY(QString passWord READ passWord WRITE setpassWord NOTIFY passWordChanged);
     Q_PROPERTY(QList<QString> friendlist READ friendlist);
+    Q_PROPERTY(QList<QString> friendlist READ friendlist);
     Q_PROPERTY(QMap<QString, QList<QString>> teamlist READ teamlist);
     Q_PROPERTY(bool microphone READ microphone WRITE setMicrophone NOTIFY microphoneChanged);
     Q_PROPERTY(QString callerName READ callerName WRITE setCallerName);
@@ -50,8 +51,6 @@ public:
     Q_INVOKABLE bool existingTeam(const QString &Name);
     Q_INVOKABLE bool existingCredential(const QString &UserName, const QString &PassWord);
     Q_INVOKABLE bool addUserToDataBase(const QString &UserName, const QString &PassWord);
-    Q_INVOKABLE void fillUserInfo();
-    Q_INVOKABLE void addFriendDataBase(const QString &userName);
     Q_INVOKABLE void removeFriendDataBase(const QString &userName);
     Q_INVOKABLE void addMembersTeamListDatabase(const QString &teamname, const QString &username);
     Q_INVOKABLE void removeMembersTeamListDatabase(const QString &teamname, const QString &username);
