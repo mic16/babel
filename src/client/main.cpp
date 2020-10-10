@@ -33,18 +33,5 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
-    Communication c;
-    c.createUser("mic16", "aze");
-    // c.connectUser("mic16", "aze");
-    c.createUser("tho", "aze");
-    // c.connectUser("tho", "aze");
-    c.createUser("mic", "aze");
-    c.connectUser("mic", "aze");
-    c.createTeam("test");
-    c.addUserToTeam("tho", "test");
-    c.addUserToTeam("mic16", "test");
-    c.removeUserFromTeam("mic16", "test");
-    c.removeUserFromTeam("tho", "test");
-    c.removeUserFromTeam("mic", "test");
     return app.exec();
 }

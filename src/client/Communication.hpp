@@ -30,6 +30,8 @@ public:
 
     void connectToServer();
 
+    bool isServerOn();
+
     bool createUser(std::string name, std::string password);
     bool createTeam(std::string teamName);
 
@@ -65,6 +67,7 @@ private:
     std::string token;
     Request lastRequestRecieve;
     bool call;
+    bool connected;
 };
 
 #endif // COMMUNICATION_H

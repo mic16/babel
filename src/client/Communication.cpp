@@ -13,7 +13,10 @@ Communication::~Communication()
 void Communication::connectToServer()
 {
     _socket.connectToHost(QHostAddress("127.0.0.1"), 7171);
-    _socket.waitForConnected();
+    if (_socket.waitForConnected())
+        connected = true;
+    else
+        connected = false;
     connect(&_socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
 
@@ -31,6 +34,11 @@ void Communication::onReadyRead()
 
     lastRequestRecieve = Request(rep.data());
     std::cout << lastRequestRecieve.getRequestType() << ":" << lastRequestRecieve.getRequestContent()  << ":" << lastRequestRecieve.getRequestToken() << std::endl;
+}
+
+bool Communication::isServerOn()
+{
+    return (connected);
 }
 
 bool Communication::createUser(std::string name, std::string password)
@@ -291,7 +299,7 @@ bool Communication::destroyTeam(std::string name)
     Request r(Request::DESTROYTEAM, name, token);
     sendToServer(r);
 
-    if (lastRequestRecieve.getRequestType() == Request::VALIDDESTROYGROUP)
+    if (lastRequestRecieve.getRequestType() == Request::VALIDDESTROYTEAM)
         return (true);
     else
         return (false);
