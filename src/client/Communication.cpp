@@ -193,8 +193,11 @@ bool Communication::connectUser(std::string name, std::string password)
 
 bool Communication::disconnect()
 {
+    std::cout << "CRASSSSHHHH 1111" << std::endl;
     Request r(Request::DISCONNECT, "", token);
+    std::cout << "CRASSSSHHHH 2222" << std::endl;
     sendToServer(r);
+    std::cout << "CRASSSSHHHH 333" << std::endl;
 }
 
 std::map<std::string, std::vector<std::string>> Communication::parse()
