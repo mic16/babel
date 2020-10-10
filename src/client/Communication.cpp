@@ -70,7 +70,7 @@ bool Communication::getCall(std::string name)
 {
     if (call) {
         call = false;
-        return (true)
+        return (true);
     } else
         return (false);
 }
@@ -264,12 +264,34 @@ bool Communication::addUserToTeam(std::string userName, std::string teamName)
         return (false);
 }
 
+bool Communication::removeUserFromTeam(std::string userName, std::string teamName)
+{
+    Request r(Request::REMOVEUSERFROMTEAM, teamName + "," + userName, token);
+    sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDREMOVEUSERFROMTEAM)
+        return (true);
+    else
+        return (false);
+}
+
 bool Communication::acceptTeamRequest(std::string name)
 {
     Request r(Request::ACCEPTTEAMREQUEST, name, token);
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTTEAMREQUEST)
+        return (true);
+    else
+        return (false);
+}
+
+bool Communication::destroyTeam(std::string name)
+{
+    Request r(Request::DESTROYTEAM, name, token);
+    sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDDESTROYGROUP)
         return (true);
     else
         return (false);

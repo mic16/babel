@@ -51,7 +51,9 @@ public:
     bool callTeam(std::string name);
     bool getCallTeam(std::string name);
     bool addUserToTeam(std::string userName, std::string teamName);
+    bool removeUserFromTeam(std::string userName, std::string teamName);
     bool acceptTeamRequest(std::string name);
+    bool destroyTeam(std::string name);
 
     bool changeName(std::string name);
 
