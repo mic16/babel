@@ -56,14 +56,18 @@ Window {
         }
         onFriendlistAddChanged: {
             console.log("FRIEND LIST HAS ADD", addFriendTextField.text)
-            backend.friendlist
             contactModel.clear()
             contactModel.append(({text: backend.userName}))
             for(var i = 0; backend.friendlist.size < i; i++)
                 contactModel.append(({text: backend.friendlist[i]}))
 
         }
-        onFriendlistChanged: {
+        onNotifListChanged: {
+            contactModel.clear()
+            contactModel.append(({text: backend.userName}))
+            for(var i = 0; backend.friendlist.size < i; i++)
+                contactModel.append(({text: backend.friendlist[i]}))
+
         }
         onTeamlistChanged: {
             console.log("TEAM LIST HAS CHANGED")
@@ -1099,11 +1103,12 @@ Window {
                         homePane.visible = true
                         exitButton.x = 20
                         exitButton.y = 520
+                        update.start()
                         if (contactModel.get(0).text === "") {
                             contactModel.clear()
                             contactModel.append(({text: pseudoSigninTextField.text}))
                             backend.userName = pseudoSigninTextField.text
-                            backend.passWord = passwordRegisterTextField.text
+                            backend.passWord = passwordSigninTextField.text
                             // --------------------------------------------
                             // var QListIterator<QString> i(backend.friendlist)
                             // while (i.hasNext())

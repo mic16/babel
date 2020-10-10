@@ -85,6 +85,7 @@ signals:
     void teamlistMembersRemoveChanged();
     void passWordChanged();
     void microphoneChanged();
+    void notifListChanged();
 
 
 private:

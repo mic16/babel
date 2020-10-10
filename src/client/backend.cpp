@@ -30,6 +30,7 @@ void BackEnd::update()
                 m_onPopup = true;
             }
         }
+        emit notifListChanged();
     }
 }
 
