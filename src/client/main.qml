@@ -13,7 +13,12 @@ Window {
     height: 600
     minimumHeight: 600
     maximumHeight: 600
-    visible: true
+    visible: {
+        if (backend.isServerOn() === false) {
+            banner.visible = true
+        }
+        return true
+    }
     title: qsTr("Babel")
     property var global_i: 0
     property var is_on: false
@@ -22,7 +27,6 @@ Window {
     Material.theme: Material.Dark
     Material.accent: Material.Orange
     flags: Qt.CustomizeWindowHint | Qt.WindowTitleHint
-
     Timer {
         id: update
         property int counter: 0
@@ -30,7 +34,9 @@ Window {
         onTriggered: {
             if (backend.isServerOn() === false) {
                 banner.visible = true
+            }
             backend.update()
+            
             if (backend.getOnPopup()) {
                 callerName.text = backend.callerName;
                 callPopup.open()
@@ -379,29 +385,6 @@ Window {
                 text: ""
             }
         }
-
-        RoundButton {
-            id: exitButton
-            x: 10
-            y: 510
-            width: 206
-            height: 58
-            text: "Exit"
-            font.pixelSize: 20
-            font.capitalization: Font.MixedCase
-            font.family: "Ubuntu"
-            focusPolicy: Qt.StrongFocus
-            Material.background: Material.Red
-            onClicked: {
-                update.stop()
-                console.log("C4EST PARTIIIIII")
-                window.close()
-                console.log("FDPPPPPPPPP")
-                backend.disconnect()
-                console.log("FINISH MOTHERFUCK")
-            }
-        }
-
         Frame {
             id: contactFrame
             visible: false
@@ -987,6 +970,8 @@ Window {
                         update.start()
                         pseudoPane.visible = false
                         homePane.visible = true
+                        exitButton.x = 20
+                        exitButton.y = 520
                     }
                     if (contactModel.get(0).text === "") {
                         contactModel.clear()
@@ -1114,23 +1099,18 @@ Window {
                 onClicked: {
                     teamModel.clear()
                     notifModel.clear()
-                    if (backend.isServerOn() === false) {
-                        //TODO PUT RED BANNER
-                        return
-                    }
                     if (backend.existingCredential(pseudoSigninTextField.text, passwordSigninTextField.text)) {
                         pseudoPane.visible = false
                         homePane.visible = true
-                        update.start()
+                        exitButton.x = 20
+                        exitButton.y = 520
                         if (contactModel.get(0).text === "") {
                             contactModel.clear()
                             contactModel.append(({text: pseudoSigninTextField.text}))
-                            backend.fillUserInfo() // friend list, team list, etc....
                             backend.userName = pseudoSigninTextField.text
                             backend.passWord = passwordRegisterTextField.text
                         }
                     }
-                    // TODO GET TOUTE LES INFO USERS
                 }
             }
 
@@ -1227,6 +1207,7 @@ Window {
                 homeTextPlain.color = "#ffffff"
                 teamNameText.color = "#ffffff"
                 callText1.color = "#ffffff"
+                textBanner.color = "#ffffff"
             } else {
                 window.Material.theme = Material.Light
                 babelText.color = "#000000"
@@ -1244,6 +1225,7 @@ Window {
                 homeTextPlain.color ="#000000"
                 teamNameText.color = "#000000"
                 callText1.color = "#000000"
+                textBanner.color = "#000000"
             }
         }
     }
@@ -1254,13 +1236,36 @@ Window {
         color: "red"
         visible: false
         Text {
+            id: textBanner
             anchors.fill: parent
             fontSizeMode: Text.Fit
+            color: "#ffffff"
             font.pixelSize: 10000 // maximum height of the font
             minimumPixelSize: 8 // minimum height of the font
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             text: "No connexion to the server detected, please restart the Babel"
+        }
+    }
+    RoundButton {
+        id: exitButton
+        x: 125
+        y: 530
+        width: 206
+        height: 58
+        text: "Exit"
+        font.pixelSize: 20
+        font.capitalization: Font.MixedCase
+        font.family: "Ubuntu"
+        focusPolicy: Qt.StrongFocus
+        Material.background: Material.Red
+        onClicked: {
+            update.stop()
+            console.log("C4EST PARTIIIIII")
+            window.close()
+            console.log("FDPPPPPPPPP")
+            backend.disconnect()
+            console.log("FINISH MOTHERFUCK")
         }
     }
 }

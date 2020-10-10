@@ -17,6 +17,7 @@ BackEnd::BackEnd(QObject *parent) :
     m_quit = false;
     m_onPending = false;
     m_inCall = false;
+    m_onPopup = false
 }
 
 BackEnd *BackEnd::get(QObject *parent)
