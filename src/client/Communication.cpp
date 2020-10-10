@@ -281,3 +281,8 @@ bool Communication::changeName(std::string name)
     else
         return (false);
 }
+
+bool Communication::isServerOn()
+{
+
+}

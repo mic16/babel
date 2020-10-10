@@ -55,6 +55,8 @@ public:
 
     bool changeName(std::string name);
 
+    bool isServerOn();
+
 public slots:
     void onReadyRead();
 

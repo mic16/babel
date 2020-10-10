@@ -56,6 +56,8 @@ public:
     Q_INVOKABLE bool callTeam(const QString &Name);
     Q_INVOKABLE void disconnect();
     Q_INVOKABLE void alwaysCall();
+    Q_INVOKABLE void callAccept(bool bool_accept);
+    Q_INVOKABLE bool isServerOn();
 
     Q_INVOKABLE void display();
 

@@ -78,7 +78,6 @@ bool BackEnd::microphone()
 
 void BackEnd::setUserName(const QString &userName)
 {
-    m_quit = true;
     std::string username = userName.toUtf8().constData();
     if (username == m_userName)
         return;
@@ -202,9 +201,14 @@ bool BackEnd::addUserToDataBase()
     return (m_com->createUser(m_userName, m_passWord));
 }
 
+bool BackEnd::isServerOn()
+{
+    return(m_com->isServerOn());
+}
+
 void BackEnd::fillUserInfo()
 {
-    const std::lock_guards<std::mutex> lock(p_mutex);
+    const std::lock_guard<std::mutex> lock(p_mutex);
     m_friendlist = m_com->getFriends();
     m_teamlist = m_com->getTeams();
     notiflist = m_com->getFriendRequests();
@@ -242,6 +246,12 @@ bool BackEnd::callTeam(const QString &Name)
 {
     // TODO FAIRE LA REQUETE D'APEL A UNE TEAM
     return false;
+}
+
+void BackEnd::callAccept(bool bool_accept)
+{
+    // c_com->callAccept(bool_accept);
+    // TODO DIRE AU SERVEUR SI LE CALL EST ACCEPTER
 }
 
 void BackEnd::disconnect()

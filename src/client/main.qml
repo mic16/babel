@@ -659,7 +659,9 @@ Window {
                         y: 100
                         width: 75
                         height: 75
-
+                        onClicked: {
+                            backend.callAccept(true)
+                        }
                     }
                     RoundButton {
                         id: callRefuse
@@ -669,7 +671,10 @@ Window {
                         y: 100
                         width: 75
                         height: 75
-
+                        onClicked: {
+                            backend.callAccept(false)
+                            callPopup.close()
+                        }
                     }
 
                 }
@@ -950,7 +955,10 @@ Window {
                 Material.background: Material.Blue
                 onClicked: {
                     backend.alwaysCall()
-                    if (pseudoRegisterTextField.text === "" || pseudoRegisterTextField.text.replace(" ", "") === "" || passwordRegisterTextField.text !== passwordRegisterValidTextField.text || passwordRegisterTextField.text === "" || passwordRegisterTextField.text.replace(" ", "") === "") {
+                    if (backend.isServerOn() === false) {
+                        //TODO PUT RED BANNER
+                    }
+                    if (pseudoRegisterTextField.text === "" || pseudoRegisterTextField.text.replace(" ", "") === "" || passwordRegisterTextField.text !== passwordRegisterValidTextField.text || passwordRegisterTextField.text === "" || passwordRegisterTextField.text.replace(" ", "") === "" || backend.addUserToDataBase() === false) {
                         registerButton.Material.background = Material.Red
                         passwordRegisterValidTextField.Material.accent = Material.Red
                         return
@@ -967,11 +975,10 @@ Window {
                     }
                     teamModel.clear()
                     notifModel.clear()
-                    if (backend.addUserToDataBase())
-                        console.log("J'AI CREER MON USER")
-                    else
-                        console.log("J'AI PAS CREER MON USER")
-                    // TODO Function to send new user info
+                    // if (backend.addUserToDataBase())
+                    //     console.log("J'AI CREER MON USER")
+                    // else
+                    //     console.log("J'AI PAS CREER MON USER")
                 }
             }
 
