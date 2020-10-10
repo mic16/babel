@@ -69,6 +69,7 @@ public:
     Q_INVOKABLE bool getQuit();
     Q_INVOKABLE bool getOnPending();
     Q_INVOKABLE bool getOnPopup();
+    Q_INVOKABLE void firstUpdate();
 
     Q_INVOKABLE void display();
 

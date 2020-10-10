@@ -1104,9 +1104,13 @@ Window {
                         exitButton.x = 20
                         exitButton.y = 520
                         update.start()
+                        backend.firstUpdate()
                         if (contactModel.get(0).text === "") {
                             contactModel.clear()
                             contactModel.append(({text: pseudoSigninTextField.text}))
+                            for(var i = 0; backend.friendlist.size < i; i++)
+                                contactModel.append(({text: backend.friendlist[i]}))
+                            console.log("LA LISTE DE MES AMIS S'ELEVE A ", backend.friendlist.size)
                             backend.userName = pseudoSigninTextField.text
                             backend.passWord = passwordSigninTextField.text
                             // --------------------------------------------

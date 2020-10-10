@@ -48,6 +48,15 @@ BackEnd::BackEnd(QObject *parent) :
     // m_thread_obj = std::thread(thread_func, this);
 }
 
+void BackEnd::firstUpdate()
+{
+    std::cout << "JE REMPLIS LA FRIEDN LIST UNE PREMIERE FOIS" << std::endl;
+    m_friendlist = m_com->getFriends();
+    std::cout << "CA ME RENVOI CA " << m_friendlist[0] << std::endl;
+    m_teamlist = m_com->getTeams();
+    m_notiflist = m_com->getFriendRequests();
+}
+
 BackEnd *BackEnd::get(QObject *parent)
 {
     if (!singleton)
@@ -74,8 +83,10 @@ QList<QString> BackEnd::friendlist()
 {
     QList<QString> list;
 
+    std::cout << "JE GET MA FRIEND LIST avec " << m_friendlist[0] << " et " << m_friendlist.size() << std::endl;
     for (size_t i = 0; i < m_friendlist.size(); i++)
         list.append(QString::fromStdString(m_friendlist[i]));
+    std::cout << "JE GET MA QQQQQQQQQFRIEND LIST avec " << list[0].toStdString() << std::endl;
     return list;
 }
 
