@@ -70,6 +70,7 @@ public:
     Q_INVOKABLE bool getOnPending();
     Q_INVOKABLE bool getOnPopup();
     Q_INVOKABLE void firstUpdate();
+    Q_INVOKABLE int getFriendlistSize();
 
     Q_INVOKABLE void display();
 
