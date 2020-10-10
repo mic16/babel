@@ -106,7 +106,7 @@ Request ServerLogic::callUser(Request request, std::string userName)
     if (this->usersMapTcp.find(request.getRequestContent()) != this->usersMapTcp.end()) {
         TcpConnection *tcp = this->usersMapTcp.find(request.getRequestContent())->second;
         calls.insert(std::pair<std::string, std::string>(request.getRequestContent(), userName));
-        return (Request(Request::VALIDCALLUSER), tcp->socket().remote_endpoint().address().to_string());
+        return (Request(Request::VALIDCALLUSER, tcp->socket().remote_endpoint().address().to_string()));
     } else
         return (Request(Request::REFUSECALLUSER));
 }
