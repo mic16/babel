@@ -50,6 +50,13 @@ Request ServerLogic::addFriend(Request request, std::string userName)
         friends.append(",");
     friends.append(request.getRequestContent());
     if (this->dataBase.insertRemoveUpdate("UPDATE users SET friends='" + friends + "' WHERE name='" + userName + "'")) {
+        std::string friendsRequest;
+        if (this->dataBase.select("SELECT friends_request FROM users WHERE name='" + request.getRequestContent() + "';").size() > 0)
+            friendsRequest.append(this->dataBase.select("SELECT friends_request FROM users WHERE name='" + request.getRequestContent() + "';").at(0));
+        if (friendsRequest.length() != 0)
+            friendsRequest.append(",");
+        friendsRequest.append(userName);
+        this->dataBase.insertRemoveUpdate("UPDATE users SET friends_request='" + friendsRequest + "' WHERE name='" + request.getRequestContent() + "'");
         return (Request(Request::VALIDADDFRIEND));
     } else
         return (Request(Request::REFUSEADDFRIEND));
@@ -146,8 +153,8 @@ bool ServerLogic::teamExist(std::string name)
 
 bool ServerLogic::userExistInTeam(std::string teamName, std::string userName)
 {
-    std::vector<std::string> rep = this->dataBase.select("SELECT name FROM teams WHERE name='" + teamName + "' AND members='" + userName + "'");
-    if (rep.size() > 0)
+    std::vector<std::string> rep = this->dataBase.select("SELECT members FROM teams WHERE name='" + teamName + "'");
+    if (rep.at(0).find(userName) != std::string::npos)
         return (true);
     else
         return (false);
@@ -168,7 +175,7 @@ Request ServerLogic::createTeam(Request request, std::string userName)
 Request ServerLogic::addUserToTeam(Request request)
 {
     std::vector<std::string> vec;
-    boost::split(vec, request.getRequestContent(), boost::is_any_of(","));
+    boost::split(vec, request.getRequestContent(), boost::is_any_of(";"));
     std::string teamName = vec[0];
     std::string userName = vec[1];
 
@@ -179,7 +186,7 @@ Request ServerLogic::addUserToTeam(Request request)
             return (Request(Request::REFUSEADDUSERTOTEAM));
         std::string members = this->dataBase.select("SELECT members FROM teams WHERE name='" + teamName + "'").at(0);
         if (members.length() != 0)
-            members.append(",");
+            members.append(";");
         members.append(userName);
         if (this->dataBase.insertRemoveUpdate("UPDATE teams set members='" + members + "' WHERE name='" + teamName + "'"))
             return (Request(Request::VALIDADDUSERTOTEAM));
@@ -187,6 +194,89 @@ Request ServerLogic::addUserToTeam(Request request)
             return (Request(Request::REFUSEADDUSERTOTEAM));
     }
 }
+
+Request ServerLogic::removeUserFromTeam(Request request)
+{
+    std::vector<std::string> vec;
+    boost::split(vec, request.getRequestContent(), boost::is_any_of(","));
+    std::string teamName = vec[0];
+    std::string userName = vec[1];
+
+    if (!this->userExistInTeam(teamName, userName) || !this->dataBase.userExist(userName))
+        return (Request(Request::REFUSEREMOVEUSERFROMTEAM));
+    else {
+        if (!this->dataBase.select("SELECT members FROM teams WHERE name='" + teamName + "'").size() > 0)
+            return (Request(Request::REFUSEREMOVEUSERFROMTEAM));
+        std::string members = this->dataBase.select("SELECT members FROM teams WHERE name='" + teamName + "'").at(0);
+        size_t pos = members.find(userName);
+        if (pos != std::string::npos)
+            members.erase(pos, userName.length());
+        if (members[pos - 1] == ',')
+            members.erase(pos - 1, 1);
+        else if (pos == 0)
+            members.erase(pos, 1);
+        if (!members.size() > 0) {
+            if (this->dataBase.insertRemoveUpdate("DELETE FROM teams WHERE name='" + teamName + "'"))
+                return (Request(Request::VALIDREMOVEUSERFROMTEAM));
+            else
+                return (Request(Request::REFUSEREMOVEUSERFROMTEAM));
+        }
+        if (this->dataBase.insertRemoveUpdate("UPDATE teams set members='" + members + "' WHERE name='" + teamName + "'"))
+            return (Request(Request::VALIDREMOVEUSERFROMTEAM));
+        else
+            return (Request(Request::REFUSEREMOVEUSERFROMTEAM));
+    }
+}
+
+Request ServerLogic::destroyTeam(Request request)
+{
+    std::string teamName = request.getRequestContent();
+
+    if (!this->teamExist(teamName))
+        return (Request(Request::REFUSEDESTROYTEAM));
+    else {
+        if (this->dataBase.insertRemoveUpdate("DELETE FROM teams WHERE name='" + teamName + "'"))
+            return (Request(Request::VALIDDESTROYTEAM));
+        else
+            return (Request(Request::VALIDDESTROYTEAM));
+
+    }
+}
+
+Request ServerLogic::getFriendRequests(Request request, std::string userName)
+{
+    std::string friendsRequest;
+
+    if (this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").size() > 0) {
+        friendsRequest.append(this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").at(0));
+        this->dataBase.insertRemoveUpdate("UPDATE users SET friends_request='' WHERE name='" + userName + "'");
+    }
+    friendsRequest = "";
+    return (Request(Request::VALIDGETFRIENDREQUESTS, friendsRequest));
+}
+
+Request ServerLogic::getTeams(Request request, std::string userName)
+{
+    std::vector<std::string> listTeam;
+    std::string res;
+    if (this->dataBase.select("SELECT name FROM teams").size() > 0) {
+        listTeam = this->dataBase.select("SELECT name FROM teams");
+    } else {
+        return (Request(Request::VALIDGETTEAMS, ""));
+    }
+    for (std::string team : listTeam) {
+        if (this->dataBase.select("SELECT members FROM teams WHERE name='" + team + "'").size() > 0) {
+            std::string t = this->dataBase.select("SELECT members FROM teams WHERE name='" + team + "'").at(0);
+            if (t.find(userName) != -1) {
+                if (res.length() != 0)
+                    res.append(",");
+                res.append(team + "(" + t + ")");
+            }
+        }
+    }
+    return (Request(Request::VALIDGETTEAMS, res));
+}
+
 
 Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
 {
@@ -220,6 +310,14 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
             return (createTeam(request, userName));
         case Request::ADDUSERTOTEAM:
             return (addUserToTeam(request));
+        case Request::REMOVEUSERFROMTEAM:
+            return (removeUserFromTeam(request));
+        case Request::GETFRIENDREQUESTS:
+            return (getFriendRequests(request, userName));
+        case Request::DESTROYTEAM:
+            return (destroyTeam(request));
+        case Request::GETTEAMS:
+            return (getTeams(request, userName));
         default:
             return (Request(Request::BADREQUEST));
     }

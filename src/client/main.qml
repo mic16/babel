@@ -957,6 +957,7 @@ Window {
                     backend.alwaysCall()
                     if (backend.isServerOn() === false) {
                         //TODO PUT RED BANNER
+                        return
                     }
                     if (pseudoRegisterTextField.text === "" || pseudoRegisterTextField.text.replace(" ", "") === "" || passwordRegisterTextField.text !== passwordRegisterValidTextField.text || passwordRegisterTextField.text === "" || passwordRegisterTextField.text.replace(" ", "") === "" || backend.addUserToDataBase() === false) {
                         registerButton.Material.background = Material.Red
@@ -1093,6 +1094,10 @@ Window {
                 onClicked: {
                     teamModel.clear()
                     notifModel.clear()
+                    if (backend.isServerOn() === false) {
+                        //TODO PUT RED BANNER
+                        return
+                    }
                     if (backend.existingCredential(pseudoSigninTextField.text, passwordSigninTextField.text)) {
                         pseudoPane.visible = false
                         homePane.visible = true

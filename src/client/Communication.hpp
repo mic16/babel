@@ -30,6 +30,8 @@ public:
 
     void connectToServer();
 
+    bool isServerOn();
+
     bool createUser(std::string name, std::string password);
     bool createTeam(std::string teamName);
 
@@ -51,7 +53,9 @@ public:
     bool callTeam(std::string name);
     bool getCallTeam(std::string name);
     bool addUserToTeam(std::string userName, std::string teamName);
+    bool removeUserFromTeam(std::string userName, std::string teamName);
     bool acceptTeamRequest(std::string name);
+    bool destroyTeam(std::string name);
 
     bool changeName(std::string name);
 
@@ -62,6 +66,8 @@ private:
     QTcpSocket  _socket;
     std::string token;
     Request lastRequestRecieve;
+    bool call;
+    bool connected;
 };
 
 #endif // COMMUNICATION_H

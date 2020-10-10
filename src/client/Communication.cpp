@@ -13,7 +13,10 @@ Communication::~Communication()
 void Communication::connectToServer()
 {
     _socket.connectToHost(QHostAddress("127.0.0.1"), 7171);
-    _socket.waitForConnected();
+    if (_socket.waitForConnected())
+        connected = true;
+    else
+        connected = false;
     connect(&_socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
 
@@ -31,6 +34,11 @@ void Communication::onReadyRead()
 
     lastRequestRecieve = Request(rep.data());
     std::cout << lastRequestRecieve.getRequestType() << ":" << lastRequestRecieve.getRequestContent()  << ":" << lastRequestRecieve.getRequestToken() << std::endl;
+}
+
+bool Communication::isServerOn()
+{
+    return (connected);
 }
 
 bool Communication::createUser(std::string name, std::string password)
@@ -68,7 +76,11 @@ bool Communication::callUser(std::string name)
 
 bool Communication::getCall(std::string name)
 {
-
+    if (call) {
+        call = false;
+        return (true);
+    } else
+        return (false);
 }
 
 bool Communication::acceptCall()
@@ -260,12 +272,34 @@ bool Communication::addUserToTeam(std::string userName, std::string teamName)
         return (false);
 }
 
+bool Communication::removeUserFromTeam(std::string userName, std::string teamName)
+{
+    Request r(Request::REMOVEUSERFROMTEAM, teamName + "," + userName, token);
+    sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDREMOVEUSERFROMTEAM)
+        return (true);
+    else
+        return (false);
+}
+
 bool Communication::acceptTeamRequest(std::string name)
 {
     Request r(Request::ACCEPTTEAMREQUEST, name, token);
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTTEAMREQUEST)
+        return (true);
+    else
+        return (false);
+}
+
+bool Communication::destroyTeam(std::string name)
+{
+    Request r(Request::DESTROYTEAM, name, token);
+    sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDDESTROYTEAM)
         return (true);
     else
         return (false);
