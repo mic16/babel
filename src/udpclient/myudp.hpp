@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QUdpSocket>
 #include "portaudio.h"
-#include "PortAudioRecord.hpp"
+#include "../PortAudio/PortAudioRecord.hpp"
 
 class MyUDP : public QObject
 {

@@ -72,6 +72,12 @@ if (EXISTS /home/$ENV{USER}/Qt)
         src/dataBase/Data.cpp
         )
 
+    set(SRCSUDP
+        src/udpclient/main.cpp
+        src/udpclient/myudp.cpp
+        src/PortAudio/PortAudioRecord.cpp
+    )
+
 
     add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
     add_definitions(-DDEBUG_PROFILE=0)
@@ -110,16 +116,26 @@ if (EXISTS /home/$ENV{USER}/Qt)
         src/utils/Request.hpp
         src/dataBase/Data.hpp
         )
+    set(HEADERSUDP
+        src/udpclient/myudp.hpp
+        src/PortAudio/PortAudioRecord.hpp
+        )
 
     # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
     add_executable(BabelServer ${SRCSSERVER} ${HEADERSSERVER})
     add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
+    add_executable(BabelUdp ${SRCSUDP} ${HEADERSUDP})
+
+    # qt5_use_modules(Babel Network)
+    # qt5_use_modules(BabelServer Network)
+    qt5_use_modules(BabelUdp Network)
 
     target_compile_definitions(Babel
     PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
     target_link_libraries(Babel PRIVATE ${CONAN_LIBS} Qt5::Widgets PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
     target_link_libraries(BabelServer ${CONAN_LIBS} sqlite3)
+    target_link_libraries(BabelUdp ${CONAN_LIBS} Qt5::Widgets)
 else()
     set(HEADERSCLIENT
         src/error/main.cpp
@@ -128,70 +144,68 @@ else()
     set(HEADERSSERVER
     )
 
-set(SRCSUDP
-    src/udpclient/main.cpp
-    src/udpclient/myudp.cpp
-    )
-
-set(SRCSPORTAUDIO
-    src/PortAudio/PortAudioRecord.cpp
-    )
-
-add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
-add_definitions(-DDEBUG_PROFILE=0)
-add_definitions(-Wno-pointer-arith)
-add_definitions("-fPIC")
-add_definitions(${Qt5Widgets_DEFINITIONS})
 
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+# set(SRCSPORTAUDIO
+#     src/PortAudio/PortAudioRecord.cpp
+#     )
 
-find_package(Qt5Widgets CONFIG REQUIRED)
+# add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
+# add_definitions(-DDEBUG_PROFILE=0)
+# add_definitions(-Wno-pointer-arith)
+# add_definitions("-fPIC")
+# add_definitions(${Qt5Widgets_DEFINITIONS})
 
-include_directories(${CMAKE_INCLUDE_PATH})
-include_directories(${Qt5Widgets_INCLUDES})
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_module")
+# include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+# conan_basic_setup()
 
-find_package(Threads REQUIRED)
+# find_package(Qt5Widgets CONFIG REQUIRED)
 
-link_libraries(${CMAKE_THREAD_LIBS_INIT})
+# include_directories(${CMAKE_INCLUDE_PATH})
+# include_directories(${Qt5Widgets_INCLUDES})
 
-set(HEADERSCLIENT
-    src/client/mainwindow.hpp
-    src/client/Communication.hpp
-    src/utils/Utils.hpp
-    src/utils/Request.hpp
-    )
+# list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_module")
 
-set(HEADERSSERVER
-    src/server/main.hpp
-    src/server/TcpConnection.hpp
-    src/server/TcpServer.hpp
-    src/server/ServerLogic.hpp
-    src/utils/Utils.hpp
-    src/utils/Request.hpp
-    src/dataBase/Data.hpp
-    )
+# find_package(Threads REQUIRED)
 
-set(HEADERSUDP
-    src/udpclient/myudp.hpp
-    )
+# link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
-set(HEADERSPORTAUDIO
-    src/PortAudio/PortAudioRecord.hpp
-    )
+# set(HEADERSCLIENT
+#     src/client/mainwindow.hpp
+#     src/client/Communication.hpp
+#     src/utils/Utils.hpp
+#     src/utils/Request.hpp
+#     )
 
-# On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
-add_executable(BabelServer ${SRCSSERVER} ${HEADERSSERVER})
-add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
-add_executable(BabelUdp ${SRCSUDP} ${HEADERSUDP} ${SRCSPORTAUDIO} ${HEADERSPORTAUDIO})
+# set(HEADERSSERVER
+#     src/server/main.hpp
+#     src/server/TcpConnection.hpp
+#     src/server/TcpServer.hpp
+#     src/server/ServerLogic.hpp
+#     src/utils/Utils.hpp
+#     src/utils/Request.hpp
+#     src/dataBase/Data.hpp
+#     )
 
-qt5_use_modules(Babel Network)
-qt5_use_modules(BabelServer Network)
-qt5_use_modules(BabelUdp Network)
+# set(HEADERSUDP
+#     src/udpclient/myudp.hpp
+#     )
 
-target_link_libraries(Babel ${CONAN_LIBS} Qt5::Widgets)
-target_link_libraries(BabelServer ${CONAN_LIBS} sqlite3)
-target_link_libraries(BabelUdp ${CONAN_LIBS} Qt5::Widgets)
+# set(HEADERSPORTAUDIO
+#     src/PortAudio/PortAudioRecord.hpp
+#     )
+
+# # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
+# add_executable(BabelServer ${SRCSSERVER} ${HEADERSSERVER})
+# add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
+# add_executable(BabelUdp ${SRCSUDP} ${HEADERSUDP} ${SRCSPORTAUDIO} ${HEADERSPORTAUDIO})
+
+# qt5_use_modules(Babel Network)
+# qt5_use_modules(BabelServer Network)
+# qt5_use_modules(BabelUdp Network)
+
+# target_link_libraries(Babel ${CONAN_LIBS} Qt5::Widgets)
+# target_link_libraries(BabelServer ${CONAN_LIBS} sqlite3)
+# target_link_libraries(BabelUdp ${CONAN_LIBS} Qt5::Widgets)
+endif()
