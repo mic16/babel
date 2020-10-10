@@ -102,25 +102,50 @@ Request ServerLogic::disconnect(Request request, std::string userName)
 
 Request ServerLogic::callUser(Request request, std::string userName)
 {
+    this->acceptCalls.insert(std::pair<std::string, std::string>(userName, "WAIT"));
     if (this->usersMapTcp.find(request.getRequestContent()) != this->usersMapTcp.end()) {
         TcpConnection *tcp = this->usersMapTcp.find(request.getRequestContent())->second;
-        calls.push_back(userName + "," + request.getRequestContent());
+        calls.insert(std::pair<std::string, std::string>(request.getRequestContent(), userName));
         return (Request(Request::VALIDCALLUSER), tcp->socket().remote_endpoint().address().to_string());
     } else
         return (Request(Request::REFUSECALLUSER));
 }
 
-Request ServerLogic::getCall(Request request)
+Request ServerLogic::getCall(Request request, std::string userName)
+{
+    if (this->calls.find(userName) != this->calls.end()) {
+        Request reponse(Request::VALIDGETCALL, calls.at(userName) + "," + this->usersMapTcp.find(this->calls.at(userName))->second->socket().remote_endpoint().address().to_string());
+        this->calls.erase(userName);
+        return (reponse);
+    }
+    return (Request(Request::VALIDGETCALL));
+}
+
+Request ServerLogic::acceptCall(Request request, std::string userName)
 {
     std::vector<std::string> vec;
     boost::split(vec, request.getRequestContent(), boost::is_any_of(","));
+    if (this->acceptCalls.find(userName) != this->acceptCalls.end()) {
+        this->acceptCalls.find(vec[0])->second = vec[1];
+        return (Request(Request::VALIDACCEPTCALL));
+    } else {
+        return (Request(Request::REFUSEACCEPTCALL));
+    }
 }
 
-Request ServerLogic::acceptCall(Request request)
+Request ServerLogic::getAcceptCall(Request request, std::string userName)
 {
-
+    if (this->acceptCalls.find(userName) != this->acceptCalls.end()) {
+        if (!(this->acceptCalls.find(userName)->second.compare("WAIT") == 0)) {
+            Request reponse(Request::VALIDGETACCEPTCALL, this->acceptCalls.find(userName)->second);
+            this->acceptCalls.erase(userName);
+            return (reponse);
+        } else {
+            return (Request(Request::VALIDGETACCEPTCALL, "WAIT"));
+        }
+    }
+    return (Request(Request::REFUSEGETACCEPTCALL));
 }
-
 // Request ServerLogic::changeName(Request request, std::string oldName)
 // {
 //     if (!this->dataBase.insertRemoveUpdate("UPDATE users SET nale='" + oldName + "' WHERE name='" + request.getRequestContent() + "'"))
@@ -319,9 +344,11 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
         case Request::CALLUSER:
             return (callUser(request, userName));
         case Request::GETCALL:
-            return (getCall(request));
+            return (getCall(request, userName));
         case Request::ACCEPTCALL:
-            return (acceptCall(request));
+            return (acceptCall(request, userName));
+        case Request::GETACCEPTCALL:
+            return (getAcceptCall(request, userName));
         case Request::CREATETEAM:
             return (createTeam(request, userName));
         case Request::ADDUSERTOTEAM:

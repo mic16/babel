@@ -10,6 +10,11 @@ Communication::~Communication()
 
 }
 
+std::string Communication::getUserIP()
+{
+    return (userIP);
+}
+
 void Communication::connectToServer()
 {
     _socket.connectToHost(QHostAddress("127.0.0.1"), 7171);
@@ -78,7 +83,9 @@ bool Communication::callUser(std::string name)
 
 std::string Communication::getCall(std::string name)
 {
-    if (lastRequestRecieve.getRequestType() == Request::VALIDGETCALL) {
+    Request r(Request::GETCALL, "", token);
+    sendToServer(r);
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETCALL && lastRequestRecieve.getRequestContent().length() > 0) {
         std::vector<std::string> vec;
         boost::split(vec, lastRequestRecieve.getRequestContent(), boost::is_any_of(","));
         std::string name = vec[0];
@@ -90,7 +97,7 @@ std::string Communication::getCall(std::string name)
 
 bool Communication::acceptCall(bool response)
 {
-    Request r(Request::ACCEPTCALL, (response ? "true" : "false"),token);
+    Request r(Request::ACCEPTCALL, (response ? "ACCEPT" : "REFUSE"),token);
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTCALL)
@@ -112,12 +119,17 @@ bool Communication::stopCall()
 
 int Communication::getAcceptCall()
 {
-    if (lastRequestRecieve.getRequestType() == Request::VALIDGETACCEPTCALL)
-        return (0);
-    else if (lastRequestRecieve.getRequestType() == Request::REFUSEGETACCEPTCALL)
-        return (1);
-    else
-        return (-1);
+    Request r(Request::GETACCEPTCALL, "", token);
+    sendToServer(r);
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETACCEPTCALL) {
+        if (lastRequestRecieve.getRequestContent().compare("WAIT"))
+            return (-1);
+        if (lastRequestRecieve.getRequestContent().compare("ACCEPT"))
+            return (0);
+        if (lastRequestRecieve.getRequestContent().compare("REFUSE"))
+            return (1);
+    }
+    return (-2);
 }
 
 bool Communication::addFriend(std::string name)

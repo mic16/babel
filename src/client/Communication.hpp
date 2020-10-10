@@ -56,8 +56,8 @@ public:
     bool removeUserFromTeam(std::string userName, std::string teamName);
     bool acceptTeamRequest(std::string name);
     bool destroyTeam(std::string name);
-
     bool changeName(std::string name);
+    std::string getUserIP();
 
 public slots:
     void onReadyRead();

@@ -32,6 +32,8 @@ class ServerLogic {
 
     private:
         Data dataBase;
+        std::map<std::string, std::string> calls;
+        std::map<std::string, std::string> acceptCalls;
         std::map<std::string, TcpConnection *> usersMapTcp; // name - Tcp
         std::map<std::string, std::string> usersMapToken;   // token - name
 
@@ -46,9 +48,9 @@ class ServerLogic {
         Request getFriendRequests(Request request, std::string userName);
 
         Request callUser(Request request, std::string userName);
-        std::vector<std::string> calls;
-        Request getCall(Request request);
-        Request acceptCall(Request request);
+        Request getCall(Request request, std::string userName);
+        Request acceptCall(Request request, std::string userName);
+        Request getAcceptCall(Request request, std::string userName);
         void stopCall();
 
         Request createTeam(Request request, std::string userName);
