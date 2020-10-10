@@ -45,7 +45,7 @@ class ServerLogic {
         Request getFriends(Request request, std::string userName); // Yoan en a pas
         Request getFriendRequests(Request request, std::string userName);
 
-        Request callUser(Request request);
+        Request callUser(Request request, std::string userName);
         std::vector<std::string> calls;
         Request getCall(Request request);
         Request acceptCall(Request request);

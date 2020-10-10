@@ -61,6 +61,8 @@ if (EXISTS /home/$ENV{USER}/Qt)
             src/client/backend.cpp
             src/client/mainwindow.cpp
             src/client/Communication.cpp
+            src/udpclient/MyUdp.cpp
+            src/PortAudio/PortAudioRecord.cpp    
             )
 
         set(SRCSSERVER
@@ -101,6 +103,8 @@ if (EXISTS /home/$ENV{USER}/Qt)
             src/client/mainwindow.hpp
             src/client/Communication.hpp
             src/client/Clock.hpp
+            src/udpclient/MyUdp.hpp
+            src/PortAudio/PortAudioRecord.hpp    
             )
 
         set(HEADERSSERVER
@@ -129,8 +133,6 @@ if (EXISTS /home/$ENV{USER}/Qt)
 
         set(HEADERSSERVER
         )
-
-        # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
         add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
     endif()
 else()
@@ -140,7 +142,5 @@ else()
 
     set(HEADERSSERVER
     )
-
-    # On indique que l'on veut un exécutable "Babel" compilé à partir des fichiers décrits par les variables SRCS et HEADERS
     add_executable(Babel ${SRCSCLIENT} ${HEADERSCLIENT})
 endif()

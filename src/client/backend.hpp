@@ -11,8 +11,10 @@
 #include "Clock.hpp"
 #include <mutex>
 #include "Communication.hpp"
+#include "../PortAudio/PortAudioRecord.hpp"
+#include "../udpclient/MyUdp.hpp"
 
-class BackEnd : public QObject
+class BackEnd : public QObject, IAudioStreamCallback 
 {
     static BackEnd *singleton;
     Q_OBJECT;
@@ -38,6 +40,8 @@ public:
     Communication *getCom();
     bool isAuth();
 
+    int onAudioReady(const float *inputSamples, unsigned long samplesCount);
+    int onAudioNeeded(float *outputSamples, unsigned long samplesCount);
 
     Q_INVOKABLE void addToFriendlist(const QString &friendName);
     Q_INVOKABLE void removeToFriendlist(const QString &friendName);
@@ -45,7 +49,7 @@ public:
     Q_INVOKABLE void removeToTeamlist(const QString &teamName);
     Q_INVOKABLE void addMembersToTeamlist(const QString &teamName, const QString &friendName);
     Q_INVOKABLE void removeMembersToTeamlist(const QString &teamName, const QString &friendName);
-    Q_INVOKABLE bool existInTeam(const QString &teamName, const QString &friendName);
+    // Q_INVOKABLE bool existInTeam(const QString &teamName, const QString &friendName);
     Q_INVOKABLE bool existingTeam(const QString &Name);
     Q_INVOKABLE bool existingCredential(const QString &UserName, const QString &PassWord);
     Q_INVOKABLE bool addUserToDataBase(const QString &UserName, const QString &PassWord);
@@ -81,6 +85,8 @@ signals:
 
 
 private:
+    PortAudio *audio;
+    MyUdp callfriend;
     Communication *m_com;
     std::string m_userName;
     std::string m_passWord;

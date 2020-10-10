@@ -80,7 +80,7 @@ std::string Communication::getCall(std::string name)
 {
     if (lastRequestRecieve.getRequestType() == Request::VALIDGETCALL) {
         std::vector<std::string> vec;
-        boost::split(vec, request.getRequestContent(), boost::is_any_of(","));
+        boost::split(vec, lastRequestRecieve.getRequestContent(), boost::is_any_of(","));
         std::string name = vec[0];
         userIP = vec[1];
         return (name);
