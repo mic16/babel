@@ -15,7 +15,7 @@ class Request {
     public:
         enum RequestType {
             //Request from clients
-            CREATEUSER,         // creé l'user passé en content de la request 0
+            CREATEUSER,         // creé l'user passé en content de la request
             CREATETEAM,         // crée la team passé en content de la request
             
             CONNECT,            // connect l'user passé en content de la request
@@ -29,7 +29,7 @@ class Request {
             ADDFRIEND,          // ajouter un user passé en content de la request à sa liste d'amis
             REMOVEFRIEND,       // enlever un user passé en content de la request de sa liste d'amis
             GETFRIENDS,         // get les amis du user
-            GETFRIENDREQUESTS,  // get les demandes d'amis du user 10
+            GETFRIENDREQUESTS,  // get les demandes d'amis du user
             ACCEPTFRIENDREQUEST,// accept la demande d'ami
 
             GETTEAMS,           // get les teams du user
@@ -47,7 +47,7 @@ class Request {
 
             //Request Reponse
                 // Refuse
-                NOTCONNECTED,               // If the user is not connected 20
+                NOTCONNECTED,               // If the user is not connected
                 BADREQUEST,                 // request non valid
 
                 REFUSECONNECT,              // refus de connecter l'user
@@ -63,7 +63,7 @@ class Request {
                 REFUSEGETACCEPTCALL,
 
                 REFUSEADDFRIEND,            // refus de rajouter un ami
-                REFUSEREMOVEFRIEND,         // refus d'enlever un ami 30
+                REFUSEREMOVEFRIEND,         // refus d'enlever un ami
                 REFUSEGETFRIENDS,           // refus de get ses amis
                 REFUSEGETFRIENDREQUESTS,    // refus de get les demandes d'amis
                 REFUSEACCEPTFRIENDREQUEST,  // refus d'accept une demande d'ami
@@ -76,7 +76,7 @@ class Request {
                 REFUSEREMOVEUSERFROMTEAM,   // refus de remove un user d'une team
                 REFUSEACCEPTTEAMREQUEST,    // refus d'accept une demande de team
 
-                REFUSECHANGENAME,           // refus de géchan le nom 40
+                REFUSECHANGENAME,           // refus de géchan le nom
                 
 
                 // Validate
@@ -94,7 +94,7 @@ class Request {
 
                 VALIDADDFRIEND,             // user a rajouté un ami
                 VALIDREMOVEFRIEND,          // user a enlevé un ami
-                VALIDGETFRIENDS,            // user a reçu ses amis 50
+                VALIDGETFRIENDS,            // user a reçu ses amis
                 VALIDGETFRIENDREQUESTS,     // user a reçu sa liste de demande d'amis
                 VALIDACCEPTFRIENDREQUEST,   // user a accepté la demande d'ami
 
@@ -106,7 +106,7 @@ class Request {
                 VALIDACCEPTTEAMREQUEST,     // user a accepté la demande de team
                 VALIDDESTROYTEAM,
 
-                VALIDCHANGENAME,            // user a changé de nom 59
+                VALIDCHANGENAME,            // user a changé de nom
 
         };
 

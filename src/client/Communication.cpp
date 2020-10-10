@@ -160,6 +160,7 @@ std::vector<std::string> Communication::getFriends()
     std::string delim = ",";
     std::vector<std::string> vec;
 
+    sendToServer(r);
     if (lastRequestRecieve.getRequestType() == Request::VALIDGETFRIENDS) {
         std::string str = lastRequestRecieve.getRequestContent();
         while (str.find(delim) != std::string::npos) {
@@ -170,7 +171,6 @@ std::vector<std::string> Communication::getFriends()
     } else {
         vec.push_back("error");
     }
-    sendToServer(r);
     return (vec);
 }
 
@@ -180,6 +180,7 @@ std::vector<std::string> Communication::getFriendRequests()
     std::string delim = ",";
     std::vector<std::string> vec;
 
+    sendToServer(r);
     if (lastRequestRecieve.getRequestType() == Request::VALIDGETFRIENDREQUESTS) {
         std::string str = lastRequestRecieve.getRequestContent();
         while (str.find(delim) != std::string::npos) {
@@ -190,7 +191,6 @@ std::vector<std::string> Communication::getFriendRequests()
     } else {
         vec.push_back("error");
     }
-    sendToServer(r);
     return (vec);
 }
 
