@@ -140,7 +140,9 @@ if (EXISTS /home/$ENV{USER}/Qt)
 
     target_link_libraries(Babel PRIVATE ${CONAN_LIBS} Qt5::Widgets PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
     target_link_libraries(BabelServer ${CONAN_LIBS} sqlite3)
-else()
+    target_link_libraries(BabelUdp ${CONAN_LIBS} Qt5::Widgets)
+
+    else()
     set(HEADERSCLIENT
         src/error/main.cpp
     )
