@@ -40,6 +40,9 @@ BackEnd::BackEnd(QObject *parent) :
     m_onPending = false;
     m_inCall = false;
     m_onPopup = false;
+    audio = new PortAudio(48000, 256, 2);
+    audio->setCallback(this);
+    // m_thread_obj = std::thread(thread_func, this);
 }
 
 BackEnd *BackEnd::get(QObject *parent)
@@ -203,14 +206,14 @@ void BackEnd::removeMembersToTeamlist(const QString &teamName, const QString &fr
     emit teamlistMembersRemoveChanged();
 }
 
-bool BackEnd::existInTeam(const QString &teamName, const QString &friendName)
-{
-    std::string teamname = teamName.toUtf8().constData();
-    std::string friendNameString = friendName.toUtf8().constData();
-    if (std::find(m_teamlist.at(teamname).begin(), m_teamlist.at(teamname).end(), friendNameString) == m_teamlist.at(teamname).end())
-        return false;
-    return true;
-}
+// bool BackEnd::existInTeam(const QString &teamName, const QString &friendName)
+// {
+//     std::string teamname = teamName.toUtf8().constData();
+//     std::string friendNameString = friendName.toUtf8().constData();
+//     if (std::find(m_teamlist.at(teamname).begin(), m_teamlist.at(teamname).end(), friendNameString) == m_teamlist.at(teamname).end())
+//         return false;
+//     return true;
+// }
 
 bool BackEnd::existingTeam(const QString &Name)
 {
@@ -247,23 +250,25 @@ bool BackEnd::getOnPopup()
     return m_onPopup;
 }
 
-void BackEnd::removeFriendDataBase(const QString &userName)
+void BackEnd::removeFriendDataBase(const QString &userName) // add to qml
 {
     m_com->removeFriend(userName.toUtf8().constData());
 }
 
-void BackEnd::addMembersTeamListDatabase(const QString &teamname, const QString &username)
+void BackEnd::addMembersTeamListDatabase(const QString &teamname, const QString &username) // add to qml
 {
     m_com->addUserToTeam(username.toUtf8().constData(), teamname.toUtf8().constData());
 }
 
-void BackEnd::removeMembersTeamListDatabase(const QString &teamname, const QString &username)
+void BackEnd::removeMembersTeamListDatabase(const QString &teamname, const QString &username) // add to qml
 {
-    // TODO REQUETE TO UDPATE THE FRIEND LIST IN DATABASE
+    m_com->removeUserFromTeam(username.toUtf8().constData(), teamname.toUtf8().constData());
 }
 
 void BackEnd::callFriend(const QString &Name)
 {
+    callfriend.setFriend(QHostAddress::LocalHost);
+    audio->start();
     // TODO FAIRE LA REQUETE D'APEL A UN AMI
     // m_com->callUser(Name.toUtf8().constData());
     // m_onPending = true;
@@ -298,7 +303,7 @@ void BackEnd::disconnect()
     std::cout << "FIN" << std::endl;
 }
 
-bool BackEnd::isAuth()
+bool BackEnd::isAuth() // add to qml
 {
     std::cout << m_userName.compare("") << " - " << m_passWord.compare("") << std::endl;
     if (m_userName.compare("") != 0 && m_passWord.compare("") != 0) {
@@ -338,3 +343,16 @@ void BackEnd::display()
         std::cout << "]" << std::endl;
     }
 }
+
+int BackEnd::onAudioReady(const float *inputSamples, unsigned long samplesCount)
+{
+    callfriend.write(inputSamples, samplesCount);
+    return (0);
+}
+
+int BackEnd::onAudioNeeded(float *outputSamples, unsigned long samplesCount)
+{
+    std::memcpy(outputSamples, callfriend.read(samplesCount), samplesCount * sizeof(float));
+    return (0);
+}
+

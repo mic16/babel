@@ -15,7 +15,6 @@
 
 #include "../utils/Request.hpp"
 #include "../utils/Utils.hpp"
-#include "../udpclient/myudp.hpp"
 
 class Communication : public QObject{
 
@@ -36,9 +35,10 @@ public:
     bool createTeam(std::string teamName);
 
     bool callUser(std::string name);
-    bool getCall(std::string name);
-    bool acceptCall();
+    std::string getCall(std::string name);
+    bool acceptCall(bool response);
     bool stopCall();
+    int getAcceptCall();
 
     bool addFriend(std::string name);
     bool removeFriend(std::string name);
@@ -56,8 +56,8 @@ public:
     bool removeUserFromTeam(std::string userName, std::string teamName);
     bool acceptTeamRequest(std::string name);
     bool destroyTeam(std::string name);
-
     bool changeName(std::string name);
+    std::string getUserIP();
 
 public slots:
     void onReadyRead();
@@ -68,6 +68,7 @@ private:
     Request lastRequestRecieve;
     bool call;
     bool connected;
+    std::string userIP;
 };
 
 #endif // COMMUNICATION_H

@@ -368,7 +368,6 @@ Window {
             }
         }
 
-
         ListModel {
             id: contactModel
             ListElement {

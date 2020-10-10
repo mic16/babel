@@ -24,6 +24,7 @@ class Request {
             CALLUSER,           // call l'user passé en content de la request
             ACCEPTCALL,         // accept le call du user passé en content de la request
             STOPCALL,           // arrêter le call
+            GETACCEPTCALL,
 
             ADDFRIEND,          // ajouter un user passé en content de la request à sa liste d'amis
             REMOVEFRIEND,       // enlever un user passé en content de la request de sa liste d'amis
@@ -59,6 +60,7 @@ class Request {
                 REFUSEGETCALL,              // refus de get les calls
                 REFUSEACCEPTCALL,           // refus d'accept le call
                 REFUSESTOPCALL,             // refus d'arrêter le call
+                REFUSEGETACCEPTCALL,
 
                 REFUSEADDFRIEND,            // refus de rajouter un ami
                 REFUSEREMOVEFRIEND,         // refus d'enlever un ami 30
@@ -88,6 +90,7 @@ class Request {
                 VALIDGETCALL,               // user a reçu le call
                 VALIDACCEPTCALL,            // user a accepté le call
                 VALIDSTOPCALL,              // user a arrêté le call
+                VALIDGETACCEPTCALL,
 
                 VALIDADDFRIEND,             // user a rajouté un ami
                 VALIDREMOVEFRIEND,          // user a enlevé un ami

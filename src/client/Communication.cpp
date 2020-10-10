@@ -10,6 +10,11 @@ Communication::~Communication()
 
 }
 
+std::string Communication::getUserIP()
+{
+    return (userIP);
+}
+
 void Communication::connectToServer()
 {
     _socket.connectToHost(QHostAddress("127.0.0.1"), 7171);
@@ -70,22 +75,29 @@ bool Communication::callUser(std::string name)
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDCALLUSER) {
-        // TO DO prendre l'IP et se connecter dessus
-    }
-}
-
-bool Communication::getCall(std::string name)
-{
-    if (call) {
-        call = false;
+        userIP = lastRequestRecieve.getRequestContent();
         return (true);
     } else
         return (false);
 }
 
-bool Communication::acceptCall()
+std::string Communication::getCall(std::string name)
 {
-    Request r(Request::ACCEPTCALL, "",token);
+    Request r(Request::GETCALL, "", token);
+    sendToServer(r);
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETCALL && lastRequestRecieve.getRequestContent().length() > 0) {
+        std::vector<std::string> vec;
+        boost::split(vec, lastRequestRecieve.getRequestContent(), boost::is_any_of(","));
+        std::string name = vec[0];
+        userIP = vec[1];
+        return (name);
+    } else
+        return ("");
+}
+
+bool Communication::acceptCall(bool response)
+{
+    Request r(Request::ACCEPTCALL, (response ? "ACCEPT" : "REFUSE"),token);
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTCALL)
@@ -105,6 +117,20 @@ bool Communication::stopCall()
         return (false);
 }
 
+int Communication::getAcceptCall()
+{
+    Request r(Request::GETACCEPTCALL, "", token);
+    sendToServer(r);
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETACCEPTCALL) {
+        if (lastRequestRecieve.getRequestContent().compare("WAIT"))
+            return (-1);
+        if (lastRequestRecieve.getRequestContent().compare("ACCEPT"))
+            return (0);
+        if (lastRequestRecieve.getRequestContent().compare("REFUSE"))
+            return (1);
+    }
+    return (-2);
+}
 
 bool Communication::addFriend(std::string name)
 {
@@ -193,11 +219,13 @@ bool Communication::connectUser(std::string name, std::string password)
 
 bool Communication::disconnect()
 {
-    std::cout << "CRASSSSHHHH 1111" << std::endl;
     Request r(Request::DISCONNECT, "", token);
-    std::cout << "CRASSSSHHHH 2222" << std::endl;
     sendToServer(r);
-    std::cout << "CRASSSSHHHH 333" << std::endl;
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDDISCONNECT)
+        return (true);
+    else
+        return (false);
 }
 
 std::map<std::string, std::vector<std::string>> Communication::parse()
