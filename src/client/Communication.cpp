@@ -76,10 +76,9 @@ bool Communication::callUser(std::string name)
 
 bool Communication::getCall(std::string name)
 {
-    if (call) {
-        call = false;
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETCALL)
         return (true);
-    } else
+    else
         return (false);
 }
 
@@ -195,6 +194,11 @@ bool Communication::disconnect()
 {
     Request r(Request::DISCONNECT, "", token);
     sendToServer(r);
+
+    if (lastRequestRecieve.getRequestType() == Request::VALIDDISCONNECT)
+        return (true);
+    else
+        return (false);
 }
 
 std::map<std::string, std::vector<std::string>> Communication::parse()

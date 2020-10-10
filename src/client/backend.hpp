@@ -7,10 +7,14 @@
 #include <algorithm>
 #include <qqml.h>
 #include <iostream>
+#include <thread>
+#include "Clock.hpp"
+#include <mutex>
 #include "Communication.hpp"
 
 class BackEnd : public QObject
 {
+    static BackEnd *singleton;
     Q_OBJECT;
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged);
     Q_PROPERTY(QString passWord READ passWord WRITE setpassWord NOTIFY passWordChanged);
@@ -20,6 +24,7 @@ class BackEnd : public QObject
 
 public:
     explicit BackEnd(QObject *parent = nullptr);
+    static BackEnd *get(QObject *parent = nullptr);
 
     QString userName();
     QString passWord();
@@ -27,9 +32,15 @@ public:
     QMap<QString, QList<QString>> teamlist();
     bool microphone();
 
+    bool getQuit();
+
     void setUserName(const QString &userName);
     void setpassWord(const QString &passWord);
     void setMicrophone(const bool &microphone);
+    Communication *getCom();
+    bool isAuth();
+
+
     Q_INVOKABLE void addToFriendlist(const QString &friendName);
     Q_INVOKABLE void removeToFriendlist(const QString &friendName);
     Q_INVOKABLE void addToTeamlist(const QString &teamName);
@@ -43,10 +54,13 @@ public:
     Q_INVOKABLE void fillUserInfo();
     Q_INVOKABLE void addFriendDataBase(const QString &userName);
     Q_INVOKABLE void removeFriendDataBase(const QString &userName);
-    Q_INVOKABLE void updateDatabaseTeamList();
+    Q_INVOKABLE void addMembersTeamListDatabase(const QString &teamname, const QString &username);
+    Q_INVOKABLE void removeMembersTeamListDatabase(const QString &teamname, const QString &username);
     Q_INVOKABLE bool callFriend(const QString &Name);
     Q_INVOKABLE bool callTeam(const QString &Name);
     Q_INVOKABLE void disconnect();
+    Q_INVOKABLE void callAccept(bool bool_accept);
+    Q_INVOKABLE bool isServerOn();
 
     Q_INVOKABLE void display();
 
@@ -74,6 +88,8 @@ private:
     std::map<std::string, std::vector<std::string>> m_teamlist;
     std::vector<std::string> notiflist;
     bool m_microphone;
+    bool m_quit;
+    std::thread m_thread_obj;
 };
 
 #endif // BACKEND_H
