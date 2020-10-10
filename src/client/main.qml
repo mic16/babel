@@ -954,7 +954,6 @@ Window {
                 font.capitalization: Font.MixedCase
                 Material.background: Material.Blue
                 onClicked: {
-                    backend.alwaysCall()
                     if (backend.isServerOn() === false) {
                         //TODO PUT RED BANNER
                         return

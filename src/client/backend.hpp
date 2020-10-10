@@ -37,6 +37,10 @@ public:
     void setUserName(const QString &userName);
     void setpassWord(const QString &passWord);
     void setMicrophone(const bool &microphone);
+    Communication *getCom();
+    bool isAuth();
+
+
     Q_INVOKABLE void addToFriendlist(const QString &friendName);
     Q_INVOKABLE void removeToFriendlist(const QString &friendName);
     Q_INVOKABLE void addToTeamlist(const QString &teamName);
@@ -55,7 +59,6 @@ public:
     Q_INVOKABLE bool callFriend(const QString &Name);
     Q_INVOKABLE bool callTeam(const QString &Name);
     Q_INVOKABLE void disconnect();
-    Q_INVOKABLE void alwaysCall();
     Q_INVOKABLE void callAccept(bool bool_accept);
     Q_INVOKABLE bool isServerOn();
 

@@ -8,8 +8,8 @@ void thread_func(BackEnd *backend)
     Clock<float> time;
 
     time.start();
-    while (true) {
-        if (time.getElapsedTime() == 1) {
+    while (backend->getCom()->isServerOn()) {
+        if (time.getElapsedTime() == 1 && backend->isAuth()) {
             std::cout << "TEST 1 SECONDE" << std::endl;
             time.reset();
             backend->fillUserInfo();
@@ -212,7 +212,6 @@ void BackEnd::fillUserInfo()
     m_friendlist = m_com->getFriends();
     m_teamlist = m_com->getTeams();
     notiflist = m_com->getFriendRequests();
-    // TODO REQUETE TO GET ALL USER INFO FROM DATABASE
 }
 
 void BackEnd::addFriendDataBase(const QString &userName)
@@ -261,9 +260,24 @@ void BackEnd::disconnect()
     m_thread_obj.join();
 }
 
+bool BackEnd::isAuth()
+{
+    std::cout << m_userName.compare("") << " - " << m_passWord.compare("") << std::endl;
+    if (m_userName.compare("") != 0 && m_passWord.compare("") != 0) {
+        std::cout << "HELLO WORLD ENCULER" << std::endl;
+        return true;
+    }
+    return false;
+}
+
 bool BackEnd::getQuit()
 {
     return m_quit;
+}
+
+Communication *BackEnd::getCom()
+{
+    return m_com;
 }
 
 void BackEnd::display()
@@ -285,10 +299,4 @@ void BackEnd::display()
         }
         std::cout << "]" << std::endl;
     }
-}
-
-void BackEnd::alwaysCall()
-{
-    
-    // thread_obj.join();
 }
