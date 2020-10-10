@@ -28,9 +28,13 @@ Window {
         property int counter: 0
         repeat: true
         onTriggered: {
-            counter += 1
-            console.log(counter)
+            if (backend.isServerOn() === false) {
+                banner.visible = true
             backend.update()
+            if (backend.getOnPopup()) {
+                callerName.text = backend.callerName;
+                callPopup.open()
+            }
             if(backend.isServerOn() === false || backend.getQuit())
                 timer.stop()
         }
@@ -755,6 +759,7 @@ Window {
                     on_call = false
                     callButton.enabled = true
                     teamCallButton.enabled = true
+                    backend.hangUpFriend()
                     if (backend.existingTeam(callName.text)) {
                         callFrame.visible = false
                         teamFrame.visible = true
@@ -900,9 +905,6 @@ Window {
                     addButton.visible = true
                     refuseButton.visible = true
                 }
-//                backend.display()
-                callerName.text = "AAAAAAAAAAAAAA"
-                callPopup.open()
             }
         }
 
@@ -972,7 +974,7 @@ Window {
                 Material.background: Material.Blue
                 onClicked: {
                     if (backend.isServerOn() === false) {
-                        //TODO PUT RED BANNER
+                        banner.visible = true
                         console.log("Server isn't on")
                         return
                     }
@@ -1243,6 +1245,22 @@ Window {
                 teamNameText.color = "#000000"
                 callText1.color = "#000000"
             }
+        }
+    }
+    Rectangle {
+        id: banner
+        width: 900
+        height: 20
+        color: "red"
+        visible: false
+        Text {
+            anchors.fill: parent
+            fontSizeMode: Text.Fit
+            font.pixelSize: 10000 // maximum height of the font
+            minimumPixelSize: 8 // minimum height of the font
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            text: "No connexion to the server detected, please restart the Babel"
         }
     }
 }

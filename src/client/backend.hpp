@@ -9,7 +9,6 @@
 #include <iostream>
 #include <thread>
 #include "Clock.hpp"
-#include <mutex>
 #include "Communication.hpp"
 
 class BackEnd : public QObject
@@ -20,7 +19,8 @@ class BackEnd : public QObject
     Q_PROPERTY(QString passWord READ passWord WRITE setpassWord NOTIFY passWordChanged);
     Q_PROPERTY(QList<QString> friendlist READ friendlist);
     Q_PROPERTY(QMap<QString, QList<QString>> teamlist READ teamlist);
-    Q_PROPERTY(bool microphone READ microphone WRITE setMicrophone NOTIFY microphoneChanged)
+    Q_PROPERTY(bool microphone READ microphone WRITE setMicrophone NOTIFY microphoneChanged);
+    Q_PROPERTY(QString callerName READ callerName WRITE setCallerName);
 
 public:
     explicit BackEnd(QObject *parent = nullptr);
@@ -28,6 +28,7 @@ public:
 
     QString userName();
     QString passWord();
+    QString callerName();
     QList<QString> friendlist();
     QMap<QString, QList<QString>> teamlist();
     bool microphone();
@@ -35,9 +36,9 @@ public:
     void setUserName(const QString &userName);
     void setpassWord(const QString &passWord);
     void setMicrophone(const bool &microphone);
+    void setCallerName(const QString &name);
     Communication *getCom();
     bool isAuth();
-
 
     Q_INVOKABLE void addToFriendlist(const QString &friendName);
     Q_INVOKABLE void removeToFriendlist(const QString &friendName);
@@ -54,16 +55,18 @@ public:
     Q_INVOKABLE void removeFriendDataBase(const QString &userName);
     Q_INVOKABLE void addMembersTeamListDatabase(const QString &teamname, const QString &username);
     Q_INVOKABLE void removeMembersTeamListDatabase(const QString &teamname, const QString &username);
-    Q_INVOKABLE bool callFriend(const QString &Name);
+    Q_INVOKABLE void callFriend(const QString &Name);
+    Q_INVOKABLE void hangUpFriend();
     Q_INVOKABLE bool callTeam(const QString &Name);
     Q_INVOKABLE void disconnect();
     Q_INVOKABLE void callAccept(bool bool_accept);
     Q_INVOKABLE bool isServerOn();
     Q_INVOKABLE void update();
     Q_INVOKABLE bool getQuit();
+    Q_INVOKABLE bool getOnPending();
+    Q_INVOKABLE bool getOnPopup();
 
     Q_INVOKABLE void display();
-
 
 
 signals:
@@ -86,10 +89,13 @@ private:
     std::string m_passWord;
     std::vector<std::string> m_friendlist;
     std::map<std::string, std::vector<std::string>> m_teamlist;
-    std::vector<std::string> notiflist;
+    std::vector<std::string> m_notiflist;
     bool m_microphone;
     bool m_quit;
-    // std::thread m_thread_obj;
+    bool m_onPending;
+    bool m_inCall;
+    bool m_onPopup;
+    std::string m_calledFriend;
 };
 
 #endif // BACKEND_H
