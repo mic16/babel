@@ -100,13 +100,24 @@ Request ServerLogic::disconnect(Request request, std::string userName)
     return (Request(Request::VALIDDISCONNECT));
 }
 
-Request ServerLogic::callUser(Request request)
+Request ServerLogic::callUser(Request request, std::string userName)
 {
     if (this->usersMapTcp.find(request.getRequestContent()) != this->usersMapTcp.end()) {
         TcpConnection *tcp = this->usersMapTcp.find(request.getRequestContent())->second;
+        calls.push_back(userName + request.getRequestContent());
         return (Request(Request::VALIDCALLUSER), tcp->socket().remote_endpoint().address().to_string());
     } else
         return (Request(Request::REFUSECALLUSER));
+}
+
+Request ServerLogic::getCall(Request request)
+{
+
+}
+
+Request ServerLogic::acceptCall(Request request)
+{
+
 }
 
 // Request ServerLogic::changeName(Request request, std::string oldName)
@@ -305,7 +316,11 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
         case Request::GETFRIENDS:
             return (getFriends(request, userName));
         case Request::CALLUSER:
-            return (callUser(request));
+            return (callUser(request, userName));
+        case Request::GETCALL:
+            return (getCall(request));
+        case Request::ACCEPTCALL:
+            return (acceptCall(request));
         case Request::CREATETEAM:
             return (createTeam(request, userName));
         case Request::ADDUSERTOTEAM:

@@ -32,8 +32,6 @@ public:
     QMap<QString, QList<QString>> teamlist();
     bool microphone();
 
-    bool getQuit();
-
     void setUserName(const QString &userName);
     void setpassWord(const QString &passWord);
     void setMicrophone(const bool &microphone);
@@ -50,7 +48,7 @@ public:
     Q_INVOKABLE bool existInTeam(const QString &teamName, const QString &friendName);
     Q_INVOKABLE bool existingTeam(const QString &Name);
     Q_INVOKABLE bool existingCredential(const QString &UserName, const QString &PassWord);
-    Q_INVOKABLE bool addUserToDataBase();
+    Q_INVOKABLE bool addUserToDataBase(const QString &UserName, const QString &PassWord);
     Q_INVOKABLE void fillUserInfo();
     Q_INVOKABLE void addFriendDataBase(const QString &userName);
     Q_INVOKABLE void removeFriendDataBase(const QString &userName);
@@ -61,6 +59,8 @@ public:
     Q_INVOKABLE void disconnect();
     Q_INVOKABLE void callAccept(bool bool_accept);
     Q_INVOKABLE bool isServerOn();
+    Q_INVOKABLE void update();
+    Q_INVOKABLE bool getQuit();
 
     Q_INVOKABLE void display();
 
@@ -89,7 +89,7 @@ private:
     std::vector<std::string> notiflist;
     bool m_microphone;
     bool m_quit;
-    std::thread m_thread_obj;
+    // std::thread m_thread_obj;
 };
 
 #endif // BACKEND_H

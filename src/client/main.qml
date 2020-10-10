@@ -23,6 +23,19 @@ Window {
     Material.accent: Material.Orange
     flags: Qt.CustomizeWindowHint | Qt.WindowTitleHint
 
+    Timer {
+        id: update
+        property int counter: 0
+        repeat: true
+        onTriggered: {
+            counter += 1
+            console.log(counter)
+            backend.update()
+            if(backend.isServerOn() === false || backend.getQuit())
+                timer.stop()
+        }
+    }
+
     BackEnd {
         id:backend
         onUserNameChanged: {
@@ -375,8 +388,12 @@ Window {
             focusPolicy: Qt.StrongFocus
             Material.background: Material.Red
             onClicked: {
+                update.stop()
+                console.log("C4EST PARTIIIIII")
                 window.close()
+                console.log("FDPPPPPPPPP")
                 backend.disconnect()
+                console.log("FINISH MOTHERFUCK")
             }
         }
 
@@ -955,14 +972,16 @@ Window {
                 onClicked: {
                     if (backend.isServerOn() === false) {
                         //TODO PUT RED BANNER
+                        console.log("Server isn't on")
                         return
                     }
-                    if (pseudoRegisterTextField.text === "" || pseudoRegisterTextField.text.replace(" ", "") === "" || passwordRegisterTextField.text !== passwordRegisterValidTextField.text || passwordRegisterTextField.text === "" || passwordRegisterTextField.text.replace(" ", "") === "" || backend.addUserToDataBase() === false) {
+                    if (pseudoRegisterTextField.text === "" || pseudoRegisterTextField.text.replace(" ", "") === "" || passwordRegisterTextField.text !== passwordRegisterValidTextField.text || passwordRegisterTextField.text === "" || passwordRegisterTextField.text.replace(" ", "") === "" || backend.addUserToDataBase(pseudoRegisterTextField, passwordRegisterTextField) === false) {
                         registerButton.Material.background = Material.Red
                         passwordRegisterValidTextField.Material.accent = Material.Red
                         return
 
                     } else {
+                        update.start()
                         pseudoPane.visible = false
                         homePane.visible = true
                     }
@@ -1099,6 +1118,7 @@ Window {
                     if (backend.existingCredential(pseudoSigninTextField.text, passwordSigninTextField.text)) {
                         pseudoPane.visible = false
                         homePane.visible = true
+                        update.start()
                         if (contactModel.get(0).text === "") {
                             contactModel.clear()
                             contactModel.append(({text: pseudoSigninTextField.text}))

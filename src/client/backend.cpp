@@ -1,21 +1,30 @@
 #include "backend.hpp"
 
 BackEnd *BackEnd::singleton = nullptr;
-std::mutex p_mutex;
+// std::mutex p_mutex;
 
-void thread_func(BackEnd *backend)
+// void thread_func(BackEnd *backend)
+// {
+//     Clock<float> time;
+
+//     time.start();
+//     while (backend->getCom()->isServerOn()) {
+//         if (time.getElapsedTime() > 1 && backend->isAuth()) {
+//             std::cout << "TEST 1 SECONDE" << std::endl;
+//             time.reset();
+//             backend->fillUserInfo();
+//         }
+//         if (backend->getQuit())
+//             break;
+//     }
+//     time.stop();
+//     std::cout << "LE THREAD N'EXISTE PLUS CAR " << backend->getCom()->isServerOn() << std::endl;
+// }
+
+void BackEnd::update()
 {
-    Clock<float> time;
-
-    time.start();
-    while (backend->getCom()->isServerOn()) {
-        if (time.getElapsedTime() == 1 && backend->isAuth()) {
-            std::cout << "TEST 1 SECONDE" << std::endl;
-            time.reset();
-            backend->fillUserInfo();
-        }
-        if (backend->getQuit())
-            break;
+    if (isAuth()) {
+        fillUserInfo();
     }
 }
 
@@ -25,7 +34,7 @@ BackEnd::BackEnd(QObject *parent) :
     m_microphone = true;
     m_com = new Communication;
     m_quit = false;
-    m_thread_obj = std::thread(thread_func, this);
+    // m_thread_obj = std::thread(thread_func, this);
 }
 
 BackEnd *BackEnd::get(QObject *parent)
@@ -196,9 +205,9 @@ bool BackEnd::existingCredential(const QString &UserName, const QString &PassWor
     return (m_com->connectUser(UserName.toUtf8().constData(), PassWord.toUtf8().constData()));
 }
 
-bool BackEnd::addUserToDataBase()
+bool BackEnd::addUserToDataBase(const QString &UserName, const QString &PassWord)
 {
-    return (m_com->createUser(m_userName, m_passWord));
+    return (m_com->createUser(UserName.toUtf8().constData(), PassWord.toUtf8().constData()));
 }
 
 bool BackEnd::isServerOn()
@@ -208,7 +217,7 @@ bool BackEnd::isServerOn()
 
 void BackEnd::fillUserInfo()
 {
-    const std::lock_guard<std::mutex> lock(p_mutex);
+    // const std::lock_guard<std::mutex> lock(p_mutex);
     m_friendlist = m_com->getFriends();
     m_teamlist = m_com->getTeams();
     notiflist = m_com->getFriendRequests();
@@ -255,8 +264,13 @@ void BackEnd::callAccept(bool bool_accept)
 
 void BackEnd::disconnect()
 {
+    // TODO LE DISCONNECT
+    std::cout << "AAAAAAAAAAAA" << std::endl;
     m_quit = true;
-    m_thread_obj.join();
+    // m_thread_obj.join();
+    std::cout << "WOAAW" << std::endl;
+    // m_com->disconnect();
+    std::cout << "FIN" << std::endl;
 }
 
 bool BackEnd::isAuth() // add to qml

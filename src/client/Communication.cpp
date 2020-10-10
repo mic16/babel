@@ -70,21 +70,27 @@ bool Communication::callUser(std::string name)
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDCALLUSER) {
-        // TO DO prendre l'IP et se connecter dessus
-    }
-}
-
-bool Communication::getCall(std::string name)
-{
-    if (lastRequestRecieve.getRequestType() == Request::VALIDGETCALL)
+        userIP = lastRequestRecieve.getRequestContent();
         return (true);
-    else
+    } else
         return (false);
 }
 
-bool Communication::acceptCall()
+std::string Communication::getCall(std::string name)
 {
-    Request r(Request::ACCEPTCALL, "",token);
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETCALL) {
+        std::vector<std::string> vec;
+        boost::split(vec, request.getRequestContent(), boost::is_any_of(","));
+        std::string name = vec[0];
+        userIP = vec[1];
+        return (name);
+    } else
+        return ("");
+}
+
+bool Communication::acceptCall(bool response)
+{
+    Request r(Request::ACCEPTCALL, (response ? "true" : "false"),token);
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTCALL)
@@ -104,6 +110,15 @@ bool Communication::stopCall()
         return (false);
 }
 
+int Communication::getAcceptCall()
+{
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETACCEPTCALL)
+        return (0);
+    else if (lastRequestRecieve.getRequestType() == Request::REFUSEGETACCEPTCALL)
+        return (1);
+    else
+        return (-1);
+}
 
 bool Communication::addFriend(std::string name)
 {

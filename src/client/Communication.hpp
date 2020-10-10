@@ -39,6 +39,7 @@ public:
     bool getCall(std::string name);
     bool acceptCall();
     bool stopCall();
+    bool getAcceptCall();
 
     bool addFriend(std::string name);
     bool removeFriend(std::string name);
@@ -68,6 +69,7 @@ private:
     Request lastRequestRecieve;
     bool call;
     bool connected;
+    std::string userIP;
 };
 
 #endif // COMMUNICATION_H

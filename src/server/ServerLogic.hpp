@@ -46,6 +46,10 @@ class ServerLogic {
         Request getFriendRequests(Request request, std::string userName);
 
         Request callUser(Request request);
+        std::vector<std::string> calls;
+        Request getCall(Request request);
+        Request acceptCall(Request request);
+        void stopCall();
 
         Request createTeam(Request request, std::string userName);
         Request addUserToTeam(Request request);
@@ -69,8 +73,6 @@ class ServerLogic {
         void getCallTeam(std::string name);
 
 
-        void acceptCall();
-        void stopCall();
 
         void acceptFriendRequest(std::string name);
         void callTeam(std::string name);
