@@ -440,12 +440,18 @@ void BackEnd::display()
 
 int BackEnd::onAudioReady(const float *inputSamples, unsigned long samplesCount)
 {
+    // for (int i = 0; i < samplesCount - 1; i++) {
+    //     std::cout << i << " : " << inputSamples[i] << std::endl;
+    // }
     callfriend->write(inputSamples, samplesCount);
     return (0);
 }
 
 int BackEnd::onAudioNeeded(float *outputSamples, unsigned long samplesCount)
 {
+    for (int i = 0; i < samplesCount - 1; i++) {
+        std::cout << i << " : " << outputSamples[i] << std::endl;
+    }
     std::memcpy(outputSamples, callfriend->read(samplesCount), samplesCount * sizeof(float));
     return (0);
 }
