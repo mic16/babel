@@ -22,7 +22,6 @@ void MyUdp::write(const float *inputSamples, unsigned long samplesCount)
 
 void MyUdp::handleReadyRead()
 {
-    std::cout << "handleReadyRead" << std::endl;
     QByteArray buffer;
     buffer.resize(512 * sizeof(float));
     
