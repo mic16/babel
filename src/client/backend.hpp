@@ -95,7 +95,7 @@ signals:
 
 private:
     PortAudio *audio;
-    MyUdp callfriend;
+    MyUdp *callfriend;
     Communication *m_com;
     std::string m_userName;
     std::string m_passWord;
