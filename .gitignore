@@ -3,3 +3,5 @@ Babel
 BabelServer
 .vscode/
 src/dataBase/data.db
+html/
+latex/

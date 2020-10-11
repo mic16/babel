@@ -680,6 +680,14 @@ Window {
                         onClicked: {
                             backend.acceptCall(true)
                             callPopup.close()
+
+                            on_call = true
+                            callButton.enabled = false
+                            teamCallButton.enabled = false
+                            callFrame.visible = true
+                            callName.text = contactNameText.text
+                            contactFrame.visible = false
+                            homeFrame.visible = false
                         }
                     }
                     RoundButton {
