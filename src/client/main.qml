@@ -58,15 +58,15 @@ Window {
             console.log("FRIEND LIST HAS ADD", addFriendTextField.text)
             contactModel.clear()
             contactModel.append(({text: backend.userName}))
+            console.log("Ma liste d'amis a ce moment la est ", backend.friendlist)
             for(var i = 0; backend.getFriendlistSize() > i; i++)
                 contactModel.append(({text: backend.friendlist[i]}))
             console.log("QUAND LA FRIEND LIST ADD HAS CHANGED", backend.friendlist.size)
         }
         onNotifListChanged: {
-            // contactModel.clear()
-            // contactModel.append(({text: backend.userName}))
-            // for(var i = 0; backend.friendlist.size() > i; i++)
-            //     contactModel.append(({text: backend.friendlist[i]}))
+            notifModel.clear()
+            for(var i = 0; backend.getNotiflistSize() > i; i++)
+                notifModel.append(({text: backend.notiflist[i]}))
         }
         onTeamlistChanged: {
             console.log("TEAM LIST HAS CHANGED")
@@ -277,7 +277,6 @@ Window {
                     if (addFriendTextField.text === "")
                         return
                     backend.addToFriendlist(addFriendTextField.text)
-                    contactModel.append(({text: addFriendTextField.text}))
                     addFriendTextField.clear()
                 }
             }
@@ -1109,12 +1108,15 @@ Window {
                             contactModel.append(({text: pseudoSigninTextField.text}))
 
 
-                            console.log("LA LISTE AVANT LE FOR EST ", backend.friendlist[0], " et ", backend.friendlist)
                             for(var j = 0; backend.getFriendlistSize() > j; j++) {
                                 contactModel.append(({text: backend.friendlist[j]}))
-                                console.log("JE FAIS UN TOURRRRRRRRRRRRRRRRRRRRRRRRRR DE BOUCLE AVEC ", backend.friendlist[j])
                             }
-                            console.log("LA LISTE DE MES AMIS S'ELEVE A ", backend.getFriendlistSize())
+                            console.log("LA LISTE AVANT LE FOR EST ", backend.notiflist[0], " et ", backend.notiflist)
+                            for(var j = 0; backend.getNotiflistSize() > j; j++) {
+                                contactModel.append(({text: backend.notiflist[j]}))
+                                console.log("JE FAIS UN TOURRRRRRRRRRRRRRRRRRRRRRRRRR DE BOUCLE AVEC ", backend.notiflist[j])
+                            }
+                            console.log("LA LISTE DE MES NOTIF S'ELEVE A ", backend.getNotiflistSize())
 
 
                             backend.userName = pseudoSigninTextField.text

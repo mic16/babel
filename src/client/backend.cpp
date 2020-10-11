@@ -10,6 +10,15 @@ void BackEnd::update()
         m_teamlist = m_com->getTeams();
         m_notiflist = m_com->getFriendRequests();
 
+        for (int i = 0; i < m_friendlist.size(); i++) {
+            // std::cout << "Dans la boucle, on itere sur  " << m_friendlist[i] << std::endl;
+            if (m_friendlist[i].compare("error") == 0) {
+                // std::cout << "ON VA DELETE LE ERROR QUI EST " << m_friendlist[i] << std::endl;
+                m_friendlist.pop_back();
+                // std::cout << "IL EST DELETE LA ?" << std::endl;
+            }
+        }
+
         if (m_onPending) {
             count = m_com->getAcceptCall();
             if (count == 0) {
@@ -50,11 +59,26 @@ BackEnd::BackEnd(QObject *parent) :
 
 void BackEnd::firstUpdate()
 {
-    std::cout << "JE REMPLIS LA FRIEDN LIST UNE PREMIERE FOIS" << std::endl;
     m_friendlist = m_com->getFriends();
-    std::cout << "CA ME RENVOI CA " << m_friendlist[0] << std::endl;
     m_teamlist = m_com->getTeams();
+    std::cout << "JE REMPLIS LA NOTIF LIST UNE PREMIERE FOIS" << std::endl;
     m_notiflist = m_com->getFriendRequests();
+    std::cout << "CA ME RENVOI CA " << m_notiflist[0] << std::endl;
+
+    for (int i = 0; i < m_friendlist.size(); i++) {
+        if (m_friendlist[i].compare("error") == 0) {
+            m_friendlist.pop_back();
+        }
+    }
+    std::cout << "Ma taile de liste de notif est " << m_notiflist.size() << std::endl;
+    for (int i = 0; i < m_notiflist.size(); i++) {
+        std::cout << "Dans la boucle, on itere sur  " << m_notiflist[i] << std::endl;
+        if (m_notiflist[i].compare("error") == 0) {
+            std::cout << "ON VA DELETE LE ERROR QUI EST " << m_notiflist[i] << std::endl;
+            m_notiflist.pop_back();
+            std::cout << "IL EST DELETE LA ?" << std::endl;
+        }
+    }
 }
 
 BackEnd *BackEnd::get(QObject *parent)
@@ -83,10 +107,25 @@ QList<QString> BackEnd::friendlist()
 {
     QList<QString> list;
 
+    if (m_friendlist.size() == 0)
+        return list;
     std::cout << "JE GET MA FRIEND LIST avec " << m_friendlist[0] << " et " << m_friendlist.size() << std::endl;
     for (size_t i = 0; i < m_friendlist.size(); i++)
         list.append(QString::fromStdString(m_friendlist[i]));
-    std::cout << "JE GET MA QQQQQQQQQFRIEND LIST avec " << list.size() << std::endl;
+    std::cout << "JE GET MA QQQQQQQQQFRIEND LIST avec " << list[0].toStdString() << list.size() << std::endl;
+    return list;
+}
+
+QList<QString> BackEnd::notiflist()
+{
+    QList<QString> list;
+
+    if (m_notiflist.size() == 0)
+        return list;
+    std::cout << "JE GET MA NOTIFFFFFF LIST avec " << m_notiflist[0] << " et " << m_notiflist.size() << std::endl;
+    for (size_t i = 0; i < m_notiflist.size(); i++)
+        list.append(QString::fromStdString(m_notiflist[i]));
+    std::cout << "JE GET MA QQQQQQQQQNOTIFFFFFF LIST avec " << list[0].toStdString() << list.size() << std::endl;
     return list;
 }
 
@@ -127,6 +166,11 @@ int BackEnd::getFriendlistSize()
     return m_friendlist.size();
 }
 
+int BackEnd::getNotiflistSize()
+{
+    return m_notiflist.size();
+}
+
 void BackEnd::setpassWord(const QString &passWord)
 {
     std::string password = passWord.toUtf8().constData();
@@ -161,7 +205,9 @@ void BackEnd::addToFriendlist(const QString &friendName)
     if (std::find(m_friendlist.begin(), m_friendlist.end(), friendNameString) != m_friendlist.end())
         return;
     m_friendlist.push_back(friendNameString);
+    std::cout << "JE VAIS APPELER LA FONCTION POUR ADD MON AMIS DANS LA BASE DE DONNER, son nom c'est " << friendNameString << std::endl;
     m_com->addFriend(friendNameString);
+    std::cout << "MON POTE EST DANS LA DB NORMALEMENT, APRES CEST LES SIGNAUX" << std::endl;
     emit friendlistAddChanged();
     emit friendlistChanged();
 }
