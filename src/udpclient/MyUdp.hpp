@@ -17,8 +17,6 @@ public:
     void read(float *outputSamples, unsigned long samplesCount);
     void setFriend(QHostAddress adresse);
 
-signals:
-
 public slots:
     void handleReadyRead();
 

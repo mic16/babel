@@ -58,8 +58,8 @@ BackEnd::BackEnd(QObject *parent) :
     callfriend = new MyUdp(parent);
     audio = new PortAudio(44000, 256, 2);
     audio->setCallback(this);
-    callfriend->setFriend(QHostAddress((QString::fromStdString("90.85.62.153")));
-    audio->start();
+    // callfriend->setFriend(QHostAddress((QString::fromStdString("90.85.62.153")));
+    // audio->start();
     m_wasInCall = false;
     // m_thread_obj = std::thread(thread_func, this);
 }
