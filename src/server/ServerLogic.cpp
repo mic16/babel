@@ -292,7 +292,6 @@ Request ServerLogic::getFriendRequests(Request request, std::string userName)
 
 Request ServerLogic::acceptFriendRequests(Request request, std::string userName)
 {
-
     std::vector<std::string> content;
     boost::split(content, request.getRequestContent(), boost::is_any_of(","));
     if (this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").size() > 0) {
