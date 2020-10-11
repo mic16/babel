@@ -56,13 +56,13 @@ if (EXISTS /home/$ENV{USER}/Qt)
         set(SRCSCLIENT
             src/client/main.cpp
             src/client/qml.qrc
+            src/client/EncoderSound.cpp
             src/utils/Utils.cpp
             src/utils/Request.cpp
             src/client/backend.cpp
             src/client/Communication.cpp
             src/udpclient/MyUdp.cpp
             src/PortAudio/PortAudioRecord.cpp  
-            src/client/  
             )
 
         set(SRCSSERVER
@@ -98,12 +98,13 @@ if (EXISTS /home/$ENV{USER}/Qt)
 
         set(HEADERSCLIENT
             src/client/backend.hpp
+            src/client/EncoderSound.hpp  
             src/utils/Utils.hpp
             src/utils/Request.hpp
             src/client/Communication.hpp
             src/client/Clock.hpp
             src/udpclient/MyUdp.hpp
-            src/PortAudio/PortAudioRecord.hpp    
+            src/PortAudio/PortAudioRecord.hpp
             )
 
         set(HEADERSSERVER
