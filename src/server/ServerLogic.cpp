@@ -286,10 +286,29 @@ Request ServerLogic::getFriendRequests(Request request, std::string userName)
 
     if (this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").size() > 0) {
         friendsRequest.append(this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").at(0));
-        this->dataBase.insertRemoveUpdate("UPDATE users SET friends_request='' WHERE name='" + userName + "'");
+        // this->dataBase.insertRemoveUpdate("UPDATE users SET friends_request='' WHERE name='" + userName + "'");
     }
     friendsRequest = "";
     return (Request(Request::VALIDGETFRIENDREQUESTS, friendsRequest));
+}
+
+Request ServerLogic::acceptFriendRequests(Request request, std::string userName)
+{
+    if (this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").size() > 0) {
+        std::vector<std::string> vec;
+        boost::split(vec, this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").at(0), boost::is_any_of(","));
+        std::string str;
+        for (std::string i : vec) {
+            if (i.compare(request.getRequestContent()) != 0) {
+                if (str.length() > 0) {
+                    str.append(",");
+                }
+                str.append(i);
+            }
+        }
+        this->dataBase.insertRemoveUpdate("UPDATE users SET friends_request='" + str + "' WHERE name='" + userName + "'");
+    }
+    return (Request(Request::ACCEPTFRIENDREQUEST));
 }
 
 Request ServerLogic::getTeams(Request request, std::string userName)
@@ -357,6 +376,8 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
             return (removeUserFromTeam(request));
         case Request::GETFRIENDREQUESTS:
             return (getFriendRequests(request, userName));
+        case Request::ACCEPTFRIENDREQUEST:
+            return (acceptFriendRequests(request, userName));
         case Request::DESTROYTEAM:
             return (destroyTeam(request));
         case Request::GETTEAMS:
