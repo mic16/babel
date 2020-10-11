@@ -833,6 +833,7 @@ Window {
                     contactModel.append(({text: notifModel.get(notifListView.currentIndex).text}))
                     backend.addToFriendlist(notifModel.get(notifListView.currentIndex).text)
                     notifModel.remove(notifListView.currentIndex)
+                    backend.acceptFriendRequest(notifModel.get(notifListView.currentIndex).text)
                     if (notifModel.count === 0) {
                         addButton.visible = false
                         refuseButton.visible = false
@@ -852,6 +853,7 @@ Window {
                 display: AbstractButton.IconOnly
                 Material.background: Material.Red
                 onClicked: {
+                    backend.acceptFriendRequest(notifModel.get(notifListView.currentIndex).text)
                     notifModel.remove(notifListView.currentIndex)
                     if (notifModel.count === 0) {
                         addButton.visible = false
