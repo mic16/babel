@@ -17,7 +17,7 @@ std::string Communication::getUserIP()
 
 void Communication::connectToServer()
 {
-    _socket.connectToHost(QHostAddress("127.0.0.1"), 7171);
+    _socket.connectToHost(QHostAddress("176.160.81.228"), 7171);
     if (_socket.waitForConnected())
         connected = true;
     else
