@@ -830,10 +830,9 @@ Window {
                 display: AbstractButton.IconOnly
                 Material.background: Material.Green
                 onClicked: {
+                    backend.acceptFriendRequest(notifModel.get(notifListView.currentIndex).text, true)
                     contactModel.append(({text: notifModel.get(notifListView.currentIndex).text}))
-                    backend.addToFriendlist(notifModel.get(notifListView.currentIndex).text)
                     notifModel.remove(notifListView.currentIndex)
-                    backend.acceptFriendRequest(notifModel.get(notifListView.currentIndex).text)
                     if (notifModel.count === 0) {
                         addButton.visible = false
                         refuseButton.visible = false
@@ -841,7 +840,6 @@ Window {
                         addButton.visible = true
                         refuseButton.visible = true
                     }
-                    // TODO SEND SIGNAL ACCEPT
                 }
             }
 
@@ -853,7 +851,7 @@ Window {
                 display: AbstractButton.IconOnly
                 Material.background: Material.Red
                 onClicked: {
-                    backend.acceptFriendRequest(notifModel.get(notifListView.currentIndex).text)
+                    backend.acceptFriendRequest(notifModel.get(notifListView.currentIndex).text, false)
                     notifModel.remove(notifListView.currentIndex)
                     if (notifModel.count === 0) {
                         addButton.visible = false
@@ -862,7 +860,6 @@ Window {
                         addButton.visible = true
                         refuseButton.visible = true
                     }
-                    // TODO SEND SIGNAL REFUSE
                 }
             }
         }
