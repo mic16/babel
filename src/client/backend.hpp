@@ -73,6 +73,7 @@ public:
     Q_INVOKABLE void firstUpdate();
     Q_INVOKABLE int getFriendlistSize();
     Q_INVOKABLE int getNotiflistSize();
+    Q_INVOKABLE void acceptFriendRequest(const QString &Name);
 
     Q_INVOKABLE void display();
 
