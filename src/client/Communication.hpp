@@ -36,7 +36,7 @@ public:
 
     bool callUser(std::string name);
     std::string getCall();
-    bool acceptCall(bool response);
+    bool acceptCall(bool response, std::string calledUser);
     bool stopCall();
     int getAcceptCall();
     bool hangUpFriend();
