@@ -58,7 +58,8 @@ BackEnd::BackEnd(QObject *parent) :
     callfriend = new MyUdp(parent);
     audio = new PortAudio(44000, 256, 2);
     audio->setCallback(this);
-    audio->start();
+    // callfriend->setFriend(QHostAddress::LocalHost);
+    // audio->start();
     m_wasInCall = false;
     // m_thread_obj = std::thread(thread_func, this);
 }
@@ -440,26 +441,13 @@ void BackEnd::display()
 
 int BackEnd::onAudioReady(const float *inputSamples, unsigned long samplesCount)
 {
-    test.push_back(inputSamples);
-    // for (int i = 0; i < samplesCount - 1; i++) {
-    //     std::cout << "onAudioReady : " <<i << " : " << inputSamples[i] << std::endl;
-    // }
-    // callfriend->write(inputSamples, samplesCount);
+    callfriend->write(inputSamples, samplesCount);
     return (0);
 }
 
 int BackEnd::onAudioNeeded(float *outputSamples, unsigned long samplesCount)
 {
-    if (test.size() > 0) {
-        std::memcpy(reinterpret_cast<char *>(outputSamples), reinterpret_cast<const char *>(test[0]), samplesCount * sizeof(float));
-        test.erase(test.begin());
-    } else {
-        std::cout << "ok" << std::endl;
-    }
-    // callfriend->read(outputSamples, samplesCount);
-    // for (int i = 0; i < samplesCount - 1; i++) {
-    //     std::cout << "onAudioNeeded : " << i << " : " << outputSamples[i] << std::endl;
-    // }
+    callfriend->read(outputSamples, samplesCount);
     return (0);
 }
 

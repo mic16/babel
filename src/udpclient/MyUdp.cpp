@@ -3,12 +3,12 @@
 MyUdp::MyUdp(QObject *parent) : QObject(parent)
 {
     socket = new QUdpSocket(this);
-    connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(handleReadyRead()));
 }
 
 void MyUdp::setFriend(QHostAddress adresse)
 {
-    this->adresse = QHostAddress::LocalHost;
+    this->adresse = adresse;
     socket->bind(adresse, 1234);
 }
 
@@ -20,7 +20,7 @@ void MyUdp::write(const float *inputSamples, unsigned long samplesCount)
     socket->writeDatagram(data, size, adresse, 1234);
 }
 
-void MyUdp::readyRead()
+void MyUdp::handleReadyRead()
 {
     QByteArray buffer;
     buffer.resize(512 * sizeof(float));
@@ -34,6 +34,7 @@ void MyUdp::readyRead()
 
 void MyUdp::read(float *outputSamples, unsigned long samplesCount)
 {
+    std::memset(outputSamples, 0, samplesCount * sizeof(float));
     if (stock.size() > 0) {
         QByteArray buffer = stock[0];
         std::memcpy(outputSamples, stock[0].data(), samplesCount * sizeof(float));
