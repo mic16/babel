@@ -20,6 +20,7 @@ void BackEnd::update()
         if (m_onPending) {
             count = m_com->getAcceptCall();
             if (count == 0) {
+                m_wasInCall = true;
                 m_inCall = true;
                 m_onPending = false; // TODO APPELER L'AUDIO START
                 callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
@@ -27,6 +28,7 @@ void BackEnd::update()
             }
             std::cout << "COUNT EST EGAL A TOUT SIMPLEMENT = " << count << std::endl;
             if (count == 1) {
+                m_wasInCall = true;
                 m_inCall = false;
                 m_onPending = false;
                 std::cout << "ON ME RACCROCHE A LA GUEULE" << std::endl;
@@ -55,6 +57,7 @@ BackEnd::BackEnd(QObject *parent) :
     callfriend = new MyUdp(parent);
     audio = new PortAudio(48000, 256, 2);
     audio->setCallback(this);
+    m_wasInCall = false;
     // m_thread_obj = std::thread(thread_func, this);
 }
 
@@ -359,7 +362,7 @@ bool BackEnd::callTeam(const QString &Name)
     return false;
 }
 
-void BackEnd::callAccept(bool bool_accept)
+void BackEnd::acceptCall(bool bool_accept)
 {
     m_onPopup = false;
     m_com->acceptCall(bool_accept, m_calledFriend);
@@ -400,6 +403,15 @@ bool BackEnd::getQuit()
 Communication *BackEnd::getCom()
 {
     return m_com;
+}
+
+bool BackEnd::getCallResponse()
+{
+    if (!m_inCall && !m_onPending && m_wasInCall) {
+        m_wasInCall = false;
+        return true;
+    }
+    return false;
 }
 
 void BackEnd::display()

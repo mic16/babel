@@ -45,6 +45,9 @@ Window {
                 pendingOrConnectedText.text = "Connected !"
             if (backend.getOnPending())
                 pendingOrConnectedText.text = "Pending..."
+            if (backend.getCallResponse())
+                callFrame.visible = false
+                contactFrame.visible = true
             if(backend.isServerOn() === false || backend.getQuit())
                 timer.stop()
         }
@@ -665,7 +668,7 @@ Window {
                         width: 75
                         height: 75
                         onClicked: {
-                            backend.callAccept(true)
+                            backend.acceptCall(true)
                             callPopup.close()
                         }
                     }
@@ -678,7 +681,7 @@ Window {
                         width: 75
                         height: 75
                         onClicked: {
-                            backend.callAccept(false)
+                            backend.acceptCall(false)
                             callPopup.close()
                         }
                     }
