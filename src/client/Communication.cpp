@@ -285,7 +285,7 @@ bool Communication::callTeam(std::string name)
 
 bool Communication::getCallTeam(std::string name)
 {
-
+    return (false);
 }
 
 bool Communication::addUserToTeam(std::string userName, std::string teamName)
