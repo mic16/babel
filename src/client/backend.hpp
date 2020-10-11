@@ -203,33 +203,88 @@ public:
     */
     Q_INVOKABLE void disconnect();
     /**
-     * Q_INVOKABLE void hangUpFriend();
+     * Q_INVOKABLE void acceptCall(bool bool_accept);
      *
-     * Will disconnect the user from the database
+     * Will send the information to the server that the client has accept the call he recieved
      * Return nothing
     */
     Q_INVOKABLE void acceptCall(bool bool_accept);
-    
+    /**
+     * Q_INVOKABLE bool isServerOn();
+     *
+     * Will recieve the information if the server is on or not
+     * Return true if the server is on
+    */
     Q_INVOKABLE bool isServerOn();
-    
+    /**
+     * Q_INVOKABLE void update();
+     *
+     * Function update that is call every second
+     * Return nothing
+    */
     Q_INVOKABLE void update();
-    
+    /**
+     * Q_INVOKABLE bool getQuit();
+     *
+     * Function to get 'Quit' member function
+     * Return the 'Quit' member function
+    */
     Q_INVOKABLE bool getQuit();
-    
+    /**
+     * Q_INVOKABLE bool getOnPending();
+     *
+     * Function to get 'Pending' member function
+     * Return the 'Pending' member function
+    */
     Q_INVOKABLE bool getOnPending();
-    
+    /**
+     * Q_INVOKABLE bool getOnPopup();
+     *
+     * Function to get 'OnPopup' member function
+     * Return the 'OnPopup' member function
+    */
     Q_INVOKABLE bool getOnPopup();
-    
+    /**
+     * Q_INVOKABLE void firstUpdate();
+     *
+     * Will be call the first time an user sign in
+     * Return nothing
+    */
     Q_INVOKABLE void firstUpdate();
-    
+    /**
+     * Q_INVOKABLE int getFriendlistSize();
+     *
+     * Will give the size of the friendList
+     * Return the size of the friendList
+    */
     Q_INVOKABLE int getFriendlistSize();
-    
+    /**
+     * Q_INVOKABLE int getNotiflistSize();
+     *
+     * Will give the size of the Notiflist
+     * Return the size of the Notiflist
+    */
     Q_INVOKABLE int getNotiflistSize();
-    
+    /**
+     * Q_INVOKABLE void acceptFriendRequest(const QString &Name, const bool &boolean);
+     *
+     * Give to the server the information if the client has accepted the friend request
+     * Return nothing
+    */
     Q_INVOKABLE void acceptFriendRequest(const QString &Name, const bool &boolean);
-    
+    /**
+     * Q_INVOKABLE bool getCallResponse();
+     *
+     * Permit the client to know if he will start the call
+     * Return true the the call is accepted
+    */
     Q_INVOKABLE bool getCallResponse();
-    
+    /**
+     * Q_INVOKABLE void display();
+     *
+     * Debug function, it print some data
+     * Return nothing
+    */
     Q_INVOKABLE void display();
 
 
