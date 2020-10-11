@@ -107,7 +107,7 @@ std::string Communication::getCall()
 
 bool Communication::acceptCall(bool response)
 {
-    Request r(Request::ACCEPTCALL, (response ? "ACCEPT" : "REFUSE"),token);
+    Request r(Request::ACCEPTCALL, (response ? "ACCEPT" : "REFUSE"), token);
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTCALL)
