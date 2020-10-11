@@ -422,7 +422,7 @@ Window {
                     callFrame.visible = true
                     callName.text = contactNameText.text
                     contactFrame.visible = false
-                    backend.callFriend(callName.text)
+                    backend.callFriends(callName.text)
                 }
 
                 Text {

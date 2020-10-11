@@ -60,7 +60,7 @@ public:
     Q_INVOKABLE void removeFriendDataBase(const QString &userName);
     Q_INVOKABLE void addMembersTeamListDatabase(const QString &teamname, const QString &username);
     Q_INVOKABLE void removeMembersTeamListDatabase(const QString &teamname, const QString &username);
-    Q_INVOKABLE void callFriend(const QString &Name);
+    Q_INVOKABLE void callFriends(const QString &Name);
     Q_INVOKABLE void hangUpFriend();
     Q_INVOKABLE bool callTeam(const QString &Name);
     Q_INVOKABLE void disconnect();

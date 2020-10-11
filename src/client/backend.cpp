@@ -11,11 +11,8 @@ void BackEnd::update()
         m_notiflist = m_com->getFriendRequests();
 
         for (int i = 0; i < m_friendlist.size(); i++) {
-            // std::cout << "Dans la boucle, on itere sur  " << m_friendlist[i] << std::endl;
             if (m_friendlist[i].compare("error") == 0) {
-                // std::cout << "ON VA DELETE LE ERROR QUI EST " << m_friendlist[i] << std::endl;
                 m_friendlist.pop_back();
-                // std::cout << "IL EST DELETE LA ?" << std::endl;
             }
         }
 
@@ -30,6 +27,7 @@ void BackEnd::update()
             if (count == 1) {
                 m_inCall = false;
                 m_onPending = false;
+                std::cout << "ON ME RACCROCHE A LA GUEULE" << std::endl;
             }
         }
         else {
@@ -337,7 +335,7 @@ void BackEnd::removeMembersTeamListDatabase(const QString &teamname, const QStri
     m_com->removeUserFromTeam(username.toUtf8().constData(), teamname.toUtf8().constData());
 }
 
-void BackEnd::callFriend(const QString &Name)
+void BackEnd::callFriends(const QString &Name)
 {
     // TODO FAIRE LA REQUETE D'APEL A UN AMI
     m_com->callUser(Name.toUtf8().constData());
