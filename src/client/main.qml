@@ -662,6 +662,7 @@ Window {
                         height: 75
                         onClicked: {
                             backend.callAccept(true)
+                            callPopup.close()
                         }
                     }
                     RoundButton {
@@ -683,8 +684,8 @@ Window {
             Text {
                 id: pendingOrConnectedText
                 text: "Pending..."
-                x: 120
-                y: 75
+                x: 150
+                y: 100
                 width: 106
                 height: 34
                 color: "#ffffff"
