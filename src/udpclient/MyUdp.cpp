@@ -17,6 +17,8 @@ void MyUdp::write(const float *inputSamples, unsigned long samplesCount)
     QByteArray data;
     data.append(reinterpret_cast<const char *>(inputSamples), size);
     socket->writeDatagram(data, size, adresse, 1234);
+
+    // qDebug() << "write : " << data.data();
 }
 
 const float *MyUdp::read(unsigned long samplesCount)
@@ -25,5 +27,6 @@ const float *MyUdp::read(unsigned long samplesCount)
     QByteArray buffer;
     buffer.resize(size);
     socket->readDatagram(buffer.data(), size, nullptr, nullptr);
+    // qDebug() << "read : " << buffer.data();
     return (reinterpret_cast<const float *>(buffer.data()));
 }
