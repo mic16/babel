@@ -45,7 +45,6 @@ void Communication::onReadyRead()
     QByteArray rep = _socket.read(Utils::convertBytesArrayToSizeT(reinterpret_cast<unsigned char *>(str.data())));
 
     lastRequestRecieve = Request(rep.data());
-    std::cout << lastRequestRecieve.getRequestType() << ":" << lastRequestRecieve.getRequestContent()  << ":" << lastRequestRecieve.getRequestToken() << std::endl;
 }
 
 bool Communication::isServerOn()
@@ -194,7 +193,6 @@ std::vector<std::string> Communication::getFriendRequests()
     } else if (lastRequestRecieve.getRequestType() == Request::REFUSEGETFRIENDREQUESTS) {
         vec.push_back("error");
     }
-    std::cout << "IS VEC EMPTY " << vec.empty() << std::endl;
     return (vec);
 }
 

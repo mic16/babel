@@ -15,7 +15,6 @@ Data::Data()
         std::cerr << "Error open dataBase " << sqlite3_errmsg(dataBase) << std::endl; 
     } 
     else
-        std::cout << "Opened Database Successfully" << std::endl; 
     
     this->insertRemoveUpdate("CREATE TABLE users(name TEXT, pwd TEXT, friends TEXT, friends_request TEXT);");
     this->insertRemoveUpdate("CREATE TABLE teams(name TEXT, members TEXT)");

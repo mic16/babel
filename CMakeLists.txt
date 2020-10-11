@@ -61,7 +61,8 @@ if (EXISTS /home/$ENV{USER}/Qt)
             src/client/backend.cpp
             src/client/Communication.cpp
             src/udpclient/MyUdp.cpp
-            src/PortAudio/PortAudioRecord.cpp    
+            src/PortAudio/PortAudioRecord.cpp  
+            src/client/  
             )
 
         set(SRCSSERVER

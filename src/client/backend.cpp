@@ -23,23 +23,19 @@ void BackEnd::update()
             }
         }
 
-        std::cout << "ALORS, LE PENDING EST -IL VRAI OU FAIX ???????????????????????????  " << m_onPending << std::endl;
         if (m_onPending) {
             count = m_com->getAcceptCall();
             if (count == 0) {
                 m_wasInCall = true;
                 m_inCall = true;
                 m_onPending = false; // TODO APPELER L'AUDIO START
-                std::cout << m_com->getUserIP() << std::endl;
                 callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
                 audio->start();
             }
-            std::cout << "COUNT EST EGAL A TOUT SIMPLEMENT = " << count << std::endl;
             if (count == 1) {
                 m_wasInCall = true;
                 m_inCall = false;
                 m_onPending = false;
-                std::cout << "ON ME RACCROCHE A LA GUEULE" << std::endl;
             }
         }
         else {
@@ -73,24 +69,16 @@ void BackEnd::firstUpdate()
 {
     m_friendlist = m_com->getFriends();
     m_teamlist = m_com->getTeams();
-    std::cout << "JE REMPLIS LA NOTIF LIST UNE PREMIERE FOIS" << std::endl;
     m_notiflist = m_com->getFriendRequests();
-    std::cout << "WIAKAREJIGEJZ -" << m_notiflist.empty() << "-" << std::endl;
 
     for (int i = 0; i < m_friendlist.size(); i++) {
         if (m_friendlist[i].compare("error") == 0) {
             m_friendlist.pop_back();
         }
     }
-    if (!m_notiflist.empty())
-        std::cout << "CA ME RENVOI CA " << m_notiflist[0] << std::endl;
-    std::cout << "Ma taile de liste de notif est " << m_notiflist.size() << std::endl;
     for (int i = 0; i < m_notiflist.size(); i++) {
-        std::cout << "Dans la boucle, on itere sur  " << m_notiflist[i] << std::endl;
         if (m_notiflist[i].compare("error") == 0) {
-            std::cout << "ON VA DELETE LE ERROR QUI EST " << m_notiflist[i] << std::endl;
             m_notiflist.pop_back();
-            std::cout << "IL EST DELETE LA ?" << std::endl;
         }
     }
 }
@@ -123,10 +111,8 @@ QList<QString> BackEnd::friendlist()
 
     if (m_friendlist.size() == 0)
         return list;
-    std::cout << "JE GET MA FRIEND LIST avec " << m_friendlist[0] << " et " << m_friendlist.size() << std::endl;
     for (size_t i = 0; i < m_friendlist.size(); i++)
         list.append(QString::fromStdString(m_friendlist[i]));
-    std::cout << "JE GET MA QQQQQQQQQFRIEND LIST avec " << list[0].toStdString() << list.size() << std::endl;
     return list;
 }
 
@@ -136,10 +122,8 @@ QList<QString> BackEnd::notiflist()
 
     if (m_notiflist.size() == 0)
         return list;
-    std::cout << "JE GET MA NOTIFFFFFF LIST avec " << m_notiflist[0] << " et " << m_notiflist.size() << std::endl;
     for (size_t i = 0; i < m_notiflist.size(); i++)
         list.append(QString::fromStdString(m_notiflist[i]));
-    std::cout << "JE GET MA QQQQQQQQQNOTIFFFFFF LIST avec " << list[0].toStdString() << list.size() << std::endl;
     return list;
 }
 
@@ -219,9 +203,7 @@ void BackEnd::addToFriendlist(const QString &friendName)
     if (std::find(m_friendlist.begin(), m_friendlist.end(), friendNameString) != m_friendlist.end() || m_userName == friendNameString)
         return;
     m_friendlist.push_back(friendNameString);
-    std::cout << "JE VAIS APPELER LA FONCTION POUR ADD MON AMIS DANS LA BASE DE DONNER, son nom c'est " << friendNameString << std::endl;
     m_com->addFriend(friendNameString);
-    std::cout << "MON POTE EST DANS LA DB NORMALEMENT, APRES CEST LES SIGNAUX" << std::endl;
     emit friendlistAddChanged();
     emit friendlistChanged();
 }
@@ -231,7 +213,6 @@ void BackEnd::removeToFriendlist(const QString &friendName)
     std::string friendNameString = friendName.toUtf8().constData();
     if (std::find(m_friendlist.begin(), m_friendlist.end(), friendNameString) != m_friendlist.end() == false)
         return;
-    std::cout << "je supprime l'ami " << friendNameString << std::endl;
     m_friendlist.erase(std::find(m_friendlist.begin(), m_friendlist.end(), friendNameString));
     emit friendlistRemoveChanged();
     emit friendlistChanged();
@@ -270,7 +251,6 @@ void BackEnd::addMembersToTeamlist(const QString &teamName, const QString &frien
     std::string friendNameString = friendName.toUtf8().constData();
     if (m_teamlist.find(teamname) == m_teamlist.end() || (std::find(m_friendlist.begin(), m_friendlist.end(), friendNameString) != m_friendlist.end() == false))
         return;
-    std::cout << "j'ajoute " << friendNameString << " a l'équipe " << teamname << std::endl;
     std::vector<std::string> tmpVector = m_teamlist.at(teamname);
     tmpVector.push_back(friendNameString);
     m_teamlist.insert_or_assign(teamname, tmpVector);
@@ -315,7 +295,6 @@ bool BackEnd::existingCredential(const QString &UserName, const QString &PassWor
 bool BackEnd::addUserToDataBase(const QString &UserName, const QString &PassWord)
 {
     std::string aze = UserName.toStdString();
-    std::cout << "AZE EST EGAL A " << aze << std::endl;
     return (m_com->createUser(UserName.toUtf8().constData(), PassWord.toUtf8().constData()));
 }
 
@@ -354,7 +333,6 @@ void BackEnd::callFriends(const QString &Name)
     // TODO FAIRE LA REQUETE D'APEL A UN AMI
     m_com->callUser(Name.toUtf8().constData());
     m_onPending = true;
-    std::cout << "JE PASSE LE PENDAING A TRUE, C4EST A DIRE QUE LA JE SUIS EN TRAIN DE CALL" << std::endl;
     m_calledFriend = Name.toUtf8().constData();
 }
 
@@ -384,20 +362,15 @@ void BackEnd::acceptCall(bool bool_accept)
 void BackEnd::disconnect()
 {
     // TODO LE DISCONNECT
-    std::cout << "AAAAAAAAAAAA" << std::endl;
     m_quit = true;
     // m_thread_obj.join();
-    std::cout << "WOAAW" << std::endl;
     // m_com->disconnect();
-    std::cout << "FIN" << std::endl;
     audio->stop();
 }
 
 bool BackEnd::isAuth() // add to qml
 {
-    std::cout << m_userName.compare("") << " - " << m_passWord.compare("") << std::endl;
     if (m_userName.compare("") != 0 && m_passWord.compare("") != 0) {
-        std::cout << "HELLO WORLD ENCULER" << std::endl;
         return true;
     }
     return false;
@@ -427,19 +400,12 @@ void BackEnd::display()
     std::map<std::string, std::vector<std::string>>::iterator it = m_teamlist.begin();
     std::vector<std::string>::iterator vector_it = m_friendlist.begin();
 
-    std::cout << "My name is " << m_userName << std::endl;
-    std::cout << "My friend are :" << std::endl;
     for (; vector_it != m_friendlist.end(); vector_it++) {
-        std::cout << "- " << *vector_it << std::endl;
     }
-    std::cout << "My teams are: " << std::endl;
     for (; it != m_teamlist.end(); it++) {
-        std::cout << "- " << it->first << " with members :" << std::endl;
         std::vector<std::string>::iterator vit = it->second.begin();
         for (; vit != it->second.end(); vit++) {
-            std::cout << "    - " << *vit << std::endl;
         }
-        std::cout << "]" << std::endl;
     }
 }
 

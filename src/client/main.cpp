@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
     // while (true) {
     //     backend = BackEnd::get();
     //     if (backend->getQuit()) {
-    //         std::cout << "QUIT" << std::endl;
     //         break;
     //     }
     // }

@@ -41,7 +41,6 @@ void MyUdp::handleReadyRead()
 
 void MyUdp::read(float *outputSamples, unsigned long samplesCount)
 {
-    // std::cout << "read" << std::endl;
     std::memset(outputSamples, 0, samplesCount * sizeof(float));
     if (stock.size() > 0) {
         QByteArray buffer = stock[0];

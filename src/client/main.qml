@@ -66,19 +66,15 @@ Window {
     BackEnd {
         id:backend
         onUserNameChanged: {
-            console.log("L'USERNAME EST CHANGED")
+            ("L'USERNAME EST CHANGED")
         }
         onFriendlistRemoveChanged: {
-            console.log("FRIEND LIST HAS REMOVE")
         }
         onFriendlistAddChanged: {
-            console.log("FRIEND LIST HAS ADD", addFriendTextField.text)
             contactModel.clear()
             contactModel.append(({text: backend.userName}))
-            console.log("Ma liste d'amis a ce moment la est ", backend.friendlist)
             for(var i = 0; backend.getFriendlistSize() > i; i++)
                 contactModel.append(({text: backend.friendlist[i]}))
-            console.log("QUAND LA FRIEND LIST ADD HAS CHANGED", backend.friendlist.size)
         }
         onNotifListChanged: {
             notifModel.clear()
@@ -86,7 +82,6 @@ Window {
                 notifModel.append(({text: backend.notiflist[i]}))
         }
         onTeamlistChanged: {
-            console.log("TEAM LIST HAS CHANGED")
         }
     }
 
@@ -177,7 +172,6 @@ Window {
                                 }
                                 return
                             }
-                            console.log(on_call, " is ", callName.text, " and ", contactModel.get(index).text)
                             if (on_call && callName.text === contactModel.get(index).text) {
                                 callFrame.visible = true
                                 contactFrame.visible = false
@@ -227,7 +221,6 @@ Window {
                                 callFrame.visible = true
                                 teamFrame.visible = false
                                 contactFrame.visible = false
-                                console.log("SUR LE CALL")
                                 teamList.currentIndex = index
                             } else {
                                 callFrame.visible = false
@@ -616,7 +609,6 @@ Window {
                 font.capitalization: Font.MixedCase
                 Material.background: Material.Purple
                 onCheckedChanged: {
-                    console.log(this.checked)
                     tabBar.currentIndex = 0
                     if (this.checked === true)
                         Material.background = Material.Orange
@@ -631,7 +623,6 @@ Window {
                 y: 300
                 text: qsTr("Members")
                 onClicked: {
-                    console.log(listTeamMembersName[teamList.currentIndex])
                 }
             }
         }
@@ -813,7 +804,6 @@ Window {
                 text: qsTr("Members")
                 visible: false
                 onClicked: {
-                    console.log(listTeamMembersName[teamList.currentIndex])
                 }
             }
         }
@@ -997,7 +987,6 @@ Window {
                 onClicked: {
                     if (backend.isServerOn() === false) {
                         banner.visible = true
-                        console.log("Server isn't on")
                         return
                     }
                     if (pseudoRegisterTextField.text === "" || pseudoRegisterTextField.text.replace(" ", "") === "" || passwordRegisterTextField.text !== passwordRegisterValidTextField.text || passwordRegisterTextField.text === "" || passwordRegisterTextField.text.replace(" ", "") === "" || backend.addUserToDataBase(pseudoRegisterTextField.text, passwordRegisterTextField.text) === false) {
@@ -1020,10 +1009,6 @@ Window {
                     }
                     teamModel.clear()
                     notifModel.clear()
-                    // if (backend.addUserToDataBase())
-                    //     console.log("J'AI CREER MON USER")
-                    // else
-                    //     console.log("J'AI PAS CREER MON USER")
                 }
             }
 
@@ -1153,21 +1138,13 @@ Window {
                             for(var j = 0; backend.getFriendlistSize() > j; j++) {
                                 contactModel.append(({text: backend.friendlist[j]}))
                             }
-                            console.log("LA LISTE AVANT LE FOR EST ", backend.notiflist[0], " et ", backend.notiflist)
                             for(var j = 0; backend.getNotiflistSize() > j; j++) {
                                 contactModel.append(({text: backend.notiflist[j]}))
-                                console.log("JE FAIS UN TOURRRRRRRRRRRRRRRRRRRRRRRRRR DE BOUCLE AVEC ", backend.notiflist[j])
                             }
-                            console.log("LA LISTE DE MES NOTIF S'ELEVE A ", backend.getNotiflistSize())
 
 
                             backend.userName = pseudoSigninTextField.text
                             backend.passWord = passwordSigninTextField.text
-                            // --------------------------------------------
-                            // var QListIterator<QString> i(backend.friendlist)
-                            // while (i.hasNext())
-                            //     contactModel.append(({text: i.next()}))
-                            // --------------------------------------------
                         }
                     }
                 }
@@ -1320,11 +1297,8 @@ Window {
         Material.background: Material.Red
         onClicked: {
             update.stop()
-            console.log("C4EST PARTIIIIII")
             window.close()
-            console.log("FDPPPPPPPPP")
             backend.disconnect()
-            console.log("FINISH MOTHERFUCK")
         }
     }
 }
