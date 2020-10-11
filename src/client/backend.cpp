@@ -249,7 +249,7 @@ void BackEnd::removeToTeamlist(const QString &teamName)
 
 void BackEnd::acceptFriendRequest(const QString &Name)
 {
-    // m_com->acceptFriendRequest(Name.toStdString());
+    m_com->acceptFriendRequest(Name.toStdString());
 }
 
 void BackEnd::addMembersToTeamlist(const QString &teamName, const QString &friendName)
