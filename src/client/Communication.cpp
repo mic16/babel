@@ -167,18 +167,11 @@ bool Communication::removeFriend(std::string name)
 std::vector<std::string> Communication::getFriends()
 {
     Request r(Request::GETFRIENDS, "", token);
-    std::string delim = ",";
-    std::vector<std::string> vec;
-
     sendToServer(r);
-    if (lastRequestRecieve.getRequestType() == Request::VALIDGETFRIENDS) {
-        std::string str = lastRequestRecieve.getRequestContent();
-        while (str.find(delim) != std::string::npos) {
-            vec.push_back(str.substr(0, str.find(delim)));
-            str.erase(0, str.substr(0, str.find(delim)).length() + delim.length());
-        }
-        vec.push_back(str);
-    } else {
+    std::vector<std::string> vec;
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETFRIENDS && lastRequestRecieve.getRequestContent().length() > 0) {
+        boost::split(vec, lastRequestRecieve.getRequestContent(), boost::is_any_of(","));
+    } else if (lastRequestRecieve.getRequestType() == Request::REFUSEGETFRIENDS) {
         vec.push_back("error");
     }
     return (vec);
@@ -187,18 +180,11 @@ std::vector<std::string> Communication::getFriends()
 std::vector<std::string> Communication::getFriendRequests()
 {
     Request r(Request::GETFRIENDREQUESTS, "", token);
-    std::string delim = ",";
-    std::vector<std::string> vec;
-
     sendToServer(r);
-    if (lastRequestRecieve.getRequestType() == Request::VALIDGETFRIENDREQUESTS) {
-        std::string str = lastRequestRecieve.getRequestContent();
-        while (str.find(delim) != std::string::npos) {
-            vec.push_back(str.substr(0, str.find(delim)));
-            str.erase(0, str.substr(0, str.find(delim)).length() + delim.length());
-        }
-        vec.push_back(str);
-    } else {
+    std::vector<std::string> vec;
+    if (lastRequestRecieve.getRequestType() == Request::VALIDGETFRIENDREQUESTS && lastRequestRecieve.getRequestContent().length() > 0) {
+        boost::split(vec, lastRequestRecieve.getRequestContent(), boost::is_any_of(","));
+    } else if (lastRequestRecieve.getRequestType() == Request::REFUSEGETFRIENDREQUESTS) {
         vec.push_back("error");
     }
     return (vec);

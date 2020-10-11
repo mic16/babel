@@ -80,7 +80,7 @@ Request ServerLogic::removeFriend(Request request, std::string userName)
 Request ServerLogic::getFriends(Request request, std::string userName)
 {
     if (!this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").size() > 0)
-        return (Request(Request::REFUSEGETFRIENDS));
+        return (Request(Request::VALIDGETFRIENDS));
     std::string friends = this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").at(0);
     return (Request(Request::VALIDGETFRIENDS, friends));
 }
