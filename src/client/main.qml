@@ -45,9 +45,19 @@ Window {
                 pendingOrConnectedText.text = "Connected !"
             if (backend.getOnPending())
                 pendingOrConnectedText.text = "Pending..."
-            if (backend.getCallResponse())
+            if (backend.getCallResponse()) {
                 callFrame.visible = false
                 contactFrame.visible = true
+                    on_call = false
+                    callButton.enabled = true
+                    teamCallButton.enabled = true
+                    // backend.hangUpFriend()
+                    if (backend.existingTeam(callName.text))
+                        teamFrame.visible = true
+                    else
+                        contactFrame.visible = true
+
+            }
             if(backend.isServerOn() === false || backend.getQuit())
                 timer.stop()
         }

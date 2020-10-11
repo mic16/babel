@@ -410,6 +410,7 @@ Communication *BackEnd::getCom()
 bool BackEnd::getCallResponse()
 {
     if (!m_inCall && !m_onPending && m_wasInCall) {
+        std::cout << "-------------------------------------------------------------------------------------------" << m_inCall << m_onPending << m_wasInCall << std::endl;
         m_wasInCall = false;
         return true;
     }
