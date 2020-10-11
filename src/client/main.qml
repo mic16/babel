@@ -683,6 +683,18 @@ Window {
             Text {
                 id: pendingOrConnectedText
                 text: "Pending..."
+                x: 120
+                y: 75
+                width: 106
+                height: 34
+                color: "#ffffff"
+                font.pixelSize: 15
+                horizontalAlignment: Text.AlignHCenter
+                lineHeightMode: Text.ProportionalHeight
+                font.hintingPreference: Font.PreferDefaultHinting
+                fontSizeMode: Text.FixedSize
+                textFormat: Text.AutoText
+
             }
 
             RoundButton {
