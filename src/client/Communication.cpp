@@ -187,6 +187,7 @@ std::vector<std::string> Communication::getFriendRequests()
     } else if (lastRequestRecieve.getRequestType() == Request::REFUSEGETFRIENDREQUESTS) {
         vec.push_back("error");
     }
+    std::cout << "IS VEC EMPTY " << vec.empty() << std::endl;
     return (vec);
 }
 

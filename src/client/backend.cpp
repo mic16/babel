@@ -63,13 +63,15 @@ void BackEnd::firstUpdate()
     m_teamlist = m_com->getTeams();
     std::cout << "JE REMPLIS LA NOTIF LIST UNE PREMIERE FOIS" << std::endl;
     m_notiflist = m_com->getFriendRequests();
-    std::cout << "CA ME RENVOI CA " << m_notiflist[0] << std::endl;
+    std::cout << "WIAKAREJIGEJZ -" << m_notiflist.empty() << "-" << std::endl;
 
     for (int i = 0; i < m_friendlist.size(); i++) {
         if (m_friendlist[i].compare("error") == 0) {
             m_friendlist.pop_back();
         }
     }
+    if (!m_notiflist.empty())
+        std::cout << "CA ME RENVOI CA " << m_notiflist[0] << std::endl;
     std::cout << "Ma taile de liste de notif est " << m_notiflist.size() << std::endl;
     for (int i = 0; i < m_notiflist.size(); i++) {
         std::cout << "Dans la boucle, on itere sur  " << m_notiflist[i] << std::endl;
