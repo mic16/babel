@@ -282,13 +282,11 @@ Request ServerLogic::destroyTeam(Request request)
 
 Request ServerLogic::getFriendRequests(Request request, std::string userName)
 {
-    std::string friendsRequest;
+    std::string friendsRequest = "";
 
     if (this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").size() > 0) {
         friendsRequest.append(this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").at(0));
-        // this->dataBase.insertRemoveUpdate("UPDATE users SET friends_request='' WHERE name='" + userName + "'");
     }
-    friendsRequest = "";
     return (Request(Request::VALIDGETFRIENDREQUESTS, friendsRequest));
 }
 
