@@ -8,7 +8,7 @@ MyUdp::MyUdp(QObject *parent) : QObject(parent)
 
 void MyUdp::setFriend(QHostAddress adresse)
 {
-    this->adresse = adresse;
+    this->adresse = QHostAddress::LocalHost;
     socket->bind(adresse, 1234);
 }
 

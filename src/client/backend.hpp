@@ -94,6 +94,7 @@ signals:
 
 
 private:
+    std::vector<const float *> test;
     PortAudio *audio;
     MyUdp *callfriend;
     Communication *m_com;
