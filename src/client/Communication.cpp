@@ -105,7 +105,7 @@ std::string Communication::getCall()
         return ("");
 }
 
-bool Communication::acceptCall(bool response)
+bool Communication::acceptCall(bool response, std::string calledUser)
 {
     Request r(Request::ACCEPTCALL, (response ? "ACCEPT" : "REFUSE"),token);
     sendToServer(r);
