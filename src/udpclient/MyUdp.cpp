@@ -7,6 +7,7 @@ MyUdp::MyUdp(QObject *parent) : QObject(parent)
 
 void MyUdp::setFriend(QHostAddress adresse)
 {
+    this->adresse = adresse;
     socket->bind(adresse, 1234);
 }
 
@@ -15,7 +16,7 @@ void MyUdp::write(const float *inputSamples, unsigned long samplesCount)
     int size = samplesCount * sizeof(float);
     QByteArray data;
     data.append(reinterpret_cast<const char *>(inputSamples), size);
-    socket->writeDatagram(data, size, QHostAddress::LocalHost, 1234);
+    socket->writeDatagram(data, size, adresse, 1234);
 }
 
 const float *MyUdp::read(unsigned long samplesCount)

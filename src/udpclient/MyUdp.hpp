@@ -19,6 +19,7 @@ signals:
 public slots:
 
 private:
+    QHostAddress adresse;
     QUdpSocket *socket;
 
 };
