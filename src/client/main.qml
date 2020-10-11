@@ -679,6 +679,11 @@ Window {
                     }
 
                 }
+            
+            Text {
+                id: pendingOrConnectedText
+                text: "Pending..."
+            }
 
             RoundButton {
                 id: muteCallButton
