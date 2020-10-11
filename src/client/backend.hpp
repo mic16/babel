@@ -50,11 +50,11 @@ class BackEnd : public QObject, IAudioStreamCallback
     */
     Q_PROPERTY(QList<QString> notiflist READ notiflist);
     /**
-     * Q_PROPERTY QMap<QString QList<QString>> teamlist
+     * Q_PROPERTY QMap<QString, QList<QString>> teamlist
      *
      * A variable for QML, can be read with 'teamlist'
     */
-    Q_PROPERTY(QMap<QString QList<QString>> teamlist READ teamlist);
+    Q_PROPERTY(QMap<QString, QList<QString>> teamlist READ teamlist);
     /**
      * Q_PROPERTY bool microphone
      *
@@ -77,7 +77,7 @@ public:
     QString callerName();
     QList<QString> friendlist();
     QList<QString> notiflist();
-    QMap<QString QList<QString>> teamlist();
+    QMap<QString, QList<QString>> teamlist();
     bool microphone();
 
     void setUserName(const QString &userName);
