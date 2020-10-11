@@ -204,7 +204,7 @@ void BackEnd::setCallerName(const QString &name)
 void BackEnd::addToFriendlist(const QString &friendName)
 {
     std::string friendNameString = friendName.toUtf8().constData();
-    if (std::find(m_friendlist.begin(), m_friendlist.end(), friendNameString) != m_friendlist.end() || m_username == friendNameString)
+    if (std::find(m_friendlist.begin(), m_friendlist.end(), friendNameString) != m_friendlist.end() || m_userName == friendNameString)
         return;
     m_friendlist.push_back(friendNameString);
     std::cout << "JE VAIS APPELER LA FONCTION POUR ADD MON AMIS DANS LA BASE DE DONNER, son nom c'est " << friendNameString << std::endl;
