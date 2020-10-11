@@ -23,6 +23,7 @@ void BackEnd::update()
                 m_wasInCall = true;
                 m_inCall = true;
                 m_onPending = false; // TODO APPELER L'AUDIO START
+                std::cout << m_com->getUserIP() << std::endl;
                 callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
                 audio->start();
             }
@@ -367,6 +368,7 @@ void BackEnd::acceptCall(bool bool_accept)
     m_onPopup = false;
     m_com->acceptCall(bool_accept, m_calledFriend);
     if (bool_accept) {
+        std::cout << m_com->getUserIP() << std::endl;
         callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
         audio->start();
     }
