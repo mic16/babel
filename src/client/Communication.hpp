@@ -45,7 +45,7 @@ public:
     bool removeFriend(std::string name);
     std::vector<std::string> getFriends(); // Yoan en a pas
     std::vector<std::string> getFriendRequests();
-    bool acceptFriendRequest(std::string name);
+    bool acceptFriendRequest(std::string name, bool value);
 
     bool connectUser(std::string name, std::string password);
     bool disconnect();

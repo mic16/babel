@@ -187,12 +187,13 @@ std::vector<std::string> Communication::getFriendRequests()
     } else if (lastRequestRecieve.getRequestType() == Request::REFUSEGETFRIENDREQUESTS) {
         vec.push_back("error");
     }
+    std::cout << "IS VEC EMPTY " << vec.empty() << std::endl;
     return (vec);
 }
 
-bool Communication::acceptFriendRequest(std::string name)
+bool Communication::acceptFriendRequest(std::string name, bool value)
 {
-    Request r(Request::ACCEPTFRIENDREQUEST, name, token);
+    Request r(Request::ACCEPTFRIENDREQUEST, name + "," + (value ? "true" : "false"), token);
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTFRIENDREQUEST)

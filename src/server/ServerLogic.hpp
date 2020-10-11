@@ -46,6 +46,7 @@ class ServerLogic {
         Request removeFriend(Request request, std::string userName);
         Request getFriends(Request request, std::string userName); // Yoan en a pas
         Request getFriendRequests(Request request, std::string userName);
+        Request acceptFriendRequests(Request request, std::string userName);
 
         Request callUser(Request request, std::string userName);
         Request getCall(Request request, std::string userName);

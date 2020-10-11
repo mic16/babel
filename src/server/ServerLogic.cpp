@@ -282,14 +282,42 @@ Request ServerLogic::destroyTeam(Request request)
 
 Request ServerLogic::getFriendRequests(Request request, std::string userName)
 {
-    std::string friendsRequest;
+    std::string friendsRequest = "";
 
     if (this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").size() > 0) {
         friendsRequest.append(this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").at(0));
-        this->dataBase.insertRemoveUpdate("UPDATE users SET friends_request='' WHERE name='" + userName + "'");
     }
-    friendsRequest = "";
     return (Request(Request::VALIDGETFRIENDREQUESTS, friendsRequest));
+}
+
+Request ServerLogic::acceptFriendRequests(Request request, std::string userName)
+{
+    std::vector<std::string> content;
+    boost::split(content, request.getRequestContent(), boost::is_any_of(","));
+    if (this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").size() > 0) {
+        std::vector<std::string> vec;
+        boost::split(vec, this->dataBase.select("SELECT friends_request FROM users WHERE name='" + userName + "';").at(0), boost::is_any_of(","));
+        std::string str;
+        for (std::string i : vec) {
+            if (i.compare(content[0]) != 0) {
+                if (str.length() > 0) {
+                    str.append(",");
+                }
+                str.append(i);
+            }
+        }
+        this->dataBase.insertRemoveUpdate("UPDATE users SET friends_request='" + str + "' WHERE name='" + userName + "'");
+        if (content[1].compare("true") == 0) {
+            std::string friends = "";
+            if (this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").size() > 0)
+                friends.append(this->dataBase.select("SELECT friends FROM users WHERE name='" + userName + "';").at(0));
+            if (friends.length() != 0)
+                friends.append(",");
+            friends.append(content[0]);
+            this->dataBase.insertRemoveUpdate("UPDATE users SET friends='" + friends + "' WHERE name='" + userName + "'");
+        }
+    }
+    return (Request(Request::ACCEPTFRIENDREQUEST));
 }
 
 Request ServerLogic::getTeams(Request request, std::string userName)
@@ -357,6 +385,8 @@ Request ServerLogic::executeLogic(Request request, TcpConnection *TcpUser)
             return (removeUserFromTeam(request));
         case Request::GETFRIENDREQUESTS:
             return (getFriendRequests(request, userName));
+        case Request::ACCEPTFRIENDREQUEST:
+            return (acceptFriendRequests(request, userName));
         case Request::DESTROYTEAM:
             return (destroyTeam(request));
         case Request::GETTEAMS:
