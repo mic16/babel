@@ -361,7 +361,7 @@ bool BackEnd::callTeam(const QString &Name)
 
 void BackEnd::callAccept(bool bool_accept)
 {
-    m_com->acceptCall(bool_accept);
+    m_com->acceptCall(bool_accept, m_calledFriend);
     if (bool_accept) {
         callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
         audio->start();
