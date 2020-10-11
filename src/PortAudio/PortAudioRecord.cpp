@@ -48,6 +48,7 @@ int PortAudio::getNbChannels()
 
 void PortAudio::start()
 {
+    std::cout << "testeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" << std::endl;
     _err = Pa_OpenDefaultStream(&_inputStream,
                         _nbChannels,
                         0,
