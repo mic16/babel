@@ -27,13 +27,16 @@ void BackEnd::update()
         if (m_onPending) {
             count = m_com->getAcceptCall();
             if (count == 0) {
+                m_wasInCall = true;
                 m_inCall = true;
                 m_onPending = false; // TODO APPELER L'AUDIO START
+                std::cout << m_com->getUserIP() << std::endl;
                 callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
                 audio->start();
             }
             std::cout << "COUNT EST EGAL A TOUT SIMPLEMENT = " << count << std::endl;
             if (count == 1) {
+                m_wasInCall = true;
                 m_inCall = false;
                 m_onPending = false;
                 std::cout << "ON ME RACCROCHE A LA GUEULE" << std::endl;
@@ -62,6 +65,7 @@ BackEnd::BackEnd(QObject *parent) :
     callfriend = new MyUdp(parent);
     audio = new PortAudio(48000, 256, 2);
     audio->setCallback(this);
+    m_wasInCall = false;
     // m_thread_obj = std::thread(thread_func, this);
 }
 
@@ -366,10 +370,12 @@ bool BackEnd::callTeam(const QString &Name)
     return false;
 }
 
-void BackEnd::callAccept(bool bool_accept)
+void BackEnd::acceptCall(bool bool_accept)
 {
+    m_onPopup = false;
     m_com->acceptCall(bool_accept, m_calledFriend);
     if (bool_accept) {
+        std::cout << m_com->getUserIP() << std::endl;
         callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
         audio->start();
     }
@@ -408,6 +414,15 @@ Communication *BackEnd::getCom()
     return m_com;
 }
 
+bool BackEnd::getCallResponse()
+{
+    if (!m_inCall && !m_onPending && m_wasInCall) {
+        m_wasInCall = false;
+        return true;
+    }
+    return false;
+}
+
 void BackEnd::display()
 {
     std::map<std::string, std::vector<std::string>>::iterator it = m_teamlist.begin();
@@ -431,13 +446,19 @@ void BackEnd::display()
 
 int BackEnd::onAudioReady(const float *inputSamples, unsigned long samplesCount)
 {
+    for (int i = 0; i < samplesCount - 1; i++) {
+        std::cout << "onAudioReady : " <<i << " : " << inputSamples[i] << std::endl;
+    }
     callfriend->write(inputSamples, samplesCount);
     return (0);
 }
 
 int BackEnd::onAudioNeeded(float *outputSamples, unsigned long samplesCount)
 {
-    std::memcpy(outputSamples, callfriend->read(samplesCount), samplesCount * sizeof(float));
+    callfriend->read(outputSamples, samplesCount);
+    for (int i = 0; i < samplesCount - 1; i++) {
+        std::cout << "onAudioNeeded : " << i << " : " << outputSamples[i] << std::endl;
+    }
     return (0);
 }
 

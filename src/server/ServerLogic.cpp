@@ -125,8 +125,8 @@ Request ServerLogic::acceptCall(Request request, std::string userName)
 {
     std::vector<std::string> vec;
     boost::split(vec, request.getRequestContent(), boost::is_any_of(","));
-    if (this->acceptCalls.find(userName) != this->acceptCalls.end()) {
-        this->acceptCalls.find(vec[0])->second = vec[1];
+    if (this->acceptCalls.find(vec[0]) != this->acceptCalls.end()) {
+        this->acceptCalls[vec[0]] = vec[1];
         return (Request(Request::VALIDACCEPTCALL));
     } else {
         return (Request(Request::REFUSEACCEPTCALL));
