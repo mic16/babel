@@ -63,7 +63,7 @@ BackEnd::BackEnd(QObject *parent) :
     m_inCall = false;
     m_onPopup = false;
     callfriend = new MyUdp(parent);
-    audio = new PortAudio(48000, 256, 2);
+    audio = new PortAudio(44000, 256, 2);
     audio->setCallback(this);
     m_wasInCall = false;
     // m_thread_obj = std::thread(thread_func, this);
@@ -375,7 +375,6 @@ void BackEnd::acceptCall(bool bool_accept)
     m_onPopup = false;
     m_com->acceptCall(bool_accept, m_calledFriend);
     if (bool_accept) {
-        std::cout << m_com->getUserIP() << std::endl;
         callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
         audio->start();
     }
@@ -446,9 +445,6 @@ void BackEnd::display()
 
 int BackEnd::onAudioReady(const float *inputSamples, unsigned long samplesCount)
 {
-    for (int i = 0; i < samplesCount - 1; i++) {
-        std::cout << "onAudioReady : " <<i << " : " << inputSamples[i] << std::endl;
-    }
     callfriend->write(inputSamples, samplesCount);
     return (0);
 }
@@ -456,9 +452,6 @@ int BackEnd::onAudioReady(const float *inputSamples, unsigned long samplesCount)
 int BackEnd::onAudioNeeded(float *outputSamples, unsigned long samplesCount)
 {
     callfriend->read(outputSamples, samplesCount);
-    for (int i = 0; i < samplesCount - 1; i++) {
-        std::cout << "onAudioNeeded : " << i << " : " << outputSamples[i] << std::endl;
-    }
     return (0);
 }
 

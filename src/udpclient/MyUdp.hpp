@@ -20,7 +20,6 @@ class MyUdp : public QObject
     Q_OBJECT
 public:
     explicit MyUdp(QObject *parent = 0);
-    void readyRead();
     void write(const float *inputSamples, unsigned long samplesCount);
     void read(float *outputSamples, unsigned long samplesCount);
     void setFriend(QHostAddress adresse);
@@ -28,6 +27,7 @@ public:
 signals:
 
 public slots:
+    void handleReadyRead();
 
 private:
     std::vector<QByteArray> stock;
