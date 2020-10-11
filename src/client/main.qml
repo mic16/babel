@@ -841,7 +841,6 @@ Window {
                         addButton.visible = true
                         refuseButton.visible = true
                     }
-                    // TODO SEND SIGNAL ACCEPT
                 }
             }
 
@@ -862,7 +861,6 @@ Window {
                         addButton.visible = true
                         refuseButton.visible = true
                     }
-                    // TODO SEND SIGNAL REFUSE
                 }
             }
         }
