@@ -193,7 +193,7 @@ std::vector<std::string> Communication::getFriendRequests()
 
 bool Communication::acceptFriendRequest(std::string name, bool value)
 {
-    Request r(Request::ACCEPTFRIENDREQUEST, name + (value ? "true" : "false"), token);
+    Request r(Request::ACCEPTFRIENDREQUEST, name + "," + (value ? "true" : "false"), token);
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDACCEPTFRIENDREQUEST)
