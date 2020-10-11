@@ -64,7 +64,7 @@ public:
     Q_INVOKABLE void hangUpFriend();
     Q_INVOKABLE bool callTeam(const QString &Name);
     Q_INVOKABLE void disconnect();
-    Q_INVOKABLE void callAccept(bool bool_accept);
+    Q_INVOKABLE void acceptCall(bool bool_accept);
     Q_INVOKABLE bool isServerOn();
     Q_INVOKABLE void update();
     Q_INVOKABLE bool getQuit();
@@ -74,7 +74,7 @@ public:
     Q_INVOKABLE int getFriendlistSize();
     Q_INVOKABLE int getNotiflistSize();
     Q_INVOKABLE void acceptFriendRequest(const QString &Name, const bool &boolean);
-
+    Q_INVOKABLE bool getCallResponse();
     Q_INVOKABLE void display();
 
 
@@ -108,6 +108,7 @@ private:
     bool m_inCall;
     bool m_onPopup;
     std::string m_calledFriend;
+    bool m_wasInCall;
 };
 
 #endif // BACKEND_H
