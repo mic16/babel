@@ -58,8 +58,8 @@ BackEnd::BackEnd(QObject *parent) :
     callfriend = new MyUdp(parent);
     audio = new PortAudio(44000, 256, 2);
     audio->setCallback(this);
-    // callfriend->setFriend(QHostAddress::LocalHost);
-    // audio->start();
+    callfriend->setFriend(QHostAddress((QString::fromStdString("90.85.62.153")));
+    audio->start();
     m_wasInCall = false;
     // m_thread_obj = std::thread(thread_func, this);
 }
@@ -371,6 +371,7 @@ void BackEnd::acceptCall(bool bool_accept)
     m_com->acceptCall(bool_accept, m_calledFriend);
     if (bool_accept) {
         std::cout << m_com->getUserIP() << std::endl;
+        std::cout << "this adresse : " << m_com->getUserIP() << std::endl;
         callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
         audio->start();
     }
