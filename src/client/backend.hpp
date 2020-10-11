@@ -20,7 +20,7 @@ class BackEnd : public QObject, IAudioStreamCallback
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged);
     Q_PROPERTY(QString passWord READ passWord WRITE setpassWord NOTIFY passWordChanged);
     Q_PROPERTY(QList<QString> friendlist READ friendlist);
-    Q_PROPERTY(QList<QString> friendlist READ friendlist);
+    Q_PROPERTY(QList<QString> notiflist READ notiflist);
     Q_PROPERTY(QMap<QString, QList<QString>> teamlist READ teamlist);
     Q_PROPERTY(bool microphone READ microphone WRITE setMicrophone NOTIFY microphoneChanged);
     Q_PROPERTY(QString callerName READ callerName WRITE setCallerName);
@@ -33,6 +33,7 @@ public:
     QString passWord();
     QString callerName();
     QList<QString> friendlist();
+    QList<QString> notiflist();
     QMap<QString, QList<QString>> teamlist();
     bool microphone();
 
@@ -71,6 +72,7 @@ public:
     Q_INVOKABLE bool getOnPopup();
     Q_INVOKABLE void firstUpdate();
     Q_INVOKABLE int getFriendlistSize();
+    Q_INVOKABLE int getNotiflistSize();
 
     Q_INVOKABLE void display();
 
