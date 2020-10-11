@@ -11,11 +11,8 @@ void BackEnd::update()
         m_notiflist = m_com->getFriendRequests();
 
         for (int i = 0; i < m_friendlist.size(); i++) {
-            // std::cout << "Dans la boucle, on itere sur  " << m_friendlist[i] << std::endl;
             if (m_friendlist[i].compare("error") == 0) {
-                // std::cout << "ON VA DELETE LE ERROR QUI EST " << m_friendlist[i] << std::endl;
                 m_friendlist.pop_back();
-                // std::cout << "IL EST DELETE LA ?" << std::endl;
             }
         }
 
@@ -24,12 +21,13 @@ void BackEnd::update()
             if (count == 0) {
                 m_inCall = true;
                 m_onPending = false; // TODO APPELER L'AUDIO START
-                callfriend.setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
+                callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
                 audio->start();
             }
             if (count == 1) {
                 m_inCall = false;
                 m_onPending = false;
+                std::cout << "ON ME RACCROCHE A LA GUEULE" << std::endl;
             }
         }
         else {
@@ -52,6 +50,7 @@ BackEnd::BackEnd(QObject *parent) :
     m_onPending = false;
     m_inCall = false;
     m_onPopup = false;
+    callfriend = new MyUdp(parent);
     audio = new PortAudio(48000, 256, 2);
     audio->setCallback(this);
     // m_thread_obj = std::thread(thread_func, this);
@@ -337,7 +336,7 @@ void BackEnd::removeMembersTeamListDatabase(const QString &teamname, const QStri
     m_com->removeUserFromTeam(username.toUtf8().constData(), teamname.toUtf8().constData());
 }
 
-void BackEnd::callFriend(const QString &Name)
+void BackEnd::callFriends(const QString &Name)
 {
     // TODO FAIRE LA REQUETE D'APEL A UN AMI
     m_com->callUser(Name.toUtf8().constData());
@@ -361,7 +360,7 @@ void BackEnd::callAccept(bool bool_accept)
 {
     m_com->acceptCall(bool_accept);
     if (bool_accept) {
-        callfriend.setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
+        callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
         audio->start();
     }
     // TODO DIRE AU SERVEUR SI LE CALL EST ACCEPTER
@@ -422,13 +421,13 @@ void BackEnd::display()
 
 int BackEnd::onAudioReady(const float *inputSamples, unsigned long samplesCount)
 {
-    callfriend.write(inputSamples, samplesCount);
+    callfriend->write(inputSamples, samplesCount);
     return (0);
 }
 
 int BackEnd::onAudioNeeded(float *outputSamples, unsigned long samplesCount)
 {
-    std::memcpy(outputSamples, callfriend.read(samplesCount), samplesCount * sizeof(float));
+    std::memcpy(outputSamples, callfriend->read(samplesCount), samplesCount * sizeof(float));
     return (0);
 }
 
