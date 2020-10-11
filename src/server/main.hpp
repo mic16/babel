@@ -4,7 +4,7 @@
 ** File description:
 ** main
 */
-
+/** @file */
 #ifndef MAIN_HPP_
 #define MAIN_HPP_
 

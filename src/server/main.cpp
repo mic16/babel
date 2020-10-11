@@ -4,7 +4,7 @@
 ** File description:
 ** main
 */
-
+/** @file */
 #include "main.hpp"
 
 int main()

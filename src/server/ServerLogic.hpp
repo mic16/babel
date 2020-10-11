@@ -4,7 +4,7 @@
 ** File description:
 ** ServerLogic
 */
-
+/** @file */
 #ifndef SERVERLOGIC_HPP_
 #define SERVERLOGIC_HPP_
 

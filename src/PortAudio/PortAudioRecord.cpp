@@ -4,7 +4,7 @@
 ** File description:
 ** PortAudio
 */
-
+/** @file */
 #include "PortAudioRecord.hpp"
 
 // samplerate = 48000 (hz)

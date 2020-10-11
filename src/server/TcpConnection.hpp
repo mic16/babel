@@ -4,7 +4,7 @@
 ** File description:
 ** tcpConnection
 */
-
+/** @file */
 #ifndef TCPCONNECTION_HPP_
 #define TCPCONNECTION_HPP_
 

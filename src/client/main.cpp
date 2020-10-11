@@ -4,7 +4,7 @@
 ** File description:
 ** Epitech File
 */
-
+/** @file */
 #include <iostream>
 #include <stdio.h>
 #include <iostream>

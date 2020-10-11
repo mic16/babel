@@ -4,7 +4,7 @@
 ** File description:
 ** ServerLogic
 */
-
+/** @file */
 #include "ServerLogic.hpp"
 #include "TcpConnection.hpp"
 

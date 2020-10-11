@@ -4,7 +4,7 @@
 ** File description:
 ** TcpConnection
 */
-
+/** @file */
 #include "TcpConnection.hpp"
 
 TcpConnection::pointer TcpConnection::create(boost::asio::io_service& ios)

@@ -4,7 +4,7 @@
 ** File description:
 ** Data
 */
-
+/** @file */
 #include "Data.hpp"
 
 Data::Data()

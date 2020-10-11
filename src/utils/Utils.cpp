@@ -4,6 +4,7 @@
 ** File description:
 ** Utils
 */
+/** @file */
 
 #include "Utils.hpp"
 

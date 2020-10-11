@@ -1,3 +1,11 @@
+/*
+** EPITECH PROJECT, 2020
+** Visual Studio Live Share (Workspace)
+** File description:
+** Epitech File
+*/
+/** @file */
+#include <iostream>
 #ifndef BACKEND_H
 #define BACKEND_H
 
@@ -17,12 +25,47 @@ class BackEnd : public QObject, IAudioStreamCallback
 {
     static BackEnd *singleton;
     Q_OBJECT;
+    /**
+     * Q_PROPERTY QString userName
+     *
+     * A variable for QML, can be read with 'userName', write with 'setUserName' and send signal named 'userNameChanged'
+    */
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged);
+    /**
+     * Q_PROPERTY QString passWord
+     *
+     * A variable for QML, can be read with 'passWord', write with 'setpassWord' and send signal named 'passWordChanged'
+    */
     Q_PROPERTY(QString passWord READ passWord WRITE setpassWord NOTIFY passWordChanged);
+    /**
+     * Q_PROPERTY QList<QString> friendlist
+     *
+     * A variable for QML, can be read with 'friendlist'
+    */
     Q_PROPERTY(QList<QString> friendlist READ friendlist);
+    /**
+     * Q_PROPERTY QList<QString> notiflist
+     *
+     * A variable for QML, can be read with 'notiflist'
+    */
     Q_PROPERTY(QList<QString> notiflist READ notiflist);
+    /**
+     * Q_PROPERTY QMap<QString, QList<QString>> teamlist
+     *
+     * A variable for QML, can be read with 'teamlist'
+    */
     Q_PROPERTY(QMap<QString, QList<QString>> teamlist READ teamlist);
+    /**
+     * Q_PROPERTY bool microphone
+     *
+     * A variable for QML, can be read with 'microphone', write with 'setMicrophone' and send signal named 'microphoneChanged'
+    */
     Q_PROPERTY(bool microphone READ microphone WRITE setMicrophone NOTIFY microphoneChanged);
+    /**
+     * Q_PROPERTY QString callerName
+     *
+     * A variable for QML, can be read with 'callerName', write with 'setCallerName'
+    */
     Q_PROPERTY(QString callerName READ callerName WRITE setCallerName);
 
 public:

@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2020
+** Visual Studio Live Share (Workspace)
+** File description:
+** Epitech File
+*/
+/** @file */
 #ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 

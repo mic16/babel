@@ -4,6 +4,7 @@
 ** File description:
 ** Epitech File
 */
+/** @file */
 #ifndef CLOCK_HPP_
 #define CLOCK_HPP_
 

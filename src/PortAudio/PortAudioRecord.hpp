@@ -4,7 +4,7 @@
 ** File description:
 ** PortAudio
 */
-
+/** @file */
 #ifndef PORTAUDIO_HPP_
 #define PORTAUDIO_HPP_
 

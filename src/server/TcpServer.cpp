@@ -4,7 +4,7 @@
 ** File description:
 ** TcpServer
 */
-
+/** @file */
 #include "TcpServer.hpp"
 
 TcpServer::TcpServer(boost::asio::io_service& io_service, int port)

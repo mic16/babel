@@ -4,7 +4,7 @@
 ** File description:
 ** Data
 */
-
+/** @file */
 #ifndef DATA_HPP_
 #define DATA_HPP_
 
