@@ -449,10 +449,10 @@ int BackEnd::onAudioReady(const float *inputSamples, unsigned long samplesCount)
 
 int BackEnd::onAudioNeeded(float *outputSamples, unsigned long samplesCount)
 {
+    std::memcpy(outputSamples, callfriend->read(samplesCount), samplesCount * sizeof(float));
     for (int i = 0; i < samplesCount - 1; i++) {
         std::cout << "onAudioNeeded : " << i << " : " << outputSamples[i] << std::endl;
     }
-    std::memcpy(outputSamples, callfriend->read(samplesCount), samplesCount * sizeof(float));
     return (0);
 }
 
