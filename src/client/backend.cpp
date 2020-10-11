@@ -16,6 +16,7 @@ void BackEnd::update()
             }
         }
 
+        std::cout << "ALORS, LE PENDING EST -IL VRAI OU FAIX ???????????????????????????  " << m_onPending << std::endl;
         if (m_onPending) {
             count = m_com->getAcceptCall();
             if (count == 0) {
@@ -24,6 +25,7 @@ void BackEnd::update()
                 callfriend->setFriend(QHostAddress(QString::fromStdString(m_com->getUserIP())));
                 audio->start();
             }
+            std::cout << "COUNT EST EGAL A TOUT SIMPLEMENT = " << count << std::endl;
             if (count == 1) {
                 m_inCall = false;
                 m_onPending = false;
@@ -341,6 +343,7 @@ void BackEnd::callFriends(const QString &Name)
     // TODO FAIRE LA REQUETE D'APEL A UN AMI
     m_com->callUser(Name.toUtf8().constData());
     m_onPending = true;
+    std::cout << "JE PASSE LE PENDAING A TRUE, C4EST A DIRE QUE LA JE SUIS EN TRAIN DE CALL" << std::endl;
     m_calledFriend = Name.toUtf8().constData();
 }
 

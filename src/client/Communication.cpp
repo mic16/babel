@@ -132,11 +132,11 @@ int Communication::getAcceptCall()
     Request r(Request::GETACCEPTCALL, "", token);
     sendToServer(r);
     if (lastRequestRecieve.getRequestType() == Request::VALIDGETACCEPTCALL) {
-        if (lastRequestRecieve.getRequestContent().compare("WAIT"))
+        if (lastRequestRecieve.getRequestContent().compare("WAIT") == 0)
             return (-1);
-        if (lastRequestRecieve.getRequestContent().compare("ACCEPT"))
+        if (lastRequestRecieve.getRequestContent().compare("ACCEPT") == 0)
             return (0);
-        if (lastRequestRecieve.getRequestContent().compare("REFUSE"))
+        if (lastRequestRecieve.getRequestContent().compare("REFUSE") == 0)
             return (1);
     }
     return (-2);
