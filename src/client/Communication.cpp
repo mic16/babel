@@ -273,22 +273,6 @@ std::map<std::string, std::vector<std::string>> Communication::getTeams()
     }
 }
 
-bool Communication::callTeam(std::string name)
-{
-    Request r(Request::CALLTEAM, name, token);
-    sendToServer(r);
-
-    if (lastRequestRecieve.getRequestType() == Request::VALIDCALLTEAM)
-        return (true);
-    else
-        return (false);
-}
-
-bool Communication::getCallTeam(std::string name)
-{
-
-}
-
 bool Communication::addUserToTeam(std::string userName, std::string teamName)
 {
     Request r(Request::ADDUSERTOTEAM, teamName + "," + userName, token);
@@ -328,17 +312,6 @@ bool Communication::destroyTeam(std::string name)
     sendToServer(r);
 
     if (lastRequestRecieve.getRequestType() == Request::VALIDDESTROYTEAM)
-        return (true);
-    else
-        return (false);
-}
-
-bool Communication::changeName(std::string name)
-{
-    Request r(Request::CHANGENAME, name, token);
-    sendToServer(r);
-
-    if (lastRequestRecieve.getRequestType() == Request::VALIDCHANGENAME)
         return (true);
     else
         return (false);
