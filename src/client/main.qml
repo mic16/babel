@@ -41,6 +41,10 @@ Window {
                 callerName.text = backend.callerName;
                 callPopup.open()
             }
+            if (backend.getOnPending() === false)
+                pendingOrConnectedText.text = "Connected !"
+            if (backend.getOnPending())
+                pendingOrConnectedText.text = "Pending..."
             if(backend.isServerOn() === false || backend.getQuit())
                 timer.stop()
         }
@@ -684,8 +688,8 @@ Window {
             Text {
                 id: pendingOrConnectedText
                 text: "Pending..."
-                x: 150
-                y: 100
+                x: 220
+                y: 200
                 width: 106
                 height: 34
                 color: "#ffffff"
