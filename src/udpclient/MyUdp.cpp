@@ -29,10 +29,14 @@ void MyUdp::readyRead()
     quint16 senderPort;
 
     socket->readDatagram(buffer.data(), 512 * sizeof(float), &sender, &senderPort);
-    stock = buffer;
+    stock.push_back(buffer);
 }
 
-const float *MyUdp::read(unsigned long samplesCount)
+void MyUdp::read(float *outputSamples, unsigned long samplesCount)
 {
-    return (reinterpret_cast<const float *>(stock.data()));
+    if (stock.size() > 0) {
+        QByteArray buffer = stock[0];
+        std::memcpy(outputSamples, stock[0].data(), samplesCount * sizeof(float));
+        stock.erase(stock.begin());
+    }
 }

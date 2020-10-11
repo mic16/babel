@@ -410,7 +410,6 @@ Communication *BackEnd::getCom()
 bool BackEnd::getCallResponse()
 {
     if (!m_inCall && !m_onPending && m_wasInCall) {
-        std::cout << "-------------------------------------------------------------------------------------------" << m_inCall << m_onPending << m_wasInCall << std::endl;
         m_wasInCall = false;
         return true;
     }
@@ -449,7 +448,7 @@ int BackEnd::onAudioReady(const float *inputSamples, unsigned long samplesCount)
 
 int BackEnd::onAudioNeeded(float *outputSamples, unsigned long samplesCount)
 {
-    std::memcpy(outputSamples, callfriend->read(samplesCount), samplesCount * sizeof(float));
+    callfriend->read(outputSamples, samplesCount);
     for (int i = 0; i < samplesCount - 1; i++) {
         std::cout << "onAudioNeeded : " << i << " : " << outputSamples[i] << std::endl;
     }
